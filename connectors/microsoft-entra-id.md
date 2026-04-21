@@ -35,9 +35,10 @@ The Microsoft Entra ID (formerly Azure AD) connector is **essential for every Se
 
 | License | What it unlocks |
 |:--------|:----------------|
-| **Entra ID Free / P1** | SigninLogs, AuditLogs, AADNonInteractiveUserSignInLogs, AADServicePrincipalSignInLogs, AADManagedIdentitySignInLogs, AADProvisioningLogs, ADFSSignInLogs |
+| **Entra ID Free / P1** | SigninLogs, AuditLogs, AADNonInteractiveUserSignInLogs, AADServicePrincipalSignInLogs, AADManagedIdentitySignInLogs, AADProvisioningLogs, ADFSSignInLogs, MicrosoftGraphActivityLogs |
 | **Entra ID P2 (included in E5)** | All of the above + AADRiskyUsers, AADUserRiskEvents (Identity Protection data) |
 | **Workload Identities Premium** | AADRiskyServicePrincipals, AADServicePrincipalRiskEvents — risk detections for service principals and managed identities |
+| **Microsoft 365 E5 / Defender (opt-in)** | EnrichedOffice365AuditLogs — enriched Office 365 audit logs (requires enablement in the Defender portal) |
 | **Entra ID with Global Secure Access** | NetworkAccessTraffic (Entra Internet/Private Access) |
 
 > [!NOTE]
@@ -66,6 +67,8 @@ The Microsoft Entra ID (formerly Azure AD) connector is **essential for every Se
 |:------|:------------|:------------------------|:----------|:---------------|:------------------|
 | **AuditLogs** | Directory changes: user/group/role modifications, app registrations, policy changes | Analytics: 90d / Lake: 365d | **Core governance table.** Tracks privilege escalation (adding Global Admin), persistence (new app registrations, federation changes), and policy tampering. MCSB PA-1 (Protect privileged users), PA-7 (Follow just enough administration). | Complete directory change audit trail — proves exactly who made what change, when, and to which object. Answers "how did the attacker escalate privilege or establish persistence in Entra ID?" | User added to Global Admin (T1098.003), New app with high-privilege API permissions (T1136.003) |
 | **AADProvisioningLogs** | User provisioning events to/from applications | Analytics: 90d / Lake: 365d | Tracks automated account creation/modification in connected apps. Detects provisioning anomalies and unauthorized access propagation. | Traces how compromised identity propagated access to connected SaaS applications — shows if attacker-controlled accounts were automatically provisioned to downstream systems | Unexpected user provisioned to sensitive SaaS application |
+| **MicrosoftGraphActivityLogs** | API requests made to Microsoft Graph for resources in the tenant (audit and security categories) | Analytics: 30d (high volume) / Lake: 365d | Detects Graph API abuse — mass data reads, enumeration of users/groups/mail, suspicious app activity. Basic log supported (low cost option). Complements SigninLogs by showing *what* the app/user did after authenticating. | Full audit of Graph API calls — proves which identity called which endpoint, from which IP, and with what result. Critical for OAuth abuse and post-compromise data access investigations. | Mass user enumeration via `/users` endpoint (T1087.004), Bulk mailbox reads by compromised app (T1114.002) |
+| **EnrichedOffice365AuditLogs** | Office 365 audit logs enriched with Entra ID context (user risk, device, session) | Analytics: 30d / Lake: 365d | Requires opt-in via the Defender portal. Adds identity context to every Office 365 audit event, enabling correlation of M365 activity with risk signals and device posture without expensive joins. | Joins identity risk/device data with Exchange/SharePoint/Teams audit events in a single table — speeds up incident response for M365 data-exfiltration and insider cases. | High-risk user exporting large volumes of SharePoint content (T1213.002) |
 
 ### Risk Tables (Entra ID P2)
 

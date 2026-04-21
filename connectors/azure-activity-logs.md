@@ -22,6 +22,8 @@
   - [Notes](#notes)
   - [Tools](#tools)
   - [References](#references)
+    - [Official Documentation](#official-documentation)
+    - [Community \& Third-Party Resources](#community--third-party-resources)
 
 ---
 

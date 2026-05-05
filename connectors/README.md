@@ -116,7 +116,6 @@ Full-spectrum monitoring for OT/IoT, DevOps, databases, custom applications, and
 |:----------|:----------|:---------------|
 | [Azure Kubernetes Service (AKS) Audit](azure-kubernetes-service.md) | Kubernetes API server audit — pod, RBAC, secrets, and namespace operations | No |
 | [Azure Storage Analytics](azure-storage-analytics.md) | Blob, File, Queue, and Table access logs — data exfiltration detection | No |
-| [Microsoft Defender for DNS (Azure DNS)](microsoft-defender-for-dns.md) | Azure-level DNS query logs — C2 and tunnelling detection for cloud-native workloads | No |
 | [Windows Forwarded Events (Advanced)](windows-forwarded-events.md) | PowerShell ScriptBlock, WMI, Sysmon, AppLocker/WDAC — advanced endpoint telemetry | No |
 
 ### OT / IoT Security

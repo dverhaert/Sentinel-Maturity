@@ -187,7 +187,6 @@ Tier 3 provides full-spectrum monitoring for mature organisations that have comp
 |:----------|:-----------|:---------------|
 | [Azure Kubernetes Service (AKS) Audit](connectors/azure-kubernetes-service.md) | AKSAudit, AKSAuditAdmin | No |
 | [Azure Storage Analytics](connectors/azure-storage-analytics.md) | StorageBlobLogs, StorageFileLogs | No |
-| [Microsoft Defender for DNS (Azure DNS)](connectors/microsoft-defender-for-dns.md) | AzureDiagnostics (DNS), DNSQueryLogs | No |
 | [Windows Forwarded Events (Advanced)](connectors/windows-forwarded-events.md) | WindowsEvent (PowerShell, Sysmon, AppLocker) | No |
 
 ### OT / IoT Security

@@ -238,7 +238,7 @@ Per-event pages on [learn.microsoft.com/windows/security/threat-protection/audit
 | 10.3 | XDR Data Volume Insights KQL | [github.com/mathijsvermaat/DefenderIngestToSentinelKQL](https://github.com/mathijsvermaat/DefenderIngestToSentinelKQL) | [procedures/xdr-data-volume-insights.md](procedures/xdr-data-volume-insights.md) |
 | 10.4 | Archiving / Basic / Retention workbook (Azure-Sentinel) | [github.com/Azure/Azure-Sentinel](https://github.com/Azure/Azure-Sentinel/blob/master/Workbooks/ArchivingBasicLogsRetention.json) | [README.md](README.md), [procedures/retention-insights.md](procedures/retention-insights.md) |
 | 10.5 | Sentinel Health workbook (Azure-Sentinel) | [github.com/Azure/Azure-Sentinel](https://github.com/Azure/Azure-Sentinel/blob/master/Workbooks/SentinelHealth.json) | [connectors/sentinel-health.md](connectors/sentinel-health.md) |
-| 10.6 | Sentinel Maturity Assessment Checklist (HTML) | [mathijsvermaat.github.io](https://mathijsvermaat.github.io/sentinel-maturity-assessment.html) | [README.md](README.md) |
+| 10.6 | Sentinel Maturity Assessment Checklist (HTML, Full + Lite modes) | [mathijsvermaat.github.io](https://mathijsvermaat.github.io/sentinel-maturity-assessment.html) | [README.md](README.md) |
 
 > Section 10 is reserved for **executable / deployable** tools — workbooks, scripts, KQL queries, hosted apps. Configuration baselines, vendor documentation, mindmaps, and reading material belong in section 11 below.
 

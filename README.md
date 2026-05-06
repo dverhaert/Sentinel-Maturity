@@ -2,6 +2,9 @@
 
 A structured approach to Microsoft Sentinel data connector onboarding, retention, and detection rationale for the Dutch Security TS team.
 
+> [!TIP]
+> This maturity model is the **what-to-ingest layer**. It is paired with the [Guidance](guidance/README.md) section that explains **why** each decision is made (risk, retention, cost, compliance), and the interactive [Assessment Checklist](https://mathijsvermaat.github.io/sentinel-maturity-assessment.html) that tracks **how far** an organisation has implemented it. Use the model to define the target, the guidance to justify it, and the assessment to measure progress.
+
 ---
 
 ## Contents
@@ -254,6 +257,11 @@ To help identify retention settings, monitor ingestion volumes, estimate costs, 
 ## Assessment Checklist
 
 Use the interactive [Sentinel Maturity Assessment Checklist](https://mathijsvermaat.github.io/sentinel-maturity-assessment.html) to track progress during a connector onboarding engagement. The checklist covers every Tier 1 connector with per-table checks, retention validation, and configuration items. Each section has a comment field for rationale and notes.
+
+The tool offers two modes, selectable from the header toggle:
+
+- **Full** — every Tier 1/2/3 connector with detailed per-item checks (Setup, Tables, Content Hub, Retention, Validation), per-table tier-change planning (Analytics ↔ Lake) and per-table retention planning, plus a comments field per connector. Use for delivery engagements, formal assessments, and customer hand-off.
+- **Lite** — a focused four-check landing page for quick conversations. Check 2 ("Defender XDR — Per-Table Ingestion") mirrors the same per-table tier and retention planner used in Full mode and feeds the same to-do output (signed GB/day delta + per-tier breakdown). The accepted-risk panel and to-do summary remain visible. Use for intro calls, executive briefings, and demos.
 
 Features: save/load progress (JSON), export to PDF, export to Excel.
 

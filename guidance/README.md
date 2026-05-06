@@ -2,6 +2,9 @@
 
 This section provides the strategic rationale and design principles behind the Sentinel Maturity Model. Before diving into specific data connectors and tables, it is important to understand **why** certain logging decisions are made and what drives retention, prioritisation, and cost trade-offs.
 
+> [!TIP]
+> The guidance below is the **rationale layer** behind the [Sentinel Maturity Model](../README.md) and the interactive [Assessment Checklist](https://mathijsvermaat.github.io/sentinel-maturity-assessment.html). The maturity model defines *what* to ingest per tier, the assessment tracks *how far* an organisation has implemented it, and this guidance explains *why* each decision is made — risk, retention, cost, and compliance. Read the topic that matches the question you are trying to answer; every page ties back to the connector pages and the assessment checks they cover.
+
 ---
 
 ## Topics

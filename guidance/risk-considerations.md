@@ -2,11 +2,17 @@
 
 ## Contents
 
-- [Overview](#overview)
-- [Risk Factors That Influence Logging Decisions](#risk-factors-that-influence-logging-decisions)
-- [Assessing Each Data Source](#assessing-each-data-source)
-- [Key Takeaway](#key-takeaway)
-- [References](#references)
+- [Risk Considerations](#risk-considerations)
+  - [Contents](#contents)
+  - [Overview](#overview)
+  - [Risk Factors That Influence Logging Decisions](#risk-factors-that-influence-logging-decisions)
+  - [Assessing Each Data Source](#assessing-each-data-source)
+    - [Purpose and Use Case](#purpose-and-use-case)
+    - [Prioritisation](#prioritisation)
+    - [Volume Considerations](#volume-considerations)
+    - [Analytical Value](#analytical-value)
+  - [Key Takeaway](#key-takeaway)
+  - [References](#references)
 
 ---
 
@@ -70,7 +76,7 @@ Even high-volume data sources can provide significant analytical value when:
 ## Key Takeaway
 
 > [!NOTE]
-> Logging decisions should be based on the organisation's specific environment and risk profile. While the recommendations in the [Tier 1 Connectors](../README.md#tier-1-connectors-bare-minimum) provide a starting point, it is critical that organisations model their threats and risks and select data sources most relevant to their risk profile.
+> Logging decisions should be based on the organisation's specific environment and risk profile. While the recommendations in the [Tier 1 Connectors](../README.md#tier-1-connectors-foundational--essential-connectors) provide a starting point, it is critical that organisations model their threats and risks and select data sources most relevant to their risk profile.
 
 ---
 

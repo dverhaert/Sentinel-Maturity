@@ -4,7 +4,7 @@ This section contains the detailed guidance for each data connector, organised b
 
 ---
 
-## Tier 1 — Bare Minimum
+## Tier 1 — Foundational — Essential Connectors
 
 Every Microsoft Sentinel deployment should have these connectors enabled.
 

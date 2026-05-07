@@ -15,7 +15,7 @@ A structured approach to Microsoft Sentinel data connector onboarding, retention
   - [Guidance](#guidance)
   - [Procedures](#procedures)
   - [Tier Model](#tier-model)
-  - [Tier 1 Connectors (Bare Minimum)](#tier-1-connectors-bare-minimum)
+  - [Tier 1 Connectors (Foundational — Essential Connectors)](#tier-1-connectors-foundational--essential-connectors)
   - [Tier 2 Connectors (Extended Visibility)](#tier-2-connectors-extended-visibility)
     - [Cloud Security Posture](#cloud-security-posture)
     - [Data Protection \& Governance](#data-protection--governance)
@@ -80,11 +80,11 @@ Step-by-step guides for the operational tools used alongside this maturity model
 
 | Tier | Description | When to adopt |
 |:-----|:------------|:--------------|
-| **[Tier 1](#tier-1-connectors-bare-minimum)** | **Bare minimum** — Essential connectors that every Sentinel deployment should have. Covers identity, endpoint, email, cloud activity, and server logs. | Start here — the foundation for every organisation |
+| **[Tier 1](#tier-1-connectors-foundational--essential-connectors)** | **Foundational** — Essential connectors that every Sentinel deployment should have. Covers identity, endpoint, email, cloud activity, and server logs. | Start here — the foundation for every organisation |
 | **[Tier 2](#tier-2-connectors-extended-visibility)** | **Extended visibility** — Network security, cloud posture, data protection, multi-cloud, endpoint compliance, and threat intelligence. | Once Tier 1 is operational and the team is ready to broaden coverage |
 | **[Tier 3](#tier-3-connectors-advanced--specialised)** | **Advanced / Specialised** — Full-spectrum monitoring including OT/IoT, CI/CD, SAP, databases, custom applications, and specialised integrations. | When Tier 1 & 2 are in place and specialised workloads require visibility |
 
-## Tier 1 Connectors (Bare Minimum)
+## Tier 1 Connectors (Foundational — Essential Connectors)
 
 | Connector | Key Tables | Licensing Benefit | Free Ingestion |
 |:-----------|:-----------|:------------------|:---------------|

@@ -21,7 +21,7 @@ A separate repo (`mathijsvermaat.github.io`) hosts the assessment HTML checklist
 
 1. **Never commit or push** unless explicitly asked.
 2. **Never create markdown files to document changes** unless explicitly requested.
-3. **Tier model is strict**: Tier 1 = bare minimum (every org), Tier 2 = extended visibility, Tier 3 = advanced/specialised.
+3. **Tier model is strict**: Tier 1 = foundational (every org), Tier 2 = extended visibility, Tier 3 = advanced/specialised.
 4. **Retention default**: `Analytics: 90d / Lake: 365d` unless a specific compliance requirement justifies longer.
 5. **Spelling**: Use British English (organisation, defence, behaviour, specialised, etc.).
 6. **File naming**: Lowercase with hyphens (`azure-firewall.md`, not `AzureFirewall.md`).

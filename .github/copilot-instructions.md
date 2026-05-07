@@ -70,6 +70,7 @@ All four locations must stay in sync. Verify after every structural change.
 11. Blogs & community resources — articles, configuration baselines (e.g. Sysmon configs), mindmaps, vendor product documentation (GitHub Docs, etc.) and any non-executable third-party reading material
 12. Standards & frameworks
 13. Sentinel Ninja (reference documentation)
+14. **Admin portals** — Microsoft cloud admin portals (Defender / Entra / Azure / Purview / Intune) and the **cmd.ms** quick-link service (entry 14.6). Each row's "Referenced in" cell must list every connector page that has an `### Admin portal` subsection citing it. When a connector page adds or removes its `### Admin portal` block, update the corresponding 14.x row(s) — and 14.6 if cmd.ms aliases are included.
 
 If a new URL fits none of the above, add a new category at the end with the next number and also add it to the Contents block at the top of `references.md`.
 
@@ -95,7 +96,8 @@ Template: `connectors/_TEMPLATE.md`
 9. **Notes** — Operational guidance bullets
 10. **Tools** — Table: `| Tool | Type | Purpose | Source | Guide |`
 11. **References** — Two subsections: `### Official Documentation` and `### Community & Third-Party Resources`
-12. **Footer** — `[← Back to Connectors](README.md) · [← Back to Sentinel Maturity Model](../README.md)`
+12. **Admin portal** *(when the connector has a configurable portal)* — H3 subsection placed after References and before the Footer. Bullet list of admin-portal links (Defender / Entra / Azure / Purview / Intune) with a short note on what to configure. Each portal bullet may carry a sub-bullet `Quick links via [cmd.ms](https://cmd.ms/) (see [References §14.6](../references.md#14-admin-portals))` listing relevant cmd.ms aliases for blade-level deep links. When you add this subsection, also append the connector page to the corresponding §14.x row in `references.md` (and §14.6 if cmd.ms aliases are included).
+13. **Footer** — `[← Back to Connectors](README.md) · [← Back to Sentinel Maturity Model](../README.md)`
 
 ### Optional Sections (insert before Notes if applicable)
 
@@ -180,6 +182,10 @@ Use GitHub-flavoured callouts consistently:
 - `> [!IMPORTANT]` — Critical decision impact
 - `> [!TIP]` — Best practice
 - `> [!WARNING]` — Caution or risk
+
+### cmd.ms quick-links
+
+Community short-link service by Merill Fernando ([cmd.ms](https://cmd.ms/)). When listing portal blade deep-links on a connector page's `### Admin portal` subsection, prefer cmd.ms aliases (e.g. `enca.cmd.ms`, `azkv.cmd.ms`, `defender.cmd.ms`) for human readability. Always keep the canonical Microsoft URL as the primary link; cmd.ms aliases live as a sub-bullet labelled `Quick links via [cmd.ms](https://cmd.ms/) (see [References §14.6](../references.md#14-admin-portals))`. Skip cmd.ms when no precise alias exists for the target blade (e.g. per-resource diagnostic-settings on Azure Firewall, IoT, or Copilot).
 
 ### Tier Conventions in Main README
 

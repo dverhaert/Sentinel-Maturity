@@ -1,6 +1,6 @@
 # Syslog for Linux Servers
 
-**Tier:** 1 (Bare Minimum) · **Connector type:** Microsoft first-party (AMA) · **Free ingestion:** Partial — `LinuxAuditLog` (auditd) is covered by the Defender for Servers P2 pooled allowance; the general `Syslog` table is not
+**Tier:** 1 (Bare Minimum) · **Connector type:** Microsoft first-party (AMA) · **Free ingestion:** None — neither `LinuxAuditLog` nor the general `Syslog` table is on the Defender for Servers P2 [eligible-tables list](https://learn.microsoft.com/en-us/azure/defender-for-cloud/data-ingestion-benefit); both are billed as regular ingestion
 
 ---
 
@@ -34,12 +34,12 @@ Like Windows Security Events, this connector has moved from the legacy Log Analy
 
 | License | What it unlocks |
 |:--------|:----------------|
-| **[Defender for Servers P2](https://learn.microsoft.com/en-us/azure/defender-for-cloud/data-ingestion-benefit)** | MDE on Linux + pooled 500 MB/day × AMA-covered servers ingestion benefit, applied to **`LinuxAuditLog`** (auditd via AMA) as part of the wider eligible-tables pool. The general **`Syslog`** table is **not** on the eligible list |
+| **[Defender for Servers P2](https://learn.microsoft.com/en-us/azure/defender-for-cloud/data-ingestion-benefit)** | MDE on Linux, vulnerability assessment, file integrity monitoring, and other server-protection features. **No Sentinel data ingestion benefit applies to Linux logging** — neither `LinuxAuditLog` nor the general `Syslog` table is on the [eligible-tables list](https://learn.microsoft.com/en-us/azure/defender-for-cloud/data-ingestion-benefit) |
 | **Defender for Servers P1** | MDE on Linux, but no free data ingestion for Sentinel |
 | **No Defender for Servers** | Full ingestion cost |
 
 > [!NOTE]
-> Only `LinuxAuditLog` (populated by the Linux auditd AMA data source) is covered by the Defender for Servers P2 data ingestion benefit — see the list of [eligible tables](https://learn.microsoft.com/en-us/azure/defender-for-cloud/data-ingestion-benefit). The general `Syslog` table is **not** eligible and is billed at standard ingestion rates. If you want to maximise the P2 benefit on Linux, enable **auditd** collection via an AMA DCR so the data lands in `LinuxAuditLog`; syslog facilities ingested into the `Syslog` table sit outside the pooled allowance.
+> Linux log collection sits **outside** the Defender for Servers P2 500 MB/day pooled allowance. Both the general `Syslog` table and `LinuxAuditLog` are billed at standard ingestion rates — see the canonical [eligible-tables list](https://learn.microsoft.com/en-us/azure/defender-for-cloud/data-ingestion-benefit). Cost control on Linux therefore depends on DCR-side filtering (facility/severity), transformations, and Basic / Auxiliary log tiers — not on the P2 ingestion benefit.
 
 ---
 
@@ -175,7 +175,7 @@ Ensure the Linux server's rsyslog (or syslog-ng) is configured to generate the r
 - For **containers and Kubernetes nodes**, syslog captures host-level events but not container-internal activity — consider Container Insights for Tier 2
 - If you use **CEF-formatted logs** from network appliances forwarded via Linux syslog, these go to the `CommonSecurityLog` table — that's a separate connector consideration
 - For high-security environments, consider deploying **auditd** with STIG-compliant rules and forwarding via syslog (Tier 2/3) — this provides process execution, file access, and syscall monitoring comparable to Windows Security Events
-- Volume is typically much lower than Windows Security Events, but note that the general `Syslog` table is **not** covered by the Defender for Servers P2 pooled allowance — only `LinuxAuditLog` (auditd) is eligible. For cost-sensitive deployments, consider collecting auditd via AMA into `LinuxAuditLog` to benefit from the pooled allowance
+- Volume is typically much lower than Windows Security Events, but note that **neither** the general `Syslog` table **nor** `LinuxAuditLog` is covered by the Defender for Servers P2 pooled allowance — both are billed at standard ingestion rates. For cost-sensitive deployments, rely on DCR filtering (facility/severity), KQL transformations, and Basic / Auxiliary log tiers rather than the P2 benefit
 
 ### Why Layered Logging Matters for Linux Servers
 
@@ -192,7 +192,7 @@ Just as with Windows, relying solely on EDR for Linux server security leaves gap
 
 | Tool | Type | Purpose | Source | Guide |
 |:-----|:-----|:--------|:-------|:------|
-| **Workspace Usage Report** | Workbook | Monitor `Syslog` and `LinuxAuditLog` ingestion volumes per server and validate the P2 ingestion benefit (only `LinuxAuditLog` counts against the allowance) | Sentinel Content Hub | [Walkthrough](../procedures/workspace-usage-report.md) |
+| **Workspace Usage Report** | Workbook | Monitor `Syslog` and `LinuxAuditLog` ingestion volumes per server (note: neither table is covered by the Defender for Servers P2 pooled allowance — both are billed as regular ingestion) | Sentinel Content Hub | [Walkthrough](../procedures/workspace-usage-report.md) |
 | **Defender AMA Coverage** | Workbook | Validate AMA agent deployment and Syslog collection coverage on Linux servers | [GitHub — mathijsvermaat/Defender-AMA-coverage](https://github.com/mathijsvermaat/Defender-AMA-coverage) | [Walkthrough](../procedures/defender-ama-coverage.md) · [Blog](https://www.linkedin.com/pulse/closing-telemetry-gap-how-we-built-kql-query-workbook-mathijs-vermaat-rzfbe/) |
 | **SOC Handbook** | Solution | Identity & Access workbook, Investigation Insights workbook, MITRE ATT&CK workbook — Syslog authentication events feed identity-based detections | Sentinel Content Hub | — |
 

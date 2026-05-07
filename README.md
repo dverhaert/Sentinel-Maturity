@@ -92,7 +92,7 @@ Step-by-step guides for the operational tools used alongside this maturity model
 | [Microsoft Entra ID](connectors/microsoft-entra-id.md) | SigninLogs, AuditLogs, AADNonInteractiveUserSignInLogs, AADRiskyUsers, AADRiskyServicePrincipals, ... | Entra ID P2 (in E5) | Yes — [free data connectors](https://learn.microsoft.com/en-us/azure/sentinel/billing?tabs=simplified%2Ccommitment-tiers#free-data-sources) |
 | [Office 365](connectors/office-365.md) | OfficeActivity | M365 E3/E5 | Yes — free data connector |
 | [Azure Activity Logs](connectors/azure-activity-logs.md) | AzureActivity | Any Azure subscription | Yes — free data connector |
-| [Windows Security Events](connectors/windows-security-events.md) | SecurityEvent / WindowsEvent | [Defender for Servers P2](https://learn.microsoft.com/en-us/azure/defender-for-cloud/data-ingestion-benefit) | [Pooled 500 MB/day × AMA-covered servers](https://learn.microsoft.com/en-us/azure/defender-for-cloud/data-ingestion-benefit) via Defender for Servers P2 (SecurityEvent stream only) |
+| [Windows Security Events](connectors/windows-security-events.md) | SecurityEvent / WindowsEvent | [Defender for Servers P2](https://learn.microsoft.com/en-us/azure/defender-for-cloud/data-ingestion-benefit) | [Pooled 500 MB/day × Defender for Servers P2-licensed servers](https://learn.microsoft.com/en-us/azure/defender-for-cloud/data-ingestion-benefit) via Defender for Servers P2 (SecurityEvent stream only) |
 | [Syslog for Linux](connectors/syslog-linux.md) | Syslog | None | None |
 | [Sentinel Health & Audit Diagnostics](connectors/sentinel-health.md) | SentinelHealth, SentinelAudit | Any Sentinel workspace | Yes — SentinelHealth is not billable |
 

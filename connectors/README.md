@@ -14,8 +14,8 @@ Every Microsoft Sentinel deployment should have these connectors enabled.
 | [Microsoft Entra ID](microsoft-entra-id.md) | Authentication, directory changes, identity risk events | Yes — free data source |
 | [Office 365](office-365.md) | Exchange, SharePoint, and Teams audit activity | Yes — free data source |
 | [Azure Activity Logs](azure-activity-logs.md) | Azure control plane operations across all subscriptions | Yes — free data source |
-| [Windows Security Events](windows-security-events.md) | Windows server authentication, process, and account management events | Pooled 500 MB/day × AMA-covered servers via Defender for Servers P2 (SecurityEvent stream) |
-| [Syslog for Linux](syslog-linux.md) | Linux server authentication and system logging | Partial — `LinuxAuditLog` (auditd) is covered by the Defender for Servers P2 pooled allowance; the general `Syslog` table is not |
+| [Windows Security Events](windows-security-events.md) | Windows server authentication, process, and account management events | Pooled 500 MB/day × Defender for Servers P2-licensed servers (SecurityEvent stream) |
+| [Syslog for Linux](syslog-linux.md) | Linux server authentication and system logging | None — neither `LinuxAuditLog` nor the general `Syslog` table is on the Defender for Servers P2 eligible-tables list |
 | [Sentinel Health & Audit Diagnostics](sentinel-health.md) | Data connector health, analytics rule execution, automation monitoring, rule change auditing | Yes — SentinelHealth is not billable |
 
 ---

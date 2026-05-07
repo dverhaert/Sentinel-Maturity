@@ -32,7 +32,7 @@ The Microsoft Defender XDR connector ingests advanced hunting data from Microsof
 > The E5 security data grant covers ingestion of Defender XDR advanced hunting tables into the Sentinel **Analytics tier** at no additional cost. Ingesting directly to the Sentinel Data Lake (Lake) does **not** qualify for the free grant. See [Microsoft Sentinel benefit for M365 E5 customers](https://azure.microsoft.com/en-us/pricing/offers/sentinel-microsoft-365-offer) for details.
 
 > [!IMPORTANT]
-> Defender for Servers P2 provides a [500 MB/day ingestion benefit](https://learn.microsoft.com/en-us/azure/defender-for-cloud/data-ingestion-benefit) for specific security data types (SecurityEvent, Syslog, etc.) but this does **not** apply to Defender XDR advanced hunting tables.
+> Defender for Servers P2 provides a [500 MB/day ingestion benefit](https://learn.microsoft.com/en-us/azure/defender-for-cloud/data-ingestion-benefit) for specific security data types (`SecurityEvent`, the `Microsoft-SecurityEvent` `WindowsEvent` stream, `SecurityAlert`, `WindowsFirewall`, `ProtectionStatus`, etc.) but this does **not** apply to Defender XDR advanced hunting tables.
 
 ---
 

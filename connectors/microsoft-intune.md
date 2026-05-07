@@ -103,6 +103,11 @@ This connector bridges endpoint **management** (Intune) with endpoint **detectio
 | Send Intune log data to Azure Storage, Event Hubs, or Log Analytics | Setup guide for routing Intune audit, operational, device, and compliance logs to Log Analytics via Intune Diagnostics settings | [learn.microsoft.com](https://learn.microsoft.com/intune/intune-service/fundamentals/review-logs-using-azure-monitor) |
 | Microsoft Sentinel pricing — Free data sources | Authoritative list of Sentinel free data sources (Intune tables are not included) | [learn.microsoft.com](https://learn.microsoft.com/azure/sentinel/billing#free-data-sources) |
 
+### Admin portal
+
+- [Microsoft Intune admin centre](https://intune.microsoft.com/) — configure Intune diagnostic settings (`Tenant administration → Diagnostic settings`) to send audit / operational / device / compliance logs to Log Analytics.
+  - Quick links via [cmd.ms](https://cmd.ms/) (see [References §14.6](../references.md#14-admin-portals)): [`in.cmd.ms`](https://in.cmd.ms/) (Intune root), [`indevices.cmd.ms`](https://indevices.cmd.ms/) (Devices), [`intenant.cmd.ms`](https://intenant.cmd.ms/) (Tenant admin).
+
 ### Community & Third-Party Resources
 
 | Title | Author | Description | Link |

@@ -164,6 +164,11 @@ Microsoft.Insights/diagnosticSettings — deployIfNotExists
 | Connect Azure Firewall to Microsoft Sentinel | Connector setup guide — resource-specific diagnostic settings for structured logs | [learn.microsoft.com](https://learn.microsoft.com/en-us/azure/sentinel/data-connectors/azure-firewall) |
 | Azure Firewall structured logs | Schema reference for all resource-specific log tables | [learn.microsoft.com](https://learn.microsoft.com/en-us/azure/firewall/firewall-structured-logs) |
 
+### Admin portal
+
+- [Microsoft Azure portal](https://portal.azure.com/) — configure Azure Firewall diagnostic settings (use **resource-specific** mode for `AZFW*` tables, not legacy `AzureDiagnostics`).
+  - Quick link via [cmd.ms](https://cmd.ms/) (see [References §14.6](../references.md#14-admin-portals)): [`azfwmg.cmd.ms`](https://azfwmg.cmd.ms/) (Azure Firewall Manager).
+
 ### Community & Third-Party Resources
 
 | Title | Author | Description | Link |

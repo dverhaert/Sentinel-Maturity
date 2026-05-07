@@ -139,6 +139,11 @@ DNS logs are **high-volume**. Strategies to manage cost:
 | Connect your DNS servers to Microsoft Sentinel | Connector setup guide — Windows DNS Events via AMA | [learn.microsoft.com](https://learn.microsoft.com/en-us/azure/sentinel/data-connectors/dns) |
 | Windows DNS Events via AMA (Sentinel data connectors reference) | Official Sentinel data connector entry — `ASimDnsActivityLogs` table and ASIM normalisation | [learn.microsoft.com](https://learn.microsoft.com/azure/sentinel/data-connectors-reference#windows-dns-events-via-ama) |
 
+### Admin portal
+
+- [Microsoft Azure portal](https://portal.azure.com/) — configure Azure Private DNS / DNS Resolver diagnostic settings to route queries into `AzureDiagnostics`.
+  - Quick link via [cmd.ms](https://cmd.ms/) (see [References §14.6](../references.md#14-admin-portals)): [`azdns.cmd.ms`](https://azdns.cmd.ms/) (DNS zones).
+
 ### Community & Third-Party Resources
 
 | Title | Author | Description | Link |

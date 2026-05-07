@@ -166,6 +166,11 @@ This ensures new subscriptions are automatically connected to your Sentinel work
 | Azure Activity log event schema | Schema reference for all Azure Activity log categories | [learn.microsoft.com](https://learn.microsoft.com/en-us/azure/azure-monitor/essentials/activity-log-schema) |
 | Create diagnostic settings at scale with built-in Azure Policy | Built-in policies to enforce diagnostic settings on resources across a subscription or management group — list of supported resource types and example deployment | [learn.microsoft.com](https://learn.microsoft.com/azure/azure-monitor/platform/diagnostic-settings-policy-built-in) |
 
+### Admin portal
+
+- [Microsoft Azure portal](https://portal.azure.com/) — configure subscription-level Activity log diagnostic settings (`Subscriptions → Activity log → Export Activity Logs`) and use Azure Policy to deploy the diagnostic setting at scale.
+  - Quick links via [cmd.ms](https://cmd.ms/) (see [References §14.6](../references.md#14-admin-portals)): [`azsubs.cmd.ms`](https://azsubs.cmd.ms/) (Subscriptions), [`azmonitor.cmd.ms`](https://azmonitor.cmd.ms/) (Monitor), [`azpolicy.cmd.ms`](https://azpolicy.cmd.ms/) (Azure Policy).
+
 ### Community & Third-Party Resources
 
 | Title | Author | Description | Link |

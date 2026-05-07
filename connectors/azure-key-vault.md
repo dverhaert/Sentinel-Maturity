@@ -131,6 +131,11 @@ If you have Defender for Key Vault enabled, anomalous access alerts (unusual IP,
 | Connect Azure Key Vault to Microsoft Sentinel | Connector setup guide — diagnostic settings for key, secret, and certificate audit events | [learn.microsoft.com](https://learn.microsoft.com/en-us/azure/sentinel/data-connectors/azure-key-vault) |
 | Azure Key Vault logging | Overview of Key Vault diagnostic logging and log categories | [learn.microsoft.com](https://learn.microsoft.com/en-us/azure/key-vault/general/logging) |
 
+### Admin portal
+
+- [Microsoft Azure portal](https://portal.azure.com/) — configure Key Vault diagnostic settings (use **resource-specific** mode to route to `AKVAuditLogs`, not legacy `AzureDiagnostics`).
+  - Quick link via [cmd.ms](https://cmd.ms/) (see [References §14.6](../references.md#14-admin-portals)): [`azkv.cmd.ms`](https://azkv.cmd.ms/) (Key Vaults).
+
 ### Community & Third-Party Resources
 
 | Title | Author | Description | Link |

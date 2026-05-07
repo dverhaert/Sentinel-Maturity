@@ -129,6 +129,11 @@ Ensure your WAF policy uses **CRS 3.2** or later. Older CRS versions generate mo
 | Connect Azure WAF to Microsoft Sentinel | Connector setup guide — Application Gateway and Front Door diagnostic settings | [learn.microsoft.com](https://learn.microsoft.com/en-us/azure/sentinel/data-connectors/azure-web-application-firewall) |
 | Azure WAF monitoring and logging | Diagnostic logs, metrics, and best practices for Azure WAF | [learn.microsoft.com](https://learn.microsoft.com/en-us/azure/web-application-firewall/ag/application-gateway-waf-metrics) |
 
+### Admin portal
+
+- [Microsoft Azure portal](https://portal.azure.com/) — configure Application Gateway / Front Door WAF diagnostic settings to route logs to Log Analytics (`AzureDiagnostics` today; resource-specific tables where available).
+  - Quick links via [cmd.ms](https://cmd.ms/) (see [References §14.6](../references.md#14-admin-portals)): [`azwaf.cmd.ms`](https://azwaf.cmd.ms/) (WAF policies), [`azappgw.cmd.ms`](https://azappgw.cmd.ms/) (Application Gateways), [`azfdcdn.cmd.ms`](https://azfdcdn.cmd.ms/) (Azure Front Door & CDN).
+
 ### Community & Third-Party Resources
 
 | Title | Author | Description | Link |

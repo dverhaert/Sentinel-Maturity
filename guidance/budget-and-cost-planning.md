@@ -2,12 +2,20 @@
 
 ## Contents
 
-- [Overview](#overview)
-- [Cost Awareness Over Time](#cost-awareness-over-time)
-- [Budget Models](#budget-models)
-- [Microsoft Sentinel Cost Optimisation](#microsoft-sentinel-cost-optimisation)
-- [Key Takeaway](#key-takeaway)
-- [References](#references)
+- [Budget and Cost Planning](#budget-and-cost-planning)
+  - [Contents](#contents)
+  - [Overview](#overview)
+  - [Cost Awareness Over Time](#cost-awareness-over-time)
+  - [Budget Models](#budget-models)
+    - [Dedicated SOC Budget (Recommended)](#dedicated-soc-budget-recommended)
+    - [Fee-for-Service / "Tax" Model (Not Recommended)](#fee-for-service--tax-model-not-recommended)
+    - [Hybrid: Project-Funded Initial Deployment](#hybrid-project-funded-initial-deployment)
+  - [Microsoft Sentinel Cost Optimisation](#microsoft-sentinel-cost-optimisation)
+    - [Pricing Tiers](#pricing-tiers)
+    - [Cost Reduction Strategies](#cost-reduction-strategies)
+    - [Monitoring and Reporting](#monitoring-and-reporting)
+  - [Key Takeaway](#key-takeaway)
+  - [References](#references)
 
 ---
 
@@ -87,6 +95,13 @@ Use the **Workspace Usage Report** workbook (available in [Sentinel Content Hub]
 - Identify cost optimisation opportunities
 - Validate data connector health
 - Track volume trends over time to inform budget planning
+
+Complementary cost / efficiency workbooks shipped via the Azure-Sentinel repo:
+
+- **Microsoft Sentinel Cost** workbook — commitment-tier modelling, retention costing, free-tier credits ([source](https://github.com/Azure/Azure-Sentinel/blob/master/Workbooks/AzureSentinelCost.json), part of the [SOC Handbook](https://github.com/Azure/Azure-Sentinel/tree/master/Solutions/SOC%20Handbook) solution).
+- **Microsoft Sentinel Optimization** workbook — surfaces SOC-optimisation recommendations (also available as the built-in [SOC optimisation](https://learn.microsoft.com/en-us/azure/sentinel/soc-optimization/soc-optimization-access) feature in the Defender portal) ([source](https://github.com/Azure/Azure-Sentinel/blob/master/Workbooks/OptimizationWorkbook.json)).
+
+For the Defender for Servers P2 ingestion benefit, use the [Defender for Servers P2 Count](https://github.com/mathijsvermaat/DefenderForServersP2Count) KQL to enumerate covered servers across your subscriptions — multiply the count by 500 MB/day to size the pooled allowance against actual ingestion.
 
 > [!TIP]
 > Regularly review the Workspace Usage Report to catch unexpected volume spikes early. A single misconfigured diagnostic setting or verbose audit policy can significantly increase ingestion costs.

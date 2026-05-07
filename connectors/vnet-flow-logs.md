@@ -152,6 +152,11 @@ VNet Flow Logs capture traffic at the VNet level including gateway traffic, whic
 | Traffic Analytics overview | How Traffic Analytics processes flow logs into NTANetAnalytics for Sentinel | [learn.microsoft.com](https://learn.microsoft.com/en-us/azure/network-watcher/traffic-analytics) |
 | NSG flow logs (legacy) | Reference for the legacy NSG flow logs product being retired on 30 September 2027 — included for brownfield deployments that have not yet migrated | [learn.microsoft.com](https://learn.microsoft.com/en-us/azure/network-watcher/nsg-flow-logs-overview) |
 
+### Admin portal
+
+- [Microsoft Azure portal](https://portal.azure.com/) — enable VNet flow logs on Network Watcher and configure ingestion into the workspace.
+  - Quick links via [cmd.ms](https://cmd.ms/) (see [References §14.6](../references.md#14-admin-portals)): [`azvn.cmd.ms`](https://azvn.cmd.ms/) (Virtual networks), [`aznwatch.cmd.ms`](https://aznwatch.cmd.ms/) (Network Watcher).
+
 ### Community & Third-Party Resources
 
 | Title | Author | Description | Link |

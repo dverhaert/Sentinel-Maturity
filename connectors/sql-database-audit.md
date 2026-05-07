@@ -6,14 +6,18 @@
 
 ## Contents
 
-- [Overview](#overview)
-- [Tables and Rationale](#tables-and-rationale)
-- [Example Detections](#example-detections)
-- [MCSB Control Mapping](#mcsb-control-mapping)
-- [Important Considerations](#important-considerations)
-- [Notes](#notes)
-- [Tools](#tools)
-- [References](#references)
+- [SQL / Database Audit Logs](#sql--database-audit-logs)
+  - [Contents](#contents)
+  - [Overview](#overview)
+    - [Licensing Benefits](#licensing-benefits)
+  - [Tables and Rationale](#tables-and-rationale)
+  - [Example Detections](#example-detections)
+  - [MCSB Control Mapping](#mcsb-control-mapping)
+  - [Important Considerations](#important-considerations)
+  - [Notes](#notes)
+    - [Tools](#tools)
+  - [References](#references)
+    - [Admin portal](#admin-portal)
 
 ---
 
@@ -102,5 +106,10 @@ For organisations with databases containing sensitive data (PII, financial recor
 | Cosmos DB diagnostic logging | [Learn](https://learn.microsoft.com/en-us/azure/cosmos-db/monitor-resource-logs) |
 
 ---
+
+### Admin portal
+
+- [Microsoft Azure portal](https://portal.azure.com/) — enable SQL Database / Managed Instance auditing and route audit logs to Log Analytics.
+  - Quick links via [cmd.ms](https://cmd.ms/) (see [References §14.6](../references.md#14-admin-portals)): [`azsql.cmd.ms`](https://azsql.cmd.ms/) (SQL servers), [`azsqldb.cmd.ms`](https://azsqldb.cmd.ms/) (SQL databases), [`azsqlmi.cmd.ms`](https://azsqlmi.cmd.ms/) (SQL managed instances).
 
 [← Back to Connectors](README.md) · [← Back to Sentinel Maturity Model](../README.md)

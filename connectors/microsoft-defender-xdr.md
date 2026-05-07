@@ -195,6 +195,11 @@ If you have **not** enabled the Defender XDR connector in Sentinel, there is no 
 | Microsoft Defender XDR integration with Microsoft Sentinel | Architecture overview of the XDR-Sentinel integration | [learn.microsoft.com](https://learn.microsoft.com/en-us/azure/sentinel/microsoft-365-defender-sentinel-integration) |
 | Advanced hunting schema reference | Table-by-table schema documentation for all Defender XDR advanced hunting tables (DeviceEvents, EmailEvents, IdentityLogonEvents, etc.) | [learn.microsoft.com](https://learn.microsoft.com/defender-xdr/advanced-hunting-schema-tables) |
 
+### Admin portal
+
+- [Microsoft Defender portal](https://security.microsoft.com/) — enable the Sentinel data connector for Defender XDR, run Advanced Hunting, and configure Lake-tier ingestion for advanced-hunting tables.
+  - Quick links via [cmd.ms](https://cmd.ms/) (see [References §14.6](../references.md#14-admin-portals)): [`defender.cmd.ms`](https://defender.cmd.ms/) (Defender root), [`th.cmd.ms`](https://th.cmd.ms/) (Threat Hunting), [`xdranalytics.cmd.ms`](https://xdranalytics.cmd.ms/) (Analytic rules), [`desettings.cmd.ms`](https://desettings.cmd.ms/) (Defender settings).
+
 ### Community & Third-Party Resources
 
 | Title | Author | Description | Link |

@@ -106,4 +106,9 @@ For organisations storing sensitive documents, backups, application data, or dat
 
 ---
 
+### Admin portal
+
+- [Microsoft Azure portal](https://portal.azure.com/) — configure Storage account diagnostic settings (use **resource-specific** mode to route to `StorageBlobLogs` etc., not legacy `AzureDiagnostics`).
+  - Quick link via [cmd.ms](https://cmd.ms/) (see [References §14.6](../references.md#14-admin-portals)): [`azsa.cmd.ms`](https://azsa.cmd.ms/) (Storage accounts).
+
 [← Back to Connectors](README.md) · [← Back to Sentinel Maturity Model](../README.md)

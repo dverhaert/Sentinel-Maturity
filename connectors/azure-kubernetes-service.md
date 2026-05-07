@@ -104,4 +104,9 @@ While Azure Activity Logs (Tier 1) capture AKS cluster-level operations (create,
 
 ---
 
+### Admin portal
+
+- [Microsoft Azure portal](https://portal.azure.com/) — enable AKS diagnostic settings (use **resource-specific** mode for `AKSAudit` / `AKSAuditAdmin`, not legacy `AzureDiagnostics`).
+  - Quick link via [cmd.ms](https://cmd.ms/) (see [References §14.6](../references.md#14-admin-portals)): [`azaks.cmd.ms`](https://azaks.cmd.ms/) (Kubernetes services).
+
 [← Back to Connectors](README.md) · [← Back to Sentinel Maturity Model](../README.md)

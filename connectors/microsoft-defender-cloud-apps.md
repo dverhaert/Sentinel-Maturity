@@ -107,4 +107,9 @@ This connector is most valuable for organisations that need visibility into unsa
 
 ---
 
+### Admin portal
+
+- [Microsoft Defender portal](https://security.microsoft.com/) — manage Defender for Cloud Apps policies, app governance, and review activity that flows to Sentinel.
+  - Quick links via [cmd.ms](https://cmd.ms/) (see [References §14.6](../references.md#14-admin-portals)): [`deca.cmd.ms`](https://deca.cmd.ms/) (Defender for Cloud Apps), [`decacat.cmd.ms`](https://decacat.cmd.ms/) (Cloud app catalog), [`decaoauth.cmd.ms`](https://decaoauth.cmd.ms/) (OAuth apps).
+
 [← Back to Connectors](README.md) · [← Back to Sentinel Maturity Model](../README.md)

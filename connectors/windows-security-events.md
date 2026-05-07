@@ -279,6 +279,9 @@ Apply **All Events** to a targeted set of high-value servers (domain controllers
 > [!NOTE]
 > The P2 benefit of 500 MB/day is per server and covers **all qualifying security data types** combined (SecurityEvent, Syslog, and others) — not 500 MB per data type. If a server also sends Syslog or other security data, that counts against the same allowance. See the [data ingestion benefit documentation](https://learn.microsoft.com/en-us/azure/defender-for-cloud/data-ingestion-benefit) for the full list of qualifying tables.
 
+> [!TIP]
+> To validate the size of your pooled allowance, use the [Defender for Servers P2 Count](https://github.com/mathijsvermaat/DefenderForServersP2Count) PowerShell script. It enumerates the servers currently covered by the P2 plan across your subscriptions so you can multiply the count by 500 MB to reconcile actual ingestion against the benefit.
+
 ### Why Layered Logging Matters for Windows Servers
 
 EDR solutions like Microsoft Defender for Endpoint are powerful but **should not be your only detection source**. Windows Security Events provide an independent, authoritative audit trail that persists even if EDR is tampered with or bypassed.

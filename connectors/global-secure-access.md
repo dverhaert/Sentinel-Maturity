@@ -139,6 +139,10 @@ They are complementary, not redundant. GSA logs have identity context; Azure Fir
 | Global Secure Access enriched Microsoft 365 logs | How Entra Internet/Private Access enriches M365 traffic logs for Sentinel | [learn.microsoft.com](https://learn.microsoft.com/en-us/entra/global-secure-access/how-to-view-enriched-logs) |
 | Integrate Global Secure Access with Microsoft Sentinel | Step-by-step guide for connecting GSA diagnostic settings to Sentinel | [learn.microsoft.com](https://learn.microsoft.com/en-us/entra/global-secure-access/how-to-sentinel-integration) |
 
+### Admin portal
+
+- [Microsoft Entra admin centre](https://entra.microsoft.com/) — enable Global Secure Access diagnostic settings (`Global Secure Access → Logs and Reporting → Diagnostic settings`).
+
 ### Community & Third-Party Resources
 
 | Title | Author | Description | Link |

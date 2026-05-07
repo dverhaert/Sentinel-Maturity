@@ -23,6 +23,7 @@ This page is kept in sync via the repository's Copilot instructions: whenever a 
   - [11. Blogs \& community resources](#11-blogs--community-resources)
   - [12. Standards \& frameworks](#12-standards--frameworks)
   - [13. Sentinel Ninja (reference documentation)](#13-sentinel-ninja-reference-documentation)
+  - [14. Admin portals](#14-admin-portals)
 
 ---
 
@@ -226,8 +227,7 @@ Per-event pages on [learn.microsoft.com/windows/security/threat-protection/audit
 | - | ----- | --- | ------------- |
 | 9.1 | Microsoft Sentinel benefit for Microsoft 365 E5 customers | [azure.microsoft.com](https://azure.microsoft.com/en-us/pricing/offers/sentinel-microsoft-365-offer) | [README.md](README.md), [connectors/README.md](connectors/README.md), [connectors/microsoft-defender-xdr.md](connectors/microsoft-defender-xdr.md), [guidance/budget-and-cost-planning.md](guidance/budget-and-cost-planning.md) |
 | 9.2 | Azure Pricing Calculator | [azure.microsoft.com](https://azure.microsoft.com/pricing/calculator/) | [procedures/retention-insights.md](procedures/retention-insights.md) |
-| 9.3 | Microsoft Defender portal (security.microsoft.com) | [security.microsoft.com](https://security.microsoft.com/) | [procedures/defender-ama-coverage.md](procedures/defender-ama-coverage.md), [procedures/xdr-data-volume-insights.md](procedures/xdr-data-volume-insights.md) |
-| 9.4 | Azure Marketplace — Microsoft Sentinel for GitHub solution | [azuremarketplace.microsoft.com](https://azuremarketplace.microsoft.com/en-us/marketplace/apps/microsoftcorporation1702511680606.sentinel4github) | [connectors/github-enterprise.md](connectors/github-enterprise.md) |
+| 9.3 | Azure Marketplace — Microsoft Sentinel for GitHub solution | [azuremarketplace.microsoft.com](https://azuremarketplace.microsoft.com/en-us/marketplace/apps/microsoftcorporation1702511680606.sentinel4github) | [connectors/github-enterprise.md](connectors/github-enterprise.md) |
 
 ---
 
@@ -241,6 +241,12 @@ Per-event pages on [learn.microsoft.com/windows/security/threat-protection/audit
 | 10.4 | Archiving / Basic / Retention workbook (Azure-Sentinel) | [github.com/Azure/Azure-Sentinel](https://github.com/Azure/Azure-Sentinel/blob/master/Workbooks/ArchivingBasicLogsRetention.json) | [README.md](README.md), [procedures/retention-insights.md](procedures/retention-insights.md) |
 | 10.5 | Sentinel Health workbook (Azure-Sentinel) | [github.com/Azure/Azure-Sentinel](https://github.com/Azure/Azure-Sentinel/blob/master/Workbooks/SentinelHealth.json) | [connectors/sentinel-health.md](connectors/sentinel-health.md) |
 | 10.6 | Sentinel Maturity Assessment Checklist (HTML, Full + Lite modes) | [mathijsvermaat.github.io](https://mathijsvermaat.github.io/sentinel-maturity-assessment.html) | [README.md](README.md) |
+| 10.7 | Defender for Servers P2 Count (PowerShell) | [github.com/mathijsvermaat/DefenderForServersP2Count](https://github.com/mathijsvermaat/DefenderForServersP2Count) | [guidance/budget-and-cost-planning.md](guidance/budget-and-cost-planning.md), [connectors/windows-security-events.md](connectors/windows-security-events.md) |
+| 10.8 | Azure Activity Log Sentinel Audit (PowerShell) | [github.com/mathijsvermaat/azure-activity-log-sentinel-audit](https://github.com/mathijsvermaat/azure-activity-log-sentinel-audit) | [connectors/azure-activity-logs.md](connectors/azure-activity-logs.md) |
+| 10.9 | Analytics Health & Audit workbook (Azure-Sentinel) | [github.com/Azure/Azure-Sentinel](https://github.com/Azure/Azure-Sentinel/blob/master/Workbooks/AnalyticsHealthAudit.json) | [connectors/sentinel-health.md](connectors/sentinel-health.md) |
+| 10.10 | Microsoft Sentinel Cost workbook (Azure-Sentinel) | [github.com/Azure/Azure-Sentinel](https://github.com/Azure/Azure-Sentinel/blob/master/Workbooks/AzureSentinelCost.json) | [guidance/budget-and-cost-planning.md](guidance/budget-and-cost-planning.md) |
+| 10.11 | Microsoft Sentinel Optimization workbook (Azure-Sentinel) | [github.com/Azure/Azure-Sentinel](https://github.com/Azure/Azure-Sentinel/blob/master/Workbooks/OptimizationWorkbook.json) | [guidance/budget-and-cost-planning.md](guidance/budget-and-cost-planning.md) |
+| 10.12 | Workspace Usage Report workbook (Azure-Sentinel) | [github.com/Azure/Azure-Sentinel](https://github.com/Azure/Azure-Sentinel/blob/master/Workbooks/WorkspaceUsage.json) | [guidance/budget-and-cost-planning.md](guidance/budget-and-cost-planning.md), [procedures/workspace-usage-report.md](procedures/workspace-usage-report.md) |
 
 > Section 10 is reserved for **executable / deployable** tools — workbooks, scripts, KQL queries, hosted apps. Configuration baselines, vendor documentation, mindmaps, and reading material belong in section 11 below.
 
@@ -321,6 +327,23 @@ Auto-generated Sentinel solutions / connectors / tables reference by **Ofer Shez
 | 13.19 | Azure NSG connector | [github.com](https://github.com/oshezaf/sentinelninja/blob/main/Solutions%20Docs/connectors/azurensg.md) | [connectors/vnet-flow-logs.md](connectors/vnet-flow-logs.md) |
 | 13.20 | Windows Security Events connector | [github.com](https://github.com/oshezaf/sentinelninja/blob/main/Solutions%20Docs/connectors/windowssecurityevents.md) | [connectors/windows-security-events.md](connectors/windows-security-events.md) |
 | 13.21 | SentinelHealth table | [github.com](https://github.com/oshezaf/sentinelninja/blob/main/Solutions%20Docs/tables/sentinelhealth.md) | [connectors/sentinel-health.md](connectors/sentinel-health.md) |
+
+---
+
+## 14. Admin portals
+
+Web portals used to configure data connectors, diagnostic settings, and supporting Microsoft cloud services that feed Sentinel. Several connector pages also list **cmd.ms** quick-link aliases — community-maintained address-bar shortcuts that redirect to specific Microsoft cloud admin blades (e.g. typing `enca.cmd.ms` opens Entra Conditional Access). Sourced from [cmd.ms](https://cmd.ms/) by Merill Fernando (see entry 14.6).
+
+| # | Title | URL | Referenced in |
+| - | ----- | --- | ------------- |
+| 14.1 | Microsoft Defender portal | [security.microsoft.com](https://security.microsoft.com/) | [procedures/defender-ama-coverage.md](procedures/defender-ama-coverage.md), [procedures/xdr-data-volume-insights.md](procedures/xdr-data-volume-insights.md), [connectors/microsoft-defender-xdr.md](connectors/microsoft-defender-xdr.md), [connectors/microsoft-defender-for-cloud.md](connectors/microsoft-defender-for-cloud.md), [connectors/microsoft-defender-cloud-apps.md](connectors/microsoft-defender-cloud-apps.md), [connectors/microsoft-defender-for-iot.md](connectors/microsoft-defender-for-iot.md), [connectors/copilot-ai-governance.md](connectors/copilot-ai-governance.md), [connectors/sentinel-health.md](connectors/sentinel-health.md) |
+| 14.2 | Microsoft Entra admin centre | [entra.microsoft.com](https://entra.microsoft.com/) | [connectors/microsoft-entra-id.md](connectors/microsoft-entra-id.md), [connectors/global-secure-access.md](connectors/global-secure-access.md) |
+| 14.3 | Microsoft Azure portal | [portal.azure.com](https://portal.azure.com/) | [connectors/azure-activity-logs.md](connectors/azure-activity-logs.md), [connectors/azure-firewall.md](connectors/azure-firewall.md), [connectors/azure-key-vault.md](connectors/azure-key-vault.md), [connectors/azure-storage-account.md](connectors/azure-storage-account.md), [connectors/azure-waf.md](connectors/azure-waf.md), [connectors/azure-kubernetes-service.md](connectors/azure-kubernetes-service.md), [connectors/azure-devops.md](connectors/azure-devops.md), [connectors/dns-security-logs.md](connectors/dns-security-logs.md), [connectors/vnet-flow-logs.md](connectors/vnet-flow-logs.md), [connectors/sql-database-audit.md](connectors/sql-database-audit.md), [connectors/copilot-ai-governance.md](connectors/copilot-ai-governance.md), [connectors/sentinel-health.md](connectors/sentinel-health.md), [connectors/microsoft-defender-for-cloud.md](connectors/microsoft-defender-for-cloud.md) |
+| 14.4 | Microsoft Purview portal | [purview.microsoft.com](https://purview.microsoft.com/) | [connectors/microsoft-purview-data-map.md](connectors/microsoft-purview-data-map.md), [connectors/microsoft-purview-information-protection.md](connectors/microsoft-purview-information-protection.md) |
+| 14.5 | Microsoft Intune admin centre | [intune.microsoft.com](https://intune.microsoft.com/) | [connectors/microsoft-intune.md](connectors/microsoft-intune.md) |
+| 14.6 | cmd.ms — Microsoft Cloud command line | [cmd.ms](https://cmd.ms/) | [connectors/microsoft-entra-id.md](connectors/microsoft-entra-id.md), [connectors/microsoft-intune.md](connectors/microsoft-intune.md), [connectors/microsoft-defender-xdr.md](connectors/microsoft-defender-xdr.md), [connectors/microsoft-defender-for-cloud.md](connectors/microsoft-defender-for-cloud.md), [connectors/microsoft-defender-cloud-apps.md](connectors/microsoft-defender-cloud-apps.md), [connectors/microsoft-purview-data-map.md](connectors/microsoft-purview-data-map.md), [connectors/microsoft-purview-information-protection.md](connectors/microsoft-purview-information-protection.md), [connectors/sentinel-health.md](connectors/sentinel-health.md), [connectors/azure-activity-logs.md](connectors/azure-activity-logs.md), [connectors/azure-firewall.md](connectors/azure-firewall.md), [connectors/azure-key-vault.md](connectors/azure-key-vault.md), [connectors/azure-storage-account.md](connectors/azure-storage-account.md), [connectors/azure-waf.md](connectors/azure-waf.md), [connectors/azure-kubernetes-service.md](connectors/azure-kubernetes-service.md), [connectors/azure-devops.md](connectors/azure-devops.md), [connectors/dns-security-logs.md](connectors/dns-security-logs.md), [connectors/vnet-flow-logs.md](connectors/vnet-flow-logs.md), [connectors/sql-database-audit.md](connectors/sql-database-audit.md) |
+
+> **About cmd.ms** — community-maintained short-link service by Merill Fernando (Microsoft) that redirects memorable address-bar aliases such as `defender.cmd.ms`, `enca.cmd.ms`, `azkv.cmd.ms`, `pu.cmd.ms`, `in.cmd.ms` to the corresponding Microsoft cloud admin blade. Open source on [github.com/merill/cmd](https://github.com/merill/cmd) (MIT licence). Useful for rapidly opening a specific configuration blade without navigating the portal tree.
 
 ---
 

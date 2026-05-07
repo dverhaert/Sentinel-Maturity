@@ -172,6 +172,11 @@ The Microsoft Entra ID (formerly Azure AD) connector is **essential for every Se
 | Risky users and risk detections | Investigating identity risk signals | [learn.microsoft.com](https://learn.microsoft.com/en-us/entra/id-protection/howto-identity-protection-investigate-risk) |
 | Workload identity risk | Risk detection for service principals and managed identities | [learn.microsoft.com](https://learn.microsoft.com/en-us/entra/id-protection/concept-workload-identity-risk) |
 
+### Admin portal
+
+- [Microsoft Entra admin centre](https://entra.microsoft.com/) — enable diagnostic settings for sign-in, audit, and provisioning logs; review Identity Protection signals.
+  - Quick links via [cmd.ms](https://cmd.ms/) (see [References §14.6](../references.md#14-admin-portals)): [`enusers.cmd.ms`](https://enusers.cmd.ms/) (Users), [`enca.cmd.ms`](https://enca.cmd.ms/) (Conditional Access), [`enauth.cmd.ms`](https://enauth.cmd.ms/) (Authentication methods), [`enpim.cmd.ms`](https://enpim.cmd.ms/) (PIM), [`enar.cmd.ms`](https://enar.cmd.ms/) (Access reviews), [`enidp.cmd.ms`](https://enidp.cmd.ms/) (Identity Protection), [`ensign.cmd.ms`](https://ensign.cmd.ms/) (Sign-in logs), [`ensynclog.cmd.ms`](https://ensynclog.cmd.ms/) (Entra Connect sync errors).
+
 ### Community & Third-Party Resources
 
 | Title | Author | Description | Link |

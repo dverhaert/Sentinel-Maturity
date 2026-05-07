@@ -98,4 +98,9 @@ An attacker with access to your DevOps environment can modify build pipelines to
 
 ---
 
+### Admin portal
+
+- [Microsoft Azure portal](https://portal.azure.com/) — configure the Azure DevOps audit-stream Sentinel data connector and ingestion DCRs.
+  - Quick link via [cmd.ms](https://cmd.ms/) (see [References §14.6](../references.md#14-admin-portals)): [`dev.cmd.ms`](https://dev.cmd.ms/) (Azure DevOps portal).
+
 [← Back to Connectors](README.md) · [← Back to Sentinel Maturity Model](../README.md)

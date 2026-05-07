@@ -128,6 +128,7 @@ The `SentinelHealth` and `SentinelAudit` tables are automatically created after 
 | Tool | Type | Purpose | Source | Guide |
 |:-----|:-----|:--------|:-------|:------|
 | **Sentinel Health** | Workbook | Visualise data connector health status, analytics rule execution health, and automation health — provides a single-pane dashboard for operational monitoring of your Sentinel workspace | [GitHub — Azure-Sentinel/Workbooks](https://github.com/Azure/Azure-Sentinel/blob/master/Workbooks/SentinelHealth.json) | — |
+| **Analytics Health & Audit** | Workbook | Drills into analytics-rule execution history, failure patterns, and audit trail of rule changes — complements the Sentinel Health workbook with rule-level integrity reporting (see Microsoft Learn: [Monitor analytics rule integrity](https://learn.microsoft.com/en-us/azure/sentinel/monitor-analytics-rule-integrity)) | [GitHub — Azure-Sentinel/Workbooks](https://github.com/Azure/Azure-Sentinel/blob/master/Workbooks/AnalyticsHealthAudit.json) | — |
 | **Data collection health monitoring** | Workbook | Monitor data ingestion volumes, detect anomalies, and track agent health — complements SentinelHealth with ingestion-level visibility | [Sentinel Content Hub](https://learn.microsoft.com/en-us/azure/sentinel/monitor-data-connector-health#use-the-health-monitoring-workbook) (search "Data collection health monitoring") | — |
 | **Workspace Usage Report** | Workbook | Monitor ingestion volumes per table and validate data connector coverage | Sentinel Content Hub | [Walkthrough](../procedures/workspace-usage-report.md) |
 
@@ -145,6 +146,13 @@ The `SentinelHealth` and `SentinelAudit` tables are automatically created after 
 | SentinelHealth and SentinelAudit table reference | Schema reference for all columns in the health and audit tables | [learn.microsoft.com](https://learn.microsoft.com/en-us/azure/sentinel/health-table-reference) |
 | Monitor the health and integrity of your analytics rules | Using health data to track analytics rule execution and detect failures | [learn.microsoft.com](https://learn.microsoft.com/en-us/azure/sentinel/monitor-analytics-rule-integrity) |
 | Monitor the health of your automation rules and playbooks | Health monitoring for automation rules and Logic Apps playbook execution | [learn.microsoft.com](https://learn.microsoft.com/en-us/azure/sentinel/monitor-automation-health) |
+
+### Admin portal
+
+- [Microsoft Azure portal](https://portal.azure.com/) — enable Sentinel Health & Audit Diagnostics on the workspace and configure Azure Logic Apps diagnostics for playbook execution telemetry.
+  - Quick link via [cmd.ms](https://cmd.ms/) (see [References §14.6](../references.md#14-admin-portals)): [`azsentinel.cmd.ms`](https://azsentinel.cmd.ms/) (Sentinel workspace selector).
+- [Microsoft Defender portal](https://security.microsoft.com/) — unified Sentinel UI for reviewing health alerts and connector status.
+  - Quick links via [cmd.ms](https://cmd.ms/): [`defender.cmd.ms`](https://defender.cmd.ms/), [`xdranalytics.cmd.ms`](https://xdranalytics.cmd.ms/) (Analytic rules).
 
 ### Community & Third-Party Resources
 

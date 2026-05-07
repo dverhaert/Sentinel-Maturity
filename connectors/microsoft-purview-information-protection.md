@@ -138,6 +138,11 @@ Enable from the **Sentinel Data connectors** page:
 | MicrosoftPurviewInformationProtection table reference | Schema reference for the sensitivity-label events table | [learn.microsoft.com](https://learn.microsoft.com/azure/azure-monitor/reference/tables/microsoftpurviewinformationprotection) |
 | Microsoft Purview with Microsoft Sentinel data lake | Overview of the modern Purview ↔ Sentinel integration — data lake onboarding, data risk graph for Insider Risk Management, and per-solution prerequisites | [learn.microsoft.com](https://learn.microsoft.com/purview/purview-sentinel) |
 
+### Admin portal
+
+- [Microsoft Purview portal](https://purview.microsoft.com/) — manage Information Protection labels, DLP policies, and review activity that flows to Sentinel.
+  - Quick links via [cmd.ms](https://cmd.ms/) (see [References §14.6](../references.md#14-admin-portals)): [`pu.cmd.ms`](https://pu.cmd.ms/) (Purview root), [`puinfoprot.cmd.ms`](https://puinfoprot.cmd.ms/) (Information Protection), [`pudlp.cmd.ms`](https://pudlp.cmd.ms/) (Data Loss Prevention), [`puactexp.cmd.ms`](https://puactexp.cmd.ms/) (Activity Explorer).
+
 ### Community & Third-Party Resources
 
 | Title | Author | Description | Link |

@@ -150,6 +150,13 @@ Defender for Cloud can generate significant alert volumes, particularly from Def
 | Security explorer and attack paths | Concept overview of Defender for Cloud attack path analysis (Defender CSPM) | [learn.microsoft.com](https://learn.microsoft.com/azure/defender-for-cloud/concept-attack-path) |
 | Retrieve attack path data with API | Query attack paths via Azure Resource Graph (`securityresources` → `microsoft.security/attackpaths`) | [learn.microsoft.com](https://learn.microsoft.com/azure/defender-for-cloud/attack-path-api) |
 
+### Admin portal
+
+- [Microsoft Defender portal](https://security.microsoft.com/) — review Defender for Cloud alerts, recommendations, and unified XDR investigation.
+  - Quick link via [cmd.ms](https://cmd.ms/) (see [References §14.6](../references.md#14-admin-portals)): [`defender.cmd.ms`](https://defender.cmd.ms/).
+- [Microsoft Azure portal](https://portal.azure.com/) — manage Defender for Cloud plans, environment settings, and the tenant-based Sentinel data connector enrolment.
+  - Quick link via [cmd.ms](https://cmd.ms/): [`azdefender.cmd.ms`](https://azdefender.cmd.ms/) — direct to the Defender for Cloud blade in the Azure portal.
+
 ### Community & Third-Party Resources
 
 | Title | Author | Description | Link |

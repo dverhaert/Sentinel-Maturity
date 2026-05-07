@@ -109,4 +109,9 @@ Configure on the **Purview account** in the Azure portal:
 | PurviewDataSensitivityLogs table reference | Schema reference for the scan-result table | [learn.microsoft.com](https://learn.microsoft.com/azure/azure-monitor/reference/tables/purviewdatasensitivitylogs) |
 | Microsoft Sentinel pricing — Free data sources | Authoritative free-data list (Purview tables are not included) | [learn.microsoft.com](https://learn.microsoft.com/azure/sentinel/billing#free-data-sources) |
 
+### Admin portal
+
+- [Microsoft Purview portal](https://purview.microsoft.com/) — manage the Purview Data Map and review classification/sensitivity activity that flows to Sentinel.
+  - Quick links via [cmd.ms](https://cmd.ms/) (see [References §14.6](../references.md#14-admin-portals)): [`pu.cmd.ms`](https://pu.cmd.ms/) (Purview root), [`puudg.cmd.ms`](https://puudg.cmd.ms/) (Unified Data Governance).
+
 [← Back to Connectors](README.md) · [← Back to Sentinel Maturity Model](../README.md)

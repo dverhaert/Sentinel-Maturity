@@ -45,14 +45,61 @@
   Detailed detection rules beyond the one-liner in the table.
   Use H3 subsections to group by category if needed.
   Example: ### Authentication-Based, ### Endpoint, ### Email, etc.
+
+  Each row should include the **MITRE ATT&CK technique** and, where available,
+  the matching **MITRE Detection Strategy** (DET####). See the section below.
 -->
 
 ### [Detection Category]
 
-| Detection | Table(s) / Event ID(s) | MITRE ATT&CK | Description |
-|:----------|:-----------------------|:-------------|:------------|
-| [Detection name] | [Table or Event ID] | [Txxxx.xxx] | [What this detection catches and how] |
-| [Detection name] | [Table or Event ID] | [Txxxx.xxx] | [Description] |
+| Detection | Table(s) / Event ID(s) | MITRE ATT&CK | Detection Strategy | Description |
+|:----------|:-----------------------|:-------------|:-------------------|:------------|
+| [Detection name] | [Table or Event ID] | [Txxxx.xxx](https://attack.mitre.org/techniques/Txxxx/xxx/) | [DET####](https://attack.mitre.org/detectionstrategies/DET####/) — [Strategy name] | [What this detection catches and how] |
+| [Detection name] | [Table or Event ID] | [Txxxx.xxx](https://attack.mitre.org/techniques/Txxxx/xxx/) | — *(no published strategy)* | [Description] |
+
+---
+
+## MITRE Detection Strategies
+
+<!--
+  Curated list of MITRE Detection Strategies (https://attack.mitre.org/detectionstrategies/)
+  relevant to the techniques referenced on this page. Each strategy publishes
+  pseudo-code analytics keyed to ATT&CK data sources — use them as a blueprint
+  for writing or reviewing Sentinel analytic rules against this connector's
+  table(s).
+
+  IMPORTANT — legacy / revoked technique IDs:
+  MITRE periodically revokes technique IDs and reorganises them under new IDs
+  (e.g. in April 2026 T1070.001, T1562, T1562.002, T1562.004 were revoked and
+  moved into the T1685 / T1686 family). Published Detection Strategies are only
+  attached to the *current* technique IDs. When building this section:
+
+    1. For each technique cited on the page, look it up in the MITRE STIX
+       enterprise-attack bundle.
+    2. If the technique has `revoked = true`, follow the `revoked-by`
+       relationship to the current technique and look up the strategy under
+       that current ID.
+    3. Show the legacy ID in the first column with "*(revoked → Txxxx.xxx)*"
+       so the reader can still match it against connector docs / Sentinel
+       rules that cite the legacy ID.
+    4. Only include the "no published strategy" note for techniques where
+       neither the legacy nor the current (post-revoked-by) technique has a
+       Detection Strategy.
+
+  The mapping CSV (`tech_to_det_v2.csv` in C:\Temp) already follows
+  `revoked-by` chains. Use it as the source of truth.
+-->
+
+| Technique | Detection Strategy | Relevant Event IDs / Tables |
+|:----------|:-------------------|:----------------------------|
+| [Txxxx.xxx](https://attack.mitre.org/techniques/Txxxx/xxx/) — [Name] | [DET####](https://attack.mitre.org/detectionstrategies/DET####/) — [Strategy name] | [Event IDs or tables on this page that map to this strategy] |
+| [Txxxx.xxx](https://attack.mitre.org/techniques/Txxxx/xxx/) — [Name] *(revoked → [Tyyyy.yyy](https://attack.mitre.org/techniques/Tyyyy/yyy/))* | [DET####](https://attack.mitre.org/detectionstrategies/DET####/) — [Strategy name] | [Event IDs or tables] |
+
+> [!NOTE]
+> *(Include only if the page cites any revoked techniques)* **MITRE legacy technique IDs.** Some technique IDs cited on this page are *legacy* IDs that MITRE later revoked and moved to a new family. Detection Strategies are attached to the current technique IDs — the parenthetical *(revoked → Txxxx.xxx)* in each row shows the current ID. Pages may continue to cite legacy IDs because that is what Microsoft Sentinel docs and built-in analytic rules still reference.
+
+> [!TIP]
+> Detection Strategies are MITRE-published *pseudo-code analytics*, not vendor rules — they describe **what** to correlate across data sources. Use them to validate that your Sentinel analytics rules and KQL hunting queries cover the published correlation logic.
 
 ---
 

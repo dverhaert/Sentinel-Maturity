@@ -91,13 +91,14 @@ Template: `connectors/_TEMPLATE.md`
 5. **Licensing Benefits** — Table: `| License | What it unlocks |`
 6. **Tables and Rationale** — Core table(s) with columns: `| Table | Description | Retention Recommendation | Rationale | Forensic Value | Example Detection |`
    - Group into H3 subsections when >5 tables (e.g., "### Authentication Tables")
-7. **Example Detections** — H3 subsections by category. Table: `| Detection | Table(s) / Event ID(s) | MITRE ATT&CK | Description |`
-8. **MCSB Control Mapping** — Table: `| MCSB Control | Relevance |`
-9. **Notes** — Operational guidance bullets
-10. **Tools** — Table: `| Tool | Type | Purpose | Source | Guide |`
-11. **References** — Two subsections: `### Official Documentation` and `### Community & Third-Party Resources`
-12. **Admin portal** *(when the connector has a configurable portal)* — H3 subsection placed after References and before the Footer. Bullet list of admin-portal links (Defender / Entra / Azure / Purview / Intune) with a short note on what to configure. Each portal bullet may carry a sub-bullet `Quick links via [cmd.ms](https://cmd.ms/) (see [References §14.6](../references.md#14-admin-portals))` listing relevant cmd.ms aliases for blade-level deep links. When you add this subsection, also append the connector page to the corresponding §14.x row in `references.md` (and §14.6 if cmd.ms aliases are included).
-13. **Footer** — `[← Back to Connectors](README.md) · [← Back to Sentinel Maturity Model](../README.md)`
+7. **Example Detections** — H3 subsections by category. Table: `| Detection | Table(s) / Event ID(s) | MITRE ATT&CK | Detection Strategy | Description |`
+8. **MITRE Detection Strategies** — Curated list of MITRE [Detection Strategies](https://attack.mitre.org/detectionstrategies/) relevant to the techniques referenced on the page. Table: `| Technique | Detection Strategy | Relevant Event IDs / Tables |`. See "MITRE Detection Strategies mapping" below for the build rules.
+9. **MCSB Control Mapping** — Table: `| MCSB Control | Relevance |`
+10. **Notes** — Operational guidance bullets
+11. **Tools** — Table: `| Tool | Type | Purpose | Source | Guide |`
+12. **References** — Two subsections: `### Official Documentation` and `### Community & Third-Party Resources`
+13. **Admin portal** *(when the connector has a configurable portal)* — H3 subsection placed after References and before the Footer. Bullet list of admin-portal links (Defender / Entra / Azure / Purview / Intune) with a short note on what to configure. Each portal bullet may carry a sub-bullet `Quick links via [cmd.ms](https://cmd.ms/) (see [References §14.6](../references.md#14-admin-portals))` listing relevant cmd.ms aliases for blade-level deep links. When you add this subsection, also append the connector page to the corresponding §14.x row in `references.md` (and §14.6 if cmd.ms aliases are included).
+14. **Footer** — `[← Back to Connectors](README.md) · [← Back to Sentinel Maturity Model](../README.md)`
 
 ### Optional Sections (insert before Notes if applicable)
 
@@ -111,8 +112,30 @@ Template: `connectors/_TEMPLATE.md`
 
 - **Retention Recommendation**: Always formatted as `Analytics: 90d / Lake: 365d` (default). Note exceptions explicitly.
 - **Forensic Value**: Phrased as investigative actions — "Reconstruct…", "Prove…", "Identify…", "Detect…"
-- **MITRE ATT&CK**: Full technique notation `T1110.003`, not just tactic names.
+- **MITRE ATT&CK**: Full technique notation `T1110.003`, linked to `https://attack.mitre.org/techniques/T1110/003/`.
+- **Detection Strategy** (in `Example Detections`): `[DET####](https://attack.mitre.org/detectionstrategies/DET####/) — [Strategy name]`, or `— *(no published strategy)*` when neither the cited technique nor its current `revoked-by` target has one.
 - **Table names**: Always in backticks: `SecurityEvent`, `AuditLogs`.
+
+### MITRE Detection Strategies mapping
+
+The `## MITRE Detection Strategies` section maps every technique cited on the page to MITRE's [Detection Strategies catalogue](https://attack.mitre.org/detectionstrategies/) — pseudo-code analytics that describe what to correlate across data sources.
+
+**Source of truth**: the MITRE STIX 2.1 `enterprise-attack.json` bundle (cached at `C:\Temp\enterprise-attack.json`, source `github.com/mitre-attack/attack-stix-data`). The pre-built CSV `C:\Temp\tech_to_det_v2.csv` already follows `revoked-by` chains. Columns: `CitedTechId, CitedName, Revoked, CurrentTechId, CurrentName, DetId, DetName, DetUrl`. Re-run `C:\Temp\build_mitre_map_v2.ps1` to refresh after pulling a new STIX bundle.
+
+**Build rules**:
+
+1. Extract every unique technique ID referenced anywhere on the page (regex `T\d{4}(\.\d{3})?`).
+2. For each technique, look it up in `tech_to_det_v2.csv`. If the row has `Revoked = True`, MITRE has reorganised it — the `CurrentTechId` column gives the current ID and `DetId` / `DetName` are the strategy attached to that current technique.
+3. Render each row as:
+   - Active technique: `[Txxxx.xxx](https://attack.mitre.org/techniques/Txxxx/xxx/) — [Name] | [DET####](https://attack.mitre.org/detectionstrategies/DET####/) — [Strategy name] | [Event IDs / tables on this page]`
+   - Revoked technique: `[Txxxx.xxx](https://attack.mitre.org/techniques/Txxxx/xxx/) — [Name] *(revoked → [Tyyyy.yyy](https://attack.mitre.org/techniques/Tyyyy/yyy/))* | [DET####](…) — [Strategy name] | [Event IDs / tables]`
+4. Only mark a technique as `— *(no published strategy)*` when neither the cited nor the current technique has one.
+5. Include a `> [!NOTE]` legacy-ID callout whenever at least one row uses a revoked technique. Suggested wording:
+   > **MITRE legacy technique IDs.** Some technique IDs cited on this page are *legacy* IDs that MITRE later revoked and moved to a new family (e.g. in April 2026 `T1070.001`, `T1562.*` were revoked and moved into `T1685` / `T1686`). Detection Strategies are attached to the *current* technique IDs — the parenthetical *(revoked → Txxxx.xxx)* shows the current ID. Pages may continue to cite legacy IDs because that is what Microsoft Sentinel docs and built-in analytic rules still reference.
+6. Include a `> [!TIP]` reminding readers that Detection Strategies are pseudo-code analytics, not vendor rules — they describe *what* to correlate and should be used to validate Sentinel analytic-rule / KQL coverage.
+7. The same DET#### link must also appear in the corresponding row of the `## Example Detections` summary table.
+
+**Do NOT** add DET#### inline to the per-Event-ID detail tables under `Tables and Rationale` — keep the mapping in the dedicated `## MITRE Detection Strategies` section and the `Example Detections` summary table only.
 
 ---
 

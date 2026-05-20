@@ -22,6 +22,7 @@
         - [Credential Access Events](#credential-access-events)
         - [Full (All Events) Only — Additional Forensic and Audit Events](#full-all-events-only--additional-forensic-and-audit-events)
   - [Example Detections](#example-detections)
+  - [MITRE Detection Strategies](#mitre-detection-strategies)
   - [MCSB Control Mapping](#mcsb-control-mapping)
   - [Recommended Configuration](#recommended-configuration)
     - [Minimum Audit Policy (GPO)](#minimum-audit-policy-gpo)
@@ -186,17 +187,65 @@ All events above follow the same retention recommendation: **Analytics: 90d / La
 
 ## Example Detections
 
-| Detection | Event ID(s) | MITRE ATT&CK | Description |
-|:----------|:------------|:-------------|:------------|
-| RDP brute-force | 4625 (Type 10) | T1110 | High volume of failed RDP logons from a single source IP |
-| Lateral movement via network logon | 4624 (Type 3), 4648 | T1021 | Network logon from an unexpected source, especially to servers |
-| New local admin account | 4720, 4732 | T1136.001 | New user account created and added to local Administrators group |
-| Suspicious process execution | 4688 | T1059 | PowerShell/cmd launching with encoded commands, download cradles |
-| Scheduled task persistence | 4698 | T1053.005 | New scheduled task created with suspicious command line |
-| Service installation | 4697 | T1543.003 | New service installed pointing to unusual binary path |
-| Audit log cleared | 1102 | T1070.001 | Security event log cleared — high-confidence attacker indicator |
-| Privilege escalation (group modification) | 4728, 4732, 4756 | T1098 | User added to a privileged local or domain group |
-| Pass-the-hash detection | 4624 (Type 9), 4648 | T1550.002 | New logon with explicit credentials combined with NTLM authentication |
+The **MITRE ATT&CK** column links to the technique on attack.mitre.org. The **Detection Strategy** column links to MITRE's [Detection Strategies catalogue](https://attack.mitre.org/detectionstrategies/) — pseudo-code analytic patterns published by MITRE that describe how to detect a technique across multiple data sources.
+
+| Detection | Event ID(s) | MITRE ATT&CK | Detection Strategy | Description |
+|:----------|:------------|:-------------|:-------------------|:------------|
+| RDP brute-force | 4625 (Type 10) | [T1110](https://attack.mitre.org/techniques/T1110/) | [DET0463](https://attack.mitre.org/detectionstrategies/DET0463/) — Brute Force Authentication Failures with Multi-Platform Log Correlation | High volume of failed RDP logons from a single source IP |
+| Lateral movement via network logon | 4624 (Type 3), 4648 | [T1021](https://attack.mitre.org/techniques/T1021/) | [DET0269](https://attack.mitre.org/detectionstrategies/DET0269/) — Behavioral Detection Strategy for Remote Service Logins and Post-Access Activity | Network logon from an unexpected source, especially to servers |
+| New local admin account | 4720, 4732 | [T1136.001](https://attack.mitre.org/techniques/T1136/001/) | [DET0447](https://attack.mitre.org/detectionstrategies/DET0447/) — T1136.001 Detection Strategy - Local Account Creation Across Platforms | New user account created and added to local Administrators group |
+| Suspicious process execution | 4688 | [T1059](https://attack.mitre.org/techniques/T1059/) | [DET0516](https://attack.mitre.org/detectionstrategies/DET0516/) — Behavioral Detection of Command and Scripting Interpreter Abuse | PowerShell/cmd launching with encoded commands, download cradles |
+| Scheduled task persistence | 4698 | [T1053.005](https://attack.mitre.org/techniques/T1053/005/) | [DET0441](https://attack.mitre.org/detectionstrategies/DET0441/) — Detection of Suspicious Scheduled Task Creation and Execution on Windows | New scheduled task created with suspicious command line |
+| Service installation | 4697 | [T1543.003](https://attack.mitre.org/techniques/T1543/003/) | [DET0552](https://attack.mitre.org/detectionstrategies/DET0552/) — Detection of Windows Service Creation or Modification | New service installed pointing to unusual binary path |
+| Audit log cleared | 1102 | [T1070.001](https://attack.mitre.org/techniques/T1070/001/) (revoked → [T1685.005](https://attack.mitre.org/techniques/T1685/005/)) | [DET0532](https://attack.mitre.org/detectionstrategies/DET0532/) — Detection of Event Log Clearing on Windows via Behavioral Chain | Security event log cleared — high-confidence attacker indicator |
+| Privilege escalation (group modification) | 4728, 4732, 4756 | [T1098](https://attack.mitre.org/techniques/T1098/) | [DET0096](https://attack.mitre.org/detectionstrategies/DET0096/) — Account Manipulation Behavior Chain Detection | User added to a privileged local or domain group |
+| Pass-the-hash detection | 4624 (Type 9), 4648 | [T1550.002](https://attack.mitre.org/techniques/T1550/002/) | [DET0409](https://attack.mitre.org/detectionstrategies/DET0409/) — Detection Strategy for T1550.002 - Pass the Hash (Windows) | New logon with explicit credentials combined with NTLM authentication |
+
+---
+
+## MITRE Detection Strategies
+
+Curated list of MITRE [Detection Strategies](https://attack.mitre.org/detectionstrategies/) relevant to the techniques referenced on this page. Each strategy publishes pseudo-code analytics keyed to the data sources Windows Security Events provides (Process Creation, Logon Session, Service, Scheduled Task, Active Directory Object, etc.) — use them as a blueprint for writing or reviewing Sentinel analytic rules against the `SecurityEvent` table.
+
+| Technique | Detection Strategy | Relevant Event IDs |
+|:----------|:-------------------|:-------------------|
+| [T1003.001](https://attack.mitre.org/techniques/T1003/001/) — OS Credential Dumping: LSASS Memory | [DET0363](https://attack.mitre.org/detectionstrategies/DET0363/) — Detection of Credential Dumping from LSASS Memory via Access and Dump Sequence | 4656, 4663, 4703 |
+| [T1005](https://attack.mitre.org/techniques/T1005/) — Data from Local System | [DET0380](https://attack.mitre.org/detectionstrategies/DET0380/) — Detection of Local Data Collection Prior to Exfiltration | 4663 |
+| [T1021](https://attack.mitre.org/techniques/T1021/) — Remote Services | [DET0269](https://attack.mitre.org/detectionstrategies/DET0269/) — Behavioral Detection Strategy for Remote Service Logins and Post-Access Activity | 4624 (Type 3 / 10), 4648 |
+| [T1021.002](https://attack.mitre.org/techniques/T1021/002/) — SMB/Windows Admin Shares | [DET0530](https://attack.mitre.org/detectionstrategies/DET0530/) — Multi-Event Detection for SMB Admin Share Lateral Movement | 5140, 5145 |
+| [T1053.005](https://attack.mitre.org/techniques/T1053/005/) — Scheduled Task | [DET0441](https://attack.mitre.org/detectionstrategies/DET0441/) — Detection of Suspicious Scheduled Task Creation and Execution on Windows | 4698, 4699, 4702 |
+| [T1059](https://attack.mitre.org/techniques/T1059/) — Command and Scripting Interpreter | [DET0516](https://attack.mitre.org/detectionstrategies/DET0516/) — Behavioral Detection of Command and Scripting Interpreter Abuse | 4688, 8003 |
+| [T1059.001](https://attack.mitre.org/techniques/T1059/001/) — PowerShell | [DET0455](https://attack.mitre.org/detectionstrategies/DET0455/) — Abuse of PowerShell for Arbitrary Execution | 4688 |
+| [T1070](https://attack.mitre.org/techniques/T1070/) — Indicator Removal | [DET0184](https://attack.mitre.org/detectionstrategies/DET0184/) — Behavioral Detection of Indicator Removal Across Platforms | 4699, 4726, 5141 |
+| [T1071](https://attack.mitre.org/techniques/T1071/) — Application Layer Protocol | [DET0444](https://attack.mitre.org/detectionstrategies/DET0444/) — Detection of Command and Control Over Application Layer Protocols | 5156 |
+| [T1078](https://attack.mitre.org/techniques/T1078/) — Valid Accounts | [DET0560](https://attack.mitre.org/detectionstrategies/DET0560/) — Detection of Valid Account Abuse Across Platforms | 4624, 4648, 4672 |
+| [T1098](https://attack.mitre.org/techniques/T1098/) — Account Manipulation | [DET0096](https://attack.mitre.org/detectionstrategies/DET0096/) — Account Manipulation Behavior Chain Detection | 4722, 4728, 4732, 4742, 4756 |
+| [T1098.004](https://attack.mitre.org/techniques/T1098/004/) — SSH Authorized Keys | [DET0126](https://attack.mitre.org/detectionstrategies/DET0126/) — Detection Strategy for SSH Key Injection in Authorized Keys | 4724 |
+| [T1110](https://attack.mitre.org/techniques/T1110/) — Brute Force | [DET0463](https://attack.mitre.org/detectionstrategies/DET0463/) — Brute Force Authentication Failures with Multi-Platform Log Correlation | 4625, 4740, 4771, 4776 |
+| [T1134](https://attack.mitre.org/techniques/T1134/) — Access Token Manipulation | [DET0283](https://attack.mitre.org/detectionstrategies/DET0283/) — Behavior-chain detection for T1134 Access Token Manipulation on Windows | 4703, 5136 |
+| [T1136](https://attack.mitre.org/techniques/T1136/) — Create Account | [DET0583](https://attack.mitre.org/detectionstrategies/DET0583/) — Detection Strategy for T1136 - Create Account across platforms | 4720, 4731 |
+| [T1136.001](https://attack.mitre.org/techniques/T1136/001/) — Local Account | [DET0447](https://attack.mitre.org/detectionstrategies/DET0447/) — T1136.001 Detection Strategy - Local Account Creation Across Platforms | 4720 |
+| [T1136.002](https://attack.mitre.org/techniques/T1136/002/) — Domain Account | [DET0003](https://attack.mitre.org/detectionstrategies/DET0003/) — T1136.002 Detection Strategy - Domain Account Creation Across Platforms | 4741 |
+| [T1222](https://attack.mitre.org/techniques/T1222/) — File and Directory Permissions Modification | [DET0299](https://attack.mitre.org/detectionstrategies/DET0299/) — Multi-Platform File and Directory Permissions Modification Detection Strategy | 4670 |
+| [T1484.001](https://attack.mitre.org/techniques/T1484/001/) — Group Policy Modification | [DET0305](https://attack.mitre.org/detectionstrategies/DET0305/) — Detection of Group Policy Modifications via AD Object Changes and File Activity | 4739, 5137 |
+| [T1484.002](https://attack.mitre.org/techniques/T1484/002/) — Domain Trust Modification | [DET0458](https://attack.mitre.org/detectionstrategies/DET0458/) — Detection of Trust Relationship Modifications in Domain or Tenant Policies | 4706, 8001, 8222 |
+| [T1543.003](https://attack.mitre.org/techniques/T1543/003/) — Windows Service | [DET0552](https://attack.mitre.org/detectionstrategies/DET0552/) — Detection of Windows Service Creation or Modification | 4697 |
+| [T1550.002](https://attack.mitre.org/techniques/T1550/002/) — Pass the Hash | [DET0409](https://attack.mitre.org/detectionstrategies/DET0409/) — Detection Strategy for T1550.002 - Pass the Hash (Windows) | 4624 (Type 9), 4648, 4776 |
+| [T1550.003](https://attack.mitre.org/techniques/T1550/003/) — Pass the Ticket | [DET0352](https://attack.mitre.org/detectionstrategies/DET0352/) — Detection Strategy for T1550.003 - Pass the Ticket (Windows) | 4769, 4770 |
+| [T1555](https://attack.mitre.org/techniques/T1555/) — Credentials from Password Stores | [DET0430](https://attack.mitre.org/detectionstrategies/DET0430/) — Detect Credentials Access from Password Stores | 5379 |
+| [T1558](https://attack.mitre.org/techniques/T1558/) — Steal or Forge Kerberos Tickets | [DET0522](https://attack.mitre.org/detectionstrategies/DET0522/) — Detect Kerberos Ticket Theft or Forgery | 4768, 4769 |
+| [T1558.001](https://attack.mitre.org/techniques/T1558/001/) — Golden Ticket | [DET0144](https://attack.mitre.org/detectionstrategies/DET0144/) — Detect Forged Kerberos Golden Tickets | 4713, 4768, 4769 |
+| [T1558.003](https://attack.mitre.org/techniques/T1558/003/) — Kerberoasting | [DET0157](https://attack.mitre.org/detectionstrategies/DET0157/) — Detect Kerberoasting Attempts | 4768, 4769 |
+| [T1070.001](https://attack.mitre.org/techniques/T1070/001/) — Clear Windows Event Logs *(revoked → [T1685.005](https://attack.mitre.org/techniques/T1685/005/))* | [DET0532](https://attack.mitre.org/detectionstrategies/DET0532/) — Detection of Event Log Clearing on Windows via Behavioral Chain | 1102 |
+| [T1562](https://attack.mitre.org/techniques/T1562/) — Impair Defenses *(revoked → [T1685](https://attack.mitre.org/techniques/T1685/))* | [DET0497](https://attack.mitre.org/detectionstrategies/DET0497/) — Detection of Defense Impairment through Disabled or Modified Tools across OS Platforms | 4907 |
+| [T1562.002](https://attack.mitre.org/techniques/T1562/002/) — Disable Windows Event Logging *(revoked → [T1685.001](https://attack.mitre.org/techniques/T1685/001/))* | [DET0187](https://attack.mitre.org/detectionstrategies/DET0187/) — Detect Disabled Windows Event Log | 4719 |
+| [T1562.004](https://attack.mitre.org/techniques/T1562/004/) — Disable or Modify System Firewall *(revoked → [T1686](https://attack.mitre.org/techniques/T1686/))* | [DET0145](https://attack.mitre.org/detectionstrategies/DET0145/) — Detection of Disabled or Modified System Firewalls across OS Platforms | 4946, 4948, 4956 |
+
+> [!NOTE]
+> **MITRE legacy technique IDs.** Several technique IDs cited elsewhere on this page (and in Microsoft Sentinel content) are *legacy* IDs — in the April 2026 ATT&CK release MITRE **revoked** the `T1070.001`, `T1562`, `T1562.002` and `T1562.004` techniques and moved them into a new `T1685` / `T1686` family ("Disable or Modify Tools" / "Disable or Modify System Firewalls"). Published Detection Strategies are attached to the *current* technique IDs only. The table above follows the `revoked-by` chain in the MITRE STIX bundle, so the strategy in each row applies to the legacy ID cited on the page — the parenthetical *(revoked → T1685.x)* shows the current technique. Pages may continue to cite legacy IDs because that is what Microsoft Sentinel docs and built-in analytic rules still reference.
+
+> [!TIP]
+> Detection Strategies are MITRE-published *pseudo-code analytics*, not vendor rules — they tell you **what** to correlate (e.g. process-creation + token-adjustment + network-connection within N seconds) across data sources. Use them to validate that your Sentinel analytics rules and KQL hunting queries cover the published correlation logic.
 
 ---
 

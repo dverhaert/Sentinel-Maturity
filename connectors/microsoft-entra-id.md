@@ -18,6 +18,7 @@
     - [Authentication-Based](#authentication-based)
     - [Directory-Based](#directory-based)
     - [Risk-Based](#risk-based)
+  - [MITRE Detection Strategies](#mitre-detection-strategies)
   - [MCSB Control Mapping](#mcsb-control-mapping)
   - [Notes](#notes)
   - [Tools](#tools)
@@ -55,29 +56,29 @@ The Microsoft Entra ID (formerly Azure AD) connector is **essential for every Se
 
 | Table | Description | Retention Recommendation | Rationale | Forensic Value | Example Detection |
 |:------|:------------|:------------------------|:----------|:---------------|:------------------|
-| **SigninLogs** | Interactive user sign-ins (browser, desktop apps) | Analytics: 90d / Lake: 365d | **Core identity security table.** Detects compromised accounts, brute-force, password spray, MFA bypass, and impossible travel. MCSB IM-1 (Centralise identity management), IM-4 (Authenticate server and services). Every identity-based investigation starts here. | Reconstruct the full authentication timeline for any user — proves when access was gained, from where, and which MFA method was used or bypassed. The starting point for nearly every identity investigation. | Brute-force / password spray (T1110.003), Impossible travel (T1078), MFA fatigue (T1621) |
-| **AADNonInteractiveUserSignInLogs** | Token refresh, background app authentication | Analytics: 90d / Lake: 365d | Detects token theft and replay attacks, session hijacking. Non-interactive sign-ins often reveal attacker persistence after initial compromise. High volume but critical for AiTM phishing investigation. | Proves persistent access via stolen tokens — shows continued session activity from attacker-controlled infrastructure even after password reset. Critical for AiTM phishing forensics. | AiTM phishing — token use from different IP after interactive sign-in (T1557) |
-| **AADServicePrincipalSignInLogs** | Application and service principal authentication | Analytics: 90d / Lake: 365d | Detects compromised application credentials, OAuth abuse, and consent phishing (MITRE T1550.001). MCSB IM-4. Service principals are high-value targets — a compromised app registration can have tenant-wide access. | Audit trail for application-level access — proves when a compromised service principal was used, from which IP, and with what scope. Essential for supply chain and OAuth abuse investigations. | Service principal auth from unexpected IP or with unusual scope (T1550.001) |
+| **SigninLogs** | Interactive user sign-ins (browser, desktop apps) | Analytics: 90d / Lake: 365d | **Core identity security table.** Detects compromised accounts, brute-force, password spray, MFA bypass, and impossible travel. MCSB IM-1 (Centralise identity management), IM-4 (Authenticate server and services). Every identity-based investigation starts here. | Reconstruct the full authentication timeline for any user — proves when access was gained, from where, and which MFA method was used or bypassed. The starting point for nearly every identity investigation. | Brute-force / password spray, Impossible travel, MFA fatigue |
+| **AADNonInteractiveUserSignInLogs** | Token refresh, background app authentication | Analytics: 90d / Lake: 365d | Detects token theft and replay attacks, session hijacking. Non-interactive sign-ins often reveal attacker persistence after initial compromise. High volume but critical for AiTM phishing investigation. | Proves persistent access via stolen tokens — shows continued session activity from attacker-controlled infrastructure even after password reset. Critical for AiTM phishing forensics. | AiTM phishing — token use from different IP after interactive sign-in |
+| **AADServicePrincipalSignInLogs** | Application and service principal authentication | Analytics: 90d / Lake: 365d | Detects compromised application credentials, OAuth abuse, and consent phishing. Service principals are high-value targets — a compromised app registration can have tenant-wide access. | Audit trail for application-level access — proves when a compromised service principal was used, from which IP, and with what scope. Essential for supply chain and OAuth abuse investigations. | Service principal auth from unexpected IP or with unusual scope |
 | **AADManagedIdentitySignInLogs** | Managed identity authentication events | Analytics: 90d / Lake: 365d | Detects anomalous use of managed identities by Azure resources. While lower risk than user credentials (no extractable secrets), compromised Azure resources can abuse their managed identity. | Traces non-human identity usage — proves which Azure resource used its managed identity and when, enabling investigation of compromised infrastructure | Managed identity used from unexpected Azure resource |
-| **ADFSSignInLogs** | Active Directory Federation Services sign-in events | Analytics: 90d / Lake: 365d | Critical for hybrid identity environments. Detects Golden SAML attacks (as seen in SolarWinds/Nobelium). MCSB IM-1. If you have ADFS, this table is essential. | Critical for detecting Golden SAML — proves whether a SAML token was legitimately issued via ADFS or forged by an attacker with access to the token-signing certificate | Golden SAML — SAML token without corresponding ADFS auth event (T1606.002) |
+| **ADFSSignInLogs** | Active Directory Federation Services sign-in events | Analytics: 90d / Lake: 365d | Critical for hybrid identity environments. Detects Golden SAML attacks (as seen in SolarWinds/Nobelium). If you have ADFS, this table is essential. | Critical for detecting Golden SAML — proves whether a SAML token was legitimately issued via ADFS or forged by an attacker with access to the token-signing certificate | Golden SAML — SAML token without corresponding ADFS auth event |
 
 ### Directory and Audit Tables
 
 | Table | Description | Retention Recommendation | Rationale | Forensic Value | Example Detection |
 |:------|:------------|:------------------------|:----------|:---------------|:------------------|
-| **AuditLogs** | Directory changes: user/group/role modifications, app registrations, policy changes | Analytics: 90d / Lake: 365d | **Core governance table.** Tracks privilege escalation (adding Global Admin), persistence (new app registrations, federation changes), and policy tampering. MCSB PA-1 (Protect privileged users), PA-7 (Follow just enough administration). | Complete directory change audit trail — proves exactly who made what change, when, and to which object. Answers "how did the attacker escalate privilege or establish persistence in Entra ID?" | User added to Global Admin (T1098.003), New app with high-privilege API permissions (T1136.003) |
+| **AuditLogs** | Directory changes: user/group/role modifications, app registrations, policy changes | Analytics: 90d / Lake: 365d | **Core governance table.** Tracks privilege escalation (adding Global Admin), persistence (new app registrations, federation changes), and policy tampering. MCSB PA-1 (Protect privileged users), PA-7 (Follow just enough administration). | Complete directory change audit trail — proves exactly who made what change, when, and to which object. Answers "how did the attacker escalate privilege or establish persistence in Entra ID?" | User added to Global Admin, New app with high-privilege API permissions |
 | **AADProvisioningLogs** | User provisioning events to/from applications | Analytics: 90d / Lake: 365d | Tracks automated account creation/modification in connected apps. Detects provisioning anomalies and unauthorized access propagation. | Traces how compromised identity propagated access to connected SaaS applications — shows if attacker-controlled accounts were automatically provisioned to downstream systems | Unexpected user provisioned to sensitive SaaS application |
-| **MicrosoftGraphActivityLogs** | API requests made to Microsoft Graph for resources in the tenant (audit and security categories) | Analytics: 30d (high volume) / Lake: 365d | Detects Graph API abuse — mass data reads, enumeration of users/groups/mail, suspicious app activity. Basic log supported (low cost option). Complements SigninLogs by showing *what* the app/user did after authenticating. | Full audit of Graph API calls — proves which identity called which endpoint, from which IP, and with what result. Critical for OAuth abuse and post-compromise data access investigations. | Mass user enumeration via `/users` endpoint (T1087.004), Bulk mailbox reads by compromised app (T1114.002) |
-| **EnrichedOffice365AuditLogs** | Office 365 audit logs enriched with Entra ID context (user risk, device, session) | Analytics: 30d / Lake: 365d | Requires opt-in via the Defender portal. Adds identity context to every Office 365 audit event, enabling correlation of M365 activity with risk signals and device posture without expensive joins. | Joins identity risk/device data with Exchange/SharePoint/Teams audit events in a single table — speeds up incident response for M365 data-exfiltration and insider cases. | High-risk user exporting large volumes of SharePoint content (T1213.002) |
+| **MicrosoftGraphActivityLogs** | API requests made to Microsoft Graph for resources in the tenant (audit and security categories) | Analytics: 30d (high volume) / Lake: 365d | Detects Graph API abuse — mass data reads, enumeration of users/groups/mail, suspicious app activity. Basic log supported (low cost option). Complements SigninLogs by showing *what* the app/user did after authenticating. | Full audit of Graph API calls — proves which identity called which endpoint, from which IP, and with what result. Critical for OAuth abuse and post-compromise data access investigations. | Mass user enumeration via `/users` endpoint, Bulk mailbox reads by compromised app |
+| **EnrichedOffice365AuditLogs** | Office 365 audit logs enriched with Entra ID context (user risk, device, session) | Analytics: 30d / Lake: 365d | Requires opt-in via the Defender portal. Adds identity context to every Office 365 audit event, enabling correlation of M365 activity with risk signals and device posture without expensive joins. | Joins identity risk/device data with Exchange/SharePoint/Teams audit events in a single table — speeds up incident response for M365 data-exfiltration and insider cases. | High-risk user exporting large volumes of SharePoint content |
 
 ### Risk Tables (Entra ID P2)
 
 | Table | Description | Retention Recommendation | Rationale | Forensic Value | Example Detection |
 |:------|:------------|:------------------------|:----------|:---------------|:------------------|
-| **AADRiskyUsers** | Users flagged as risky by Entra ID Protection | Analytics: 90d / Lake: 365d | Provides a risk-scored view of users. Enables automated response (e.g., require password change, block access). MCSB IM-1. Critical input for risk-based Conditional Access policies monitored via Sentinel. | Historical risk profile — shows when a user was first flagged, at what risk level, and whether remediation occurred or was delayed. Supports post-incident review of risk-based policy effectiveness. | High-risk user sign-in correlated with suspicious inbox rule |
-| **AADUserRiskEvents** | Individual risk detections (leaked credentials, anonymous IP, malware-linked IP, etc.) | Analytics: 90d / Lake: 365d | Detailed risk event telemetry. Enables correlation of risk signals with sign-in activity. Supports investigation of why a user was flagged and the specific indicators involved. | Granular risk detection evidence — proves exactly which risk signal triggered (leaked credentials, anomalous token, etc.) and when, enabling root cause analysis of identity compromise | Leaked credentials detection (T1078), Anomalous token usage (T1550.001) |
+| **AADRiskyUsers** | Users flagged as risky by Entra ID Protection | Analytics: 90d / Lake: 365d | Provides a risk-scored view of users. Enables automated response (e.g., require password change, block access). Critical input for risk-based Conditional Access policies monitored via Sentinel. | Historical risk profile — shows when a user was first flagged, at what risk level, and whether remediation occurred or was delayed. Supports post-incident review of risk-based policy effectiveness. | High-risk user sign-in correlated with suspicious inbox rule |
+| **AADUserRiskEvents** | Individual risk detections (leaked credentials, anonymous IP, malware-linked IP, etc.) | Analytics: 90d / Lake: 365d | Detailed risk event telemetry. Enables correlation of risk signals with sign-in activity. Supports investigation of why a user was flagged and the specific indicators involved. | Granular risk detection evidence — proves exactly which risk signal triggered (leaked credentials, anomalous token, etc.) and when, enabling root cause analysis of identity compromise | Leaked credentials detection, Anomalous token usage |
 | **AADRiskyServicePrincipals** | Service principals flagged as risky by Entra ID Protection | Analytics: 90d / Lake: 365d | Identifies compromised or anomalous application identities. Service principals can have broad tenant access — risk detection is critical for supply chain and OAuth abuse scenarios. | Proves when a service principal was flagged and the associated risk signals — essential for investigating compromised applications | Risky service principal with unusual API access pattern |
-| **AADServicePrincipalRiskEvents** | Individual risk detections for service principals | Analytics: 90d / Lake: 365d | Granular risk signals for application identities — anomalous credential usage, suspicious activity patterns. MCSB IM-4. | Detailed evidence of why a service principal was flagged — enables root cause analysis of compromised app registrations and managed identities | Anomalous service principal credential usage from unexpected geography |
+| **AADServicePrincipalRiskEvents** | Individual risk detections for service principals | Analytics: 90d / Lake: 365d | Granular risk signals for application identities — anomalous credential usage, suspicious activity patterns. | Detailed evidence of why a service principal was flagged — enables root cause analysis of compromised app registrations and managed identities | Anomalous service principal credential usage from unexpected geography |
 
 ---
 
@@ -85,36 +86,73 @@ The Microsoft Entra ID (formerly Azure AD) connector is **essential for every Se
 
 ### Authentication-Based
 
-| Detection | Table(s) | MITRE ATT&CK | Description |
-|:----------|:---------|:-------------|:------------|
-| Brute-force / password spray | SigninLogs | T1110.003 | High volume of failed sign-ins across multiple accounts from limited source IPs |
-| MFA fatigue / push bombing | SigninLogs | T1621 | Repeated MFA prompts followed by an eventual approval from the user |
-| Impossible travel | SigninLogs | T1078 | Sign-ins from geographically impossible locations within a short time window |
-| AiTM phishing (token theft) | AADNonInteractiveUserSignInLogs, SigninLogs | T1557 | Successful sign-in followed by non-interactive token use from a different IP/location |
-| Compromised service principal | AADServicePrincipalSignInLogs | T1550.001 | Service principal authentication from unexpected IPs or with unusual scope |
-| Golden SAML attack | ADFSSignInLogs, AuditLogs | T1606.002 | SAML token issued without corresponding ADFS authentication event |
+| Detection | Table(s) | MITRE ATT&CK | Detection Strategy | Description |
+|:----------|:---------|:-------------|:-------------------|:------------|
+| Brute-force / password spray | SigninLogs | [T1110.003](https://attack.mitre.org/techniques/T1110/003/) | [DET0487](https://attack.mitre.org/detectionstrategies/DET0487/) — Distributed Password Spraying | High volume of failed sign-ins across multiple accounts from limited source IPs |
+| MFA fatigue / push bombing | SigninLogs | [T1621](https://attack.mitre.org/techniques/T1621/) | [DET0160](https://attack.mitre.org/detectionstrategies/DET0160/) — MFA Request Generation | Repeated MFA prompts followed by an eventual approval from the user |
+| Impossible travel | SigninLogs | [T1078](https://attack.mitre.org/techniques/T1078/) | [DET0560](https://attack.mitre.org/detectionstrategies/DET0560/) — Valid Account Abuse | Sign-ins from geographically impossible locations within a short time window |
+| AiTM phishing (token theft) | AADNonInteractiveUserSignInLogs, SigninLogs | [T1557](https://attack.mitre.org/techniques/T1557/) | [DET0296](https://attack.mitre.org/detectionstrategies/DET0296/) — Adversary-in-the-Middle | Successful sign-in followed by non-interactive token use from a different IP/location |
+| Compromised service principal | AADServicePrincipalSignInLogs | [T1550.001](https://attack.mitre.org/techniques/T1550/001/) | [DET0185](https://attack.mitre.org/detectionstrategies/DET0185/) — Application Access Token Use | Service principal authentication from unexpected IPs or with unusual scope |
+| Golden SAML attack | ADFSSignInLogs, AuditLogs | [T1606.002](https://attack.mitre.org/techniques/T1606/002/) | [DET0148](https://attack.mitre.org/detectionstrategies/DET0148/) — Forged SAML Tokens | SAML token issued without corresponding ADFS authentication event |
 
 ### Directory-Based
 
-| Detection | Table(s) | MITRE ATT&CK | Description |
-|:----------|:---------|:-------------|:------------|
-| Privilege escalation | AuditLogs | T1098.003 | User added to Global Administrator or other privileged Entra ID roles |
-| New application registration with high permissions | AuditLogs | T1136.003 | New app registration with Mail.Read, Files.ReadWrite.All, or similar sensitive Graph API permissions |
-| Consent phishing (illicit consent grant) | AuditLogs, SigninLogs | T1528 | User grants OAuth consent to a malicious application |
-| Federation domain modification | AuditLogs | T1484.002 | Changes to federation settings — potential backdoor for authentication bypass |
-| Conditional Access policy modification | AuditLogs | T1562.001 | Disabling or weakening Conditional Access policies to reduce security controls |
+| Detection | Table(s) | MITRE ATT&CK | Detection Strategy | Description |
+|:----------|:---------|:-------------|:-------------------|:------------|
+| Privilege escalation | AuditLogs | [T1098.003](https://attack.mitre.org/techniques/T1098/003/) | [DET0277](https://attack.mitre.org/detectionstrategies/DET0277/) — Role Addition to Cloud Accounts | User added to Global Administrator or other privileged Entra ID roles |
+| New application registration with high permissions | AuditLogs | [T1136.003](https://attack.mitre.org/techniques/T1136/003/) | [DET0319](https://attack.mitre.org/detectionstrategies/DET0319/) — Cloud Account Creation | New app registration with Mail.Read, Files.ReadWrite.All, or similar sensitive Graph API permissions |
+| Consent phishing (illicit consent grant) | AuditLogs, SigninLogs | [T1528](https://attack.mitre.org/techniques/T1528/) | [DET0515](https://attack.mitre.org/detectionstrategies/DET0515/) — Steal Application Access Token | User grants OAuth consent to a malicious application |
+| Federation domain modification | AuditLogs | [T1484.002](https://attack.mitre.org/techniques/T1484/002/) | [DET0458](https://attack.mitre.org/detectionstrategies/DET0458/) — Trust Relationship Modifications | Changes to federation settings — potential backdoor for authentication bypass |
+| Conditional Access policy modification | AuditLogs | [T1562.001](https://attack.mitre.org/techniques/T1562/001/) *(revoked &rarr; [T1685](https://attack.mitre.org/techniques/T1685/))* | [DET0497](https://attack.mitre.org/detectionstrategies/DET0497/) — Defense Impairment | Disabling or weakening Conditional Access policies to reduce security controls |
 
 ### Risk-Based
 
-| Detection | Table(s) | MITRE ATT&CK | Description |
-|:----------|:---------|:-------------|:------------|
-| Leaked credentials detection | AADUserRiskEvents | T1078 | Entra ID Protection detects credentials found in dark web dumps or paste sites |
-| Anomalous token usage | AADUserRiskEvents | T1550.001 | Unusual token characteristics indicating potential token manipulation |
-| Leaked credentials not remediated | AADRiskyUsers, AADUserRiskEvents | T1589.001 | User flagged with leaked credentials but risk state remains "atRisk" beyond remediation SLA |
-| Multiple risk detections for single user | AADUserRiskEvents | T1078 | Multiple distinct risk detection types triggered for the same user within a short window — indicates active compromise |
-| Atypical travel followed by data access | AADUserRiskEvents, SigninLogs | T1078, T1537 | Atypical travel risk detection followed by successful sign-in and resource access |
-| Risky service principal accessing Key Vault | AADRiskyServicePrincipals, AKVAuditLogs | T1078.004, T1552.004 | Service principal flagged as risky that subsequently accessed Key Vault secrets |
-| Anomalous service principal credential usage | AADServicePrincipalRiskEvents | T1098.001 | Service principal using credentials from an unusual location or at unusual times |
+| Detection | Table(s) | MITRE ATT&CK | Detection Strategy | Description |
+|:----------|:---------|:-------------|:-------------------|:------------|
+| Leaked credentials detection | AADUserRiskEvents | [T1078](https://attack.mitre.org/techniques/T1078/) | [DET0560](https://attack.mitre.org/detectionstrategies/DET0560/) — Valid Account Abuse | Entra ID Protection detects credentials found in dark web dumps or paste sites |
+| Anomalous token usage | AADUserRiskEvents | [T1550.001](https://attack.mitre.org/techniques/T1550/001/) | [DET0185](https://attack.mitre.org/detectionstrategies/DET0185/) — Application Access Token Use | Unusual token characteristics indicating potential token manipulation |
+| Leaked credentials not remediated | AADRiskyUsers, AADUserRiskEvents | [T1589.001](https://attack.mitre.org/techniques/T1589/001/) | [DET0813](https://attack.mitre.org/detectionstrategies/DET0813/) — Detection of Credentials | User flagged with leaked credentials but risk state remains "atRisk" beyond remediation SLA |
+| Multiple risk detections for single user | AADUserRiskEvents | [T1078](https://attack.mitre.org/techniques/T1078/) | [DET0560](https://attack.mitre.org/detectionstrategies/DET0560/) — Valid Account Abuse | Multiple distinct risk detection types triggered for the same user within a short window — indicates active compromise |
+| Atypical travel followed by data access | AADUserRiskEvents, SigninLogs | [T1078](https://attack.mitre.org/techniques/T1078/), [T1537](https://attack.mitre.org/techniques/T1537/) | [DET0560](https://attack.mitre.org/detectionstrategies/DET0560/) · [DET0573](https://attack.mitre.org/detectionstrategies/DET0573/) — Data Transfer to Cloud Account | Atypical travel risk detection followed by successful sign-in and resource access |
+| Risky service principal accessing Key Vault | AADRiskyServicePrincipals, AKVAuditLogs | [T1078.004](https://attack.mitre.org/techniques/T1078/004/), [T1552.004](https://attack.mitre.org/techniques/T1552/004/) | [DET0546](https://attack.mitre.org/detectionstrategies/DET0546/) · [DET0549](https://attack.mitre.org/detectionstrategies/DET0549/) — Cloud Account Abuse / Private Key Access | Service principal flagged as risky that subsequently accessed Key Vault secrets |
+| Anomalous service principal credential usage | AADServicePrincipalRiskEvents | [T1098.001](https://attack.mitre.org/techniques/T1098/001/) | [DET0531](https://attack.mitre.org/detectionstrategies/DET0531/) — Additional Cloud Credentials | Service principal using credentials from an unusual location or at unusual times |
+
+---
+
+## MITRE Detection Strategies
+
+Curated list of MITRE [Detection Strategies](https://attack.mitre.org/detectionstrategies/) relevant to the techniques referenced on this page.
+
+| Technique | Detection Strategy |
+|:----------|:-------------------|
+| [T1110.003](https://attack.mitre.org/techniques/T1110/003/) | [DET0487](https://attack.mitre.org/detectionstrategies/DET0487/) &mdash; Distributed Password Spraying via Authentication Failures Across Multiple Accounts |
+| [T1078](https://attack.mitre.org/techniques/T1078/) | [DET0560](https://attack.mitre.org/detectionstrategies/DET0560/) &mdash; Detection of Valid Account Abuse Across Platforms |
+| [T1621](https://attack.mitre.org/techniques/T1621/) | [DET0160](https://attack.mitre.org/detectionstrategies/DET0160/) &mdash; Detection Strategy for Multi-Factor Authentication Request Generation (T1621) |
+| [T1557](https://attack.mitre.org/techniques/T1557/) | [DET0296](https://attack.mitre.org/detectionstrategies/DET0296/) &mdash; Detect Adversary-in-the-Middle via Network and Configuration Anomalies |
+| [T1550.001](https://attack.mitre.org/techniques/T1550/001/) | [DET0185](https://attack.mitre.org/detectionstrategies/DET0185/) &mdash; Behavioral Detection Strategy for Use Alternate Authentication Material: Application Access Token (T1550.001) |
+| [T1606.002](https://attack.mitre.org/techniques/T1606/002/) | [DET0148](https://attack.mitre.org/detectionstrategies/DET0148/) &mdash; Detection Strategy for Forged SAML Tokens |
+| [T1098.003](https://attack.mitre.org/techniques/T1098/003/) | [DET0277](https://attack.mitre.org/detectionstrategies/DET0277/) &mdash; Detection Strategy for Role Addition to Cloud Accounts |
+| [T1136.003](https://attack.mitre.org/techniques/T1136/003/) | [DET0319](https://attack.mitre.org/detectionstrategies/DET0319/) &mdash; Detection Strategy for T1136.003 - Cloud Account Creation across IaaS, IdP, SaaS, Office |
+| [T1528](https://attack.mitre.org/techniques/T1528/) | [DET0515](https://attack.mitre.org/detectionstrategies/DET0515/) &mdash; Detection Strategy for T1528 - Steal Application Access Token |
+| [T1484.002](https://attack.mitre.org/techniques/T1484/002/) | [DET0458](https://attack.mitre.org/detectionstrategies/DET0458/) &mdash; Detection of Trust Relationship Modifications in Domain or Tenant Policies |
+| [T1562.001](https://attack.mitre.org/techniques/T1562/001/) *(revoked &rarr; [T1685](https://attack.mitre.org/techniques/T1685/))* | [DET0497](https://attack.mitre.org/detectionstrategies/DET0497/) &mdash; Detection of Defense Impairment through Disabled or Modified Tools across OS Platforms. |
+| [T1589.001](https://attack.mitre.org/techniques/T1589/001/) | [DET0813](https://attack.mitre.org/detectionstrategies/DET0813/) &mdash; Detection of Credentials |
+| [T1537](https://attack.mitre.org/techniques/T1537/) | [DET0573](https://attack.mitre.org/detectionstrategies/DET0573/) &mdash; Cross-Platform Detection of Data Transfer to Cloud Account |
+| [T1078.004](https://attack.mitre.org/techniques/T1078/004/) | [DET0546](https://attack.mitre.org/detectionstrategies/DET0546/) &mdash; Detection of Abused or Compromised Cloud Accounts for Access and Persistence |
+| [T1552.004](https://attack.mitre.org/techniques/T1552/004/) | [DET0549](https://attack.mitre.org/detectionstrategies/DET0549/) &mdash; Detect Suspicious Access to Private Key Files and Export Attempts Across Platforms |
+| [T1098.001](https://attack.mitre.org/techniques/T1098/001/) | [DET0531](https://attack.mitre.org/detectionstrategies/DET0531/) &mdash; Detection Strategy for Additional Cloud Credentials in IaaS/IdP/SaaS |
+| [T1087.004](https://attack.mitre.org/techniques/T1087/004/) | [DET0386](https://attack.mitre.org/detectionstrategies/DET0386/) &mdash; Cloud Account Enumeration via API, CLI, and Scripting Interfaces |
+| [T1114.002](https://attack.mitre.org/techniques/T1114/002/) | [DET0048](https://attack.mitre.org/detectionstrategies/DET0048/) &mdash; Detect Remote Email Collection via Abnormal Login and Programmatic Access |
+| [T1213.002](https://attack.mitre.org/techniques/T1213/002/) | [DET0500](https://attack.mitre.org/detectionstrategies/DET0500/) &mdash; Detecting Abnormal SharePoint Data Mining by Privileged or Rare Users |
+
+> [!NOTE]
+> This page intentionally omits the third MITRE-evidence column. For identity-provider strategies, MITRE may cite cross-platform or provider-specific source names that do not map 1:1 to Microsoft Entra ID tables; keeping this section as Technique + Detection Strategy avoids a brittle translation layer.
+
+> [!NOTE]
+> **MITRE legacy technique IDs.** Some technique IDs cited on this page are *legacy* IDs that MITRE has revoked and remapped: T1562.001 &rarr; T1685. Published Detection Strategies are attached to the current technique IDs only; the table above follows the `revoked-by` chain so each strategy still applies to the legacy ID cited above.
+
+> [!TIP]
+> Detection Strategies are MITRE-published *pseudo-code analytics*, not vendor rules — they tell you **what** to correlate across data sources. Use them to validate that your Sentinel analytic rules and KQL hunting queries cover the published correlation logic.
 
 ---
 

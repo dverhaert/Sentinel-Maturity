@@ -9,6 +9,7 @@
 - [Overview](#overview)
 - [Tables and Rationale](#tables-and-rationale)
 - [Example Detections](#example-detections)
+- [MITRE Detection Strategies](#mitre-detection-strategies)
 - [MCSB Control Mapping](#mcsb-control-mapping)
 - [Important Considerations](#important-considerations)
 - [Notes](#notes)
@@ -44,22 +45,22 @@ For organisations using Azure Firewall as their central egress point (hub-spoke 
 
 | Table | Description | Retention Recommendation | Rationale | Forensic Value | Example Detection |
 |:------|:------------|:------------------------|:----------|:---------------|:------------------|
-| **AZFWNetworkRule** | Network rule evaluation — source/dest IP, port, protocol, action (allow/deny) | Analytics: 90d / Lake: 365d | **Core network forensics table.** Detects lateral movement, port scanning, C2 over non-HTTP protocols. MCSB LT-4. | Complete network connection audit trail — proves which source connected to which destination, on which port, and whether it was allowed or denied. Essential for lateral movement and C2 investigation. | Outbound connection to known C2 IP on unusual port (T1571), internal port scan (T1046) |
-| **AZFWApplicationRule** | Application (L7) rule evaluation — FQDN, URL, HTTP method, action | Analytics: 90d / Lake: 365d | Detects data exfiltration to cloud storage, C2 over HTTPS, access to suspicious domains. MCSB LT-4. | Proves exactly which FQDNs and URLs were accessed through the firewall — essential for scoping data exfiltration and identifying C2 domains | Data exfiltration to personal cloud storage (T1567), C2 callback to newly registered domain (T1071.001) |
-| **AZFWNatRule** | DNAT rule matches — inbound connections mapped to backend resources | Analytics: 90d / Lake: 365d | Tracks inbound access to published services — detects scanning and exploitation attempts against internet-facing services. | Proves which external IPs accessed published services and when — essential for investigating initial access to internet-facing workloads | Inbound exploitation attempt against published service (T1190) |
+| **AZFWNetworkRule** | Network rule evaluation — source/dest IP, port, protocol, action (allow/deny) | Analytics: 90d / Lake: 365d | **Core network forensics table.** Detects lateral movement, port scanning, C2 over non-HTTP protocols. | Complete network connection audit trail — proves which source connected to which destination, on which port, and whether it was allowed or denied. Essential for lateral movement and C2 investigation. | Outbound connection to known C2 IP on unusual port, internal port scan |
+| **AZFWApplicationRule** | Application (L7) rule evaluation — FQDN, URL, HTTP method, action | Analytics: 90d / Lake: 365d | Detects data exfiltration to cloud storage, C2 over HTTPS, access to suspicious domains. | Proves exactly which FQDNs and URLs were accessed through the firewall — essential for scoping data exfiltration and identifying C2 domains | Data exfiltration to personal cloud storage, C2 callback to newly registered domain |
+| **AZFWNatRule** | DNAT rule matches — inbound connections mapped to backend resources | Analytics: 90d / Lake: 365d | Tracks inbound access to published services — detects scanning and exploitation attempts against internet-facing services. | Proves which external IPs accessed published services and when — essential for investigating initial access to internet-facing workloads | Inbound exploitation attempt against published service |
 
 ### Threat Intelligence and DNS
 
 | Table | Description | Retention Recommendation | Rationale | Forensic Value | Example Detection |
 |:------|:------------|:------------------------|:----------|:---------------|:------------------|
-| **AZFWThreatIntel** | Connections matching Microsoft Threat Intelligence feeds | Analytics: 90d / Lake: 365d | Direct IOC matching at the network level — detects known malicious IPs, domains, and URLs. MCSB LT-1. | Authoritative evidence that a resource communicated with known malicious infrastructure — strong indicator of compromise | Connection to known botnet C2 infrastructure (T1071) |
-| **AZFWDnsQuery** | DNS queries proxied through Azure Firewall DNS proxy | Analytics: 90d / Lake: 365d | Detects DNS tunnelling, DGA domains, C2 over DNS, and data exfiltration via DNS. MCSB LT-4. Cross-reference with the [DNS Security Logs](dns-security-logs.md) page for endpoint-level DNS. | Complete DNS query audit trail — proves which resource queried which domain and when. Essential for detecting C2 communication patterns and DNS-based exfiltration. | DNS tunnelling with high query volume to single domain (T1071.004), DGA domain resolution (T1568.002) |
+| **AZFWThreatIntel** | Connections matching Microsoft Threat Intelligence feeds | Analytics: 90d / Lake: 365d | Direct IOC matching at the network level — detects known malicious IPs, domains, and URLs. | Authoritative evidence that a resource communicated with known malicious infrastructure — strong indicator of compromise | Connection to known botnet C2 infrastructure |
+| **AZFWDnsQuery** | DNS queries proxied through Azure Firewall DNS proxy | Analytics: 90d / Lake: 365d | Detects DNS tunnelling, DGA domains, C2 over DNS, and data exfiltration via DNS. Cross-reference with the [DNS Security Logs](dns-security-logs.md) page for endpoint-level DNS. | Complete DNS query audit trail — proves which resource queried which domain and when. Essential for detecting C2 communication patterns and DNS-based exfiltration. | DNS tunnelling with high query volume to single domain, DGA domain resolution |
 
 ### IDPS Logs (Premium)
 
 | Table | Description | Retention Recommendation | Rationale | Forensic Value | Example Detection |
 |:------|:------------|:------------------------|:----------|:---------------|:------------------|
-| **AZFWIdpsSignature** | Intrusion detection and prevention signature matches (Premium only) | Analytics: 90d / Lake: 365d | Network-level intrusion detection — identifies known exploit signatures, malware communications, and protocol anomalies. | Evidence of network-level attack signatures — proves that specific exploit attempts or malware communications were detected at the perimeter | Known exploit signature detected in network traffic (T1190) |
+| **AZFWIdpsSignature** | Intrusion detection and prevention signature matches (Premium only) | Analytics: 90d / Lake: 365d | Network-level intrusion detection — identifies known exploit signatures, malware communications, and protocol anomalies. | Evidence of network-level attack signatures — proves that specific exploit attempts or malware communications were detected at the perimeter | Known exploit signature detected in network traffic |
 
 ### Diagnostic Tables
 
@@ -75,20 +76,43 @@ For organisations using Azure Firewall as their central egress point (hub-spoke 
 
 ### C2 and Exfiltration
 
-| Detection | Table(s) | MITRE ATT&CK | Description |
-|:----------|:---------|:-------------|:------------|
-| Outbound C2 to suspicious domain | AZFWApplicationRule, AZFWThreatIntel | T1071.001 | HTTPS connections to newly registered or threat intel-flagged domains |
-| DNS tunnelling | AZFWDnsQuery | T1071.004 | High-entropy subdomain queries to a single domain — data exfiltration via DNS |
-| Data exfiltration to cloud storage | AZFWApplicationRule | T1567 | Large outbound transfers to personal cloud storage services (Dropbox, Google Drive, etc.) |
-| DGA domain resolution | AZFWDnsQuery | T1568.002 | Algorithmically generated domain names resolved through the DNS proxy |
+| Detection | Table(s) | MITRE ATT&CK | Detection Strategy | Description |
+|:----------|:---------|:-------------|:-------------------|:------------|
+| Outbound C2 to suspicious domain | AZFWApplicationRule, AZFWThreatIntel | [T1071.001](https://attack.mitre.org/techniques/T1071/001/) | [DET0027](https://attack.mitre.org/detectionstrategies/DET0027/) — Web Protocols C2 | HTTPS connections to newly registered or threat intel-flagged domains |
+| DNS tunnelling | AZFWDnsQuery | [T1071.004](https://attack.mitre.org/techniques/T1071/004/) | [DET0400](https://attack.mitre.org/detectionstrategies/DET0400/) — DNS Tunneling | High-entropy subdomain queries to a single domain — data exfiltration via DNS |
+| Data exfiltration to cloud storage | AZFWApplicationRule | [T1567](https://attack.mitre.org/techniques/T1567/) | [DET0548](https://attack.mitre.org/detectionstrategies/DET0548/) — Exfiltration Over Web Service | Large outbound transfers to personal cloud storage services (Dropbox, Google Drive, etc.) |
+| DGA domain resolution | AZFWDnsQuery | [T1568.002](https://attack.mitre.org/techniques/T1568/002/) | [DET0419](https://attack.mitre.org/detectionstrategies/DET0419/) — Domain Generation Algorithms | Algorithmically generated domain names resolved through the DNS proxy |
 
 ### Lateral Movement and Reconnaissance
 
-| Detection | Table(s) | MITRE ATT&CK | Description |
-|:----------|:---------|:-------------|:------------|
-| Internal port scan | AZFWNetworkRule | T1046 | Single source connecting to many destinations on the same port in short timeframe |
-| Unexpected spoke-to-spoke traffic | AZFWNetworkRule | T1021 | Traffic between spoke VNets that should not communicate directly |
-| Inbound exploitation attempt | AZFWNatRule | T1190 | External IP scanning or exploiting DNAT-published services |
+| Detection | Table(s) | MITRE ATT&CK | Detection Strategy | Description |
+|:----------|:---------|:-------------|:-------------------|:------------|
+| Internal port scan | AZFWNetworkRule | [T1046](https://attack.mitre.org/techniques/T1046/) | [DET0376](https://attack.mitre.org/detectionstrategies/DET0376/) — Network Service Discovery | Single source connecting to many destinations on the same port in short timeframe |
+| Unexpected spoke-to-spoke traffic | AZFWNetworkRule | [T1021](https://attack.mitre.org/techniques/T1021/) | [DET0269](https://attack.mitre.org/detectionstrategies/DET0269/) — Remote Services | Traffic between spoke VNets that should not communicate directly |
+| Inbound exploitation attempt | AZFWNatRule | [T1190](https://attack.mitre.org/techniques/T1190/) | [DET0080](https://attack.mitre.org/detectionstrategies/DET0080/) — Exploit Public-Facing Application | External IP scanning or exploiting DNAT-published services |
+
+---
+
+## MITRE Detection Strategies
+
+Curated list of MITRE [Detection Strategies](https://attack.mitre.org/detectionstrategies/) relevant to the techniques referenced on this page.
+
+| Technique | Detection Strategy |
+|:----------|:-------------------|
+| [T1071.001](https://attack.mitre.org/techniques/T1071/001/) | [DET0027](https://attack.mitre.org/detectionstrategies/DET0027/) &mdash; Detection of Web Protocol-Based C2 Over HTTP, HTTPS, or WebSockets |
+| [T1071.004](https://attack.mitre.org/techniques/T1071/004/) | [DET0400](https://attack.mitre.org/detectionstrategies/DET0400/) &mdash; Behavioral Detection of DNS Tunneling and Application Layer Abuse |
+| [T1567](https://attack.mitre.org/techniques/T1567/) | [DET0548](https://attack.mitre.org/detectionstrategies/DET0548/) &mdash; Detection Strategy for Exfiltration Over Web Service |
+| [T1568.002](https://attack.mitre.org/techniques/T1568/002/) | [DET0419](https://attack.mitre.org/detectionstrategies/DET0419/) &mdash; Detection Strategy for Dynamic Resolution using Domain Generation Algorithms. |
+| [T1046](https://attack.mitre.org/techniques/T1046/) | [DET0376](https://attack.mitre.org/detectionstrategies/DET0376/) &mdash; Behavioral Detection Strategy for Network Service Discovery Across Platforms |
+| [T1021](https://attack.mitre.org/techniques/T1021/) | [DET0269](https://attack.mitre.org/detectionstrategies/DET0269/) &mdash; Behavioral Detection Strategy for Remote Service Logins and Post-Access Activity |
+| [T1190](https://attack.mitre.org/techniques/T1190/) | [DET0080](https://attack.mitre.org/detectionstrategies/DET0080/) &mdash; Exploit Public-Facing Application – multi-signal correlation (request → error → post-exploit process/egress) |
+| [T1071](https://attack.mitre.org/techniques/T1071/) | [DET0444](https://attack.mitre.org/detectionstrategies/DET0444/) &mdash; Detection of Command and Control Over Application Layer Protocols |
+
+> [!NOTE]
+> This page intentionally omits the third MITRE-evidence column. For broad platform-family strategies, MITRE may cite provider-specific source names that do not map 1:1 to Azure Firewall tables; keeping this section as Technique + Detection Strategy avoids a brittle translation layer.
+
+> [!TIP]
+> Detection Strategies are MITRE-published *pseudo-code analytics*, not vendor rules — they tell you **what** to correlate across data sources. Use them to validate that your Sentinel analytic rules and KQL hunting queries cover the published correlation logic.
 
 ---
 

@@ -9,6 +9,7 @@
 - [Overview](#overview)
 - [Tables and Rationale](#tables-and-rationale)
 - [Example Detections](#example-detections)
+- [MITRE Detection Strategies](#mitre-detection-strategies)
 - [MCSB Control Mapping](#mcsb-control-mapping)
 - [OfficeActivity vs CloudAppEvents](#officeactivity-vs-cloudappevents)
 - [Notes](#notes)
@@ -37,9 +38,9 @@ The Office 365 connector provides **audit log data for Exchange Online, SharePoi
 
 | Table | Workload | Description | Retention Recommendation | Rationale | Forensic Value | Example Detection |
 |:------|:---------|:------------|:------------------------|:----------|:---------------|:------------------|
-| **OfficeActivity** (Exchange) | Exchange Online | Mailbox activity: login, mail access, send, delegate access, inbox rule creation, mailbox permissions changes | Analytics: 90d / Lake: 365d | BEC detection and investigation. Inbox rule creation is a top indicator of compromised mailboxes (MITRE T1564.008). MailItemsAccessed (E5 Audit Premium) enables precise forensic scoping of what data an attacker accessed. MCSB LT-3. | Reconstruct exactly which emails the attacker read, sent, or forwarded — MailItemsAccessed proves the blast radius of a BEC incident and which data was exposed. Essential for breach notification scoping. | Suspicious inbox rule forwarding to external domain (T1564.008), Delegate access granted (T1098.002) |
-| **OfficeActivity** (SharePoint) | SharePoint Online | File access, sharing, download, upload, site collection changes | Analytics: 90d / Lake: 365d | Data exfiltration detection (mass downloads, external sharing). Insider threat monitoring. MCSB DP-2 (Protect sensitive data). Tracks who accessed which files and when — essential for data breach scoping. | Proves exactly which files were accessed or downloaded by a compromised account — critical for regulatory breach notification where you must demonstrate what data was exposed | Mass file download by single user (T1530), Anonymous sharing link created (T1567) |
-| **OfficeActivity** (Teams) | Microsoft Teams | Teams messaging, meeting, app, and channel events | Analytics: 90d / Lake: 365d | Shadow IT detection (unauthorized apps in Teams), data loss via Teams messaging, guest access monitoring. Becoming increasingly important as Teams adoption grows. | Traces communication activity during an incident — shows whether an attacker communicated via Teams, installed malicious apps, or accessed sensitive team channels | Unauthorized third-party app installed (T1195.002), Guest added to sensitive team |
+| **OfficeActivity** (Exchange) | Exchange Online | Mailbox activity: login, mail access, send, delegate access, inbox rule creation, mailbox permissions changes | Analytics: 90d / Lake: 365d | BEC detection and investigation. Inbox rule creation is a top indicator of compromised mailboxes. MailItemsAccessed (E5 Audit Premium) enables precise forensic scoping of what data an attacker accessed. | Reconstruct exactly which emails the attacker read, sent, or forwarded — MailItemsAccessed proves the blast radius of a BEC incident and which data was exposed. Essential for breach notification scoping. | Suspicious inbox rule forwarding to external domain, Delegate access granted |
+| **OfficeActivity** (SharePoint) | SharePoint Online | File access, sharing, download, upload, site collection changes | Analytics: 90d / Lake: 365d | Data exfiltration detection (mass downloads, external sharing). Insider threat monitoring. Tracks who accessed which files and when — essential for data breach scoping. | Proves exactly which files were accessed or downloaded by a compromised account — critical for regulatory breach notification where you must demonstrate what data was exposed | Mass file download by single user, Anonymous sharing link created |
+| **OfficeActivity** (Teams) | Microsoft Teams | Teams messaging, meeting, app, and channel events | Analytics: 90d / Lake: 365d | Shadow IT detection (unauthorized apps in Teams), data loss via Teams messaging, guest access monitoring. Becoming increasingly important as Teams adoption grows. | Traces communication activity during an incident — shows whether an attacker communicated via Teams, installed malicious apps, or accessed sensitive team channels | Unauthorized third-party app installed, Guest added to sensitive team |
 
 > [!IMPORTANT]
 > Ensure **Unified Audit Log** is enabled in Microsoft 365. Without it, no Office 365 audit events will flow to Sentinel. Check via `Get-AdminAuditLogConfig` or the Microsoft Purview compliance portal.
@@ -50,30 +51,56 @@ The Office 365 connector provides **audit log data for Exchange Online, SharePoi
 
 ### Exchange Online
 
-| Detection | Operation(s) | MITRE ATT&CK | Description |
-|:----------|:-------------|:-------------|:------------|
-| Suspicious inbox rule creation | New-InboxRule, Set-InboxRule | T1564.008 | Rules that forward/redirect/delete email — classic BEC persistence |
-| Mailbox forwarding to external address | Set-Mailbox (ForwardingSmtpAddress) | T1114.003 | Email forwarding configured to external domain |
-| MailItemsAccessed by compromised account | MailItemsAccessed | T1114.002 | After a confirmed compromise, scope exactly which emails were accessed (E5 Audit Premium) |
-| Delegate access granted | Add-MailboxPermission | T1098.002 | Unexpected delegate access (FullAccess, SendAs, SendOnBehalf) to a mailbox |
-| eDiscovery abuse | New-ComplianceSearch, SearchStarted | T1114 | Misuse of eDiscovery to search and export mailbox content |
+| Detection | Operation(s) | MITRE ATT&CK | Detection Strategy | Description |
+|:----------|:-------------|:-------------|:-------------------|:------------|
+| Suspicious inbox rule creation | New-InboxRule, Set-InboxRule | [T1564.008](https://attack.mitre.org/techniques/T1564/008/) | [DET0192](https://attack.mitre.org/detectionstrategies/DET0192/) — Email Hiding Rules | Rules that forward/redirect/delete email — classic BEC persistence |
+| Mailbox forwarding to external address | Set-Mailbox (ForwardingSmtpAddress) | [T1114.003](https://attack.mitre.org/techniques/T1114/003/) | [DET0576](https://attack.mitre.org/detectionstrategies/DET0576/) — Email Forwarding Rule Abuse | Email forwarding configured to external domain |
+| MailItemsAccessed by compromised account | MailItemsAccessed | [T1114.002](https://attack.mitre.org/techniques/T1114/002/) | [DET0048](https://attack.mitre.org/detectionstrategies/DET0048/) — Remote Email Collection | After a confirmed compromise, scope exactly which emails were accessed (E5 Audit Premium) |
+| Delegate access granted | Add-MailboxPermission | [T1098.002](https://attack.mitre.org/techniques/T1098/002/) | [DET0373](https://attack.mitre.org/detectionstrategies/DET0373/) — Email Delegate Permissions | Unexpected delegate access (FullAccess, SendAs, SendOnBehalf) to a mailbox |
+| eDiscovery abuse | New-ComplianceSearch, SearchStarted | [T1114](https://attack.mitre.org/techniques/T1114/) | [DET0476](https://attack.mitre.org/detectionstrategies/DET0476/) — Email Collection | Misuse of eDiscovery to search and export mailbox content |
 
 ### SharePoint Online
 
-| Detection | Operation(s) | MITRE ATT&CK | Description |
-|:----------|:-------------|:-------------|:------------|
-| Mass file download | FileDownloaded (high frequency) | T1530 | Unusually high volume of file downloads by a single user |
-| External sharing of sensitive documents | SharingSet, AnonymousLinkCreated | T1567 | Documents shared externally or via anonymous links |
-| Site permission changes | SiteCollectionAdminAdded | T1098 | Granting admin rights to a site collection |
-| Sensitive file access | FileAccessed | T1530 | Access to files in designated sensitive libraries |
+| Detection | Operation(s) | MITRE ATT&CK | Detection Strategy | Description |
+|:----------|:-------------|:-------------|:-------------------|:------------|
+| Mass file download | FileDownloaded (high frequency) | [T1530](https://attack.mitre.org/techniques/T1530/) | [DET0484](https://attack.mitre.org/detectionstrategies/DET0484/) — Cloud Storage Exfiltration | Unusually high volume of file downloads by a single user |
+| External sharing of sensitive documents | SharingSet, AnonymousLinkCreated | [T1567](https://attack.mitre.org/techniques/T1567/) | [DET0548](https://attack.mitre.org/detectionstrategies/DET0548/) — Exfiltration Over Web Service | Documents shared externally or via anonymous links |
+| Site permission changes | SiteCollectionAdminAdded | [T1098](https://attack.mitre.org/techniques/T1098/) | [DET0096](https://attack.mitre.org/detectionstrategies/DET0096/) — Account Manipulation | Granting admin rights to a site collection |
+| Sensitive file access | FileAccessed | [T1530](https://attack.mitre.org/techniques/T1530/) | [DET0484](https://attack.mitre.org/detectionstrategies/DET0484/) — Cloud Storage Exfiltration | Access to files in designated sensitive libraries |
 
 ### Microsoft Teams
 
-| Detection | Operation(s) | MITRE ATT&CK | Description |
-|:----------|:-------------|:-------------|:------------|
-| Third-party app installation | AppInstalled | T1195.002 | Unauthorized or suspicious app installed in Teams |
-| Guest user added to sensitive team | MemberAdded (guest) | T1136 | External guest accounts added to internal-only teams |
-| Suspicious bot or connector activity | BotAddedToTeam, ConnectorAdded | T1059 | Bots or connectors that could exfiltrate data from Teams channels |
+| Detection | Operation(s) | MITRE ATT&CK | Detection Strategy | Description |
+|:----------|:-------------|:-------------|:-------------------|:------------|
+| Third-party app installation | AppInstalled | [T1195.002](https://attack.mitre.org/techniques/T1195/002/) | [DET0309](https://attack.mitre.org/detectionstrategies/DET0309/) — Compromised software/update chain | Unauthorized or suspicious app installed in Teams |
+| Guest user added to sensitive team | MemberAdded (guest) | [T1136](https://attack.mitre.org/techniques/T1136/) | [DET0583](https://attack.mitre.org/detectionstrategies/DET0583/) — Create Account | External guest accounts added to internal-only teams |
+| Suspicious bot or connector activity | BotAddedToTeam, ConnectorAdded | [T1059](https://attack.mitre.org/techniques/T1059/) | [DET0516](https://attack.mitre.org/detectionstrategies/DET0516/) — Command and Scripting Interpreter Abuse | Bots or connectors that could exfiltrate data from Teams channels |
+
+---
+
+## MITRE Detection Strategies
+
+Curated list of MITRE [Detection Strategies](https://attack.mitre.org/detectionstrategies/) relevant to the techniques referenced on this page.
+
+| Technique | Detection Strategy |
+|:----------|:-------------------|
+| [T1564.008](https://attack.mitre.org/techniques/T1564/008/) | [DET0192](https://attack.mitre.org/detectionstrategies/DET0192/) &mdash; Detection Strategy for Email Hiding Rules |
+| [T1098.002](https://attack.mitre.org/techniques/T1098/002/) | [DET0373](https://attack.mitre.org/detectionstrategies/DET0373/) &mdash; Detection Strategy for Addition of Email Delegate Permissions |
+| [T1530](https://attack.mitre.org/techniques/T1530/) | [DET0484](https://attack.mitre.org/detectionstrategies/DET0484/) &mdash; Multi-Platform Cloud Storage Exfiltration Behavior Chain |
+| [T1567](https://attack.mitre.org/techniques/T1567/) | [DET0548](https://attack.mitre.org/detectionstrategies/DET0548/) &mdash; Detection Strategy for Exfiltration Over Web Service |
+| [T1195.002](https://attack.mitre.org/techniques/T1195/002/) | [DET0309](https://attack.mitre.org/detectionstrategies/DET0309/) &mdash; Compromised software/update chain (installer/write &rarr; first-run/child &rarr; egress/signature anomaly) |
+| [T1114.003](https://attack.mitre.org/techniques/T1114/003/) | [DET0576](https://attack.mitre.org/detectionstrategies/DET0576/) &mdash; Email Forwarding Rule Abuse Detection Across Platforms |
+| [T1114.002](https://attack.mitre.org/techniques/T1114/002/) | [DET0048](https://attack.mitre.org/detectionstrategies/DET0048/) &mdash; Detect Remote Email Collection via Abnormal Login and Programmatic Access |
+| [T1114](https://attack.mitre.org/techniques/T1114/) | [DET0476](https://attack.mitre.org/detectionstrategies/DET0476/) &mdash; Email Collection via Local Email Access and Auto-Forwarding Behavior |
+| [T1098](https://attack.mitre.org/techniques/T1098/) | [DET0096](https://attack.mitre.org/detectionstrategies/DET0096/) &mdash; Account Manipulation Behavior Chain Detection |
+| [T1136](https://attack.mitre.org/techniques/T1136/) | [DET0583](https://attack.mitre.org/detectionstrategies/DET0583/) &mdash; Detection Strategy for T1136 - Create Account across platforms |
+| [T1059](https://attack.mitre.org/techniques/T1059/) | [DET0516](https://attack.mitre.org/detectionstrategies/DET0516/) &mdash; Behavioral Detection of Command and Scripting Interpreter Abuse |
+
+> [!NOTE]
+> This page intentionally omits the third MITRE-evidence column. For Office Suite strategies, MITRE may cite cross-platform or provider-specific source names that do not map 1:1 to Microsoft 365 tables; keeping this section as Technique + Detection Strategy avoids a brittle translation layer.
+
+> [!TIP]
+> Detection Strategies are MITRE-published *pseudo-code analytics*, not vendor rules — they tell you **what** to correlate across data sources. Use them to validate that your Sentinel analytic rules and KQL hunting queries cover the published correlation logic.
 
 ---
 

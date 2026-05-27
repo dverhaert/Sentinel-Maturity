@@ -9,6 +9,7 @@
 - [Overview](#overview)
 - [Tables and Rationale](#tables-and-rationale)
 - [Example Detections](#example-detections)
+- [MITRE Detection Strategies](#mitre-detection-strategies)
 - [MCSB Control Mapping](#mcsb-control-mapping)
 - [Important Considerations](#important-considerations)
 - [Notes](#notes)
@@ -39,9 +40,9 @@ These logs are critical for detecting application-layer attacks that network fir
 
 | Table | Description | Retention Recommendation | Rationale | Forensic Value | Example Detection |
 |:------|:------------|:------------------------|:----------|:---------------|:------------------|
-| **AzureDiagnostics** (ApplicationGatewayFirewallLog) | WAF rule matches — triggered rules, action (allow/block/log), request URI, source IP | Analytics: 90d / Lake: 365d | **Core web application security table.** Detects OWASP Top 10 attacks, bot activity, and application abuse. MCSB LT-3, LT-4. | Proves which application-layer attacks were attempted against your web applications, from which IPs, and whether they were blocked. Essential for investigating web application breaches. | SQL injection attempt on login form (T1190), XSS payload in URL parameter (T1059.007) |
-| **AzureDiagnostics** (ApplicationGatewayAccessLog) | Access log — all requests passing through Application Gateway (including those not triggering WAF rules) | Analytics: 90d / Lake: 365d | Provides baseline traffic context and identifies requests that bypassed WAF rules. | Complete request audit trail — proves every HTTP request to your web applications including source IP, URI, response code, and latency | Unusual request volume from single IP — potential reconnaissance or brute-force (T1595) |
-| **AzureDiagnostics** (FrontDoorWebApplicationFirewallLog) | Front Door WAF rule matches — same structure as Application Gateway WAF | Analytics: 90d / Lake: 365d | Global edge WAF visibility — detects attacks before they reach the origin. | Evidence of attacks blocked at the edge — proves your global attack surface and the geographic distribution of attack sources | SQL injection blocked at edge before reaching origin (T1190) |
+| **AzureDiagnostics** (ApplicationGatewayFirewallLog) | WAF rule matches — triggered rules, action (allow/block/log), request URI, source IP | Analytics: 90d / Lake: 365d | **Core web application security table.** Detects OWASP Top 10 attacks, bot activity, and application abuse. MCSB LT-3, LT-4. | Proves which application-layer attacks were attempted against your web applications, from which IPs, and whether they were blocked. Essential for investigating web application breaches. | SQL injection attempt on login form, XSS payload in URL parameter |
+| **AzureDiagnostics** (ApplicationGatewayAccessLog) | Access log — all requests passing through Application Gateway (including those not triggering WAF rules) | Analytics: 90d / Lake: 365d | Provides baseline traffic context and identifies requests that bypassed WAF rules. | Complete request audit trail — proves every HTTP request to your web applications including source IP, URI, response code, and latency | Unusual request volume from single IP — potential reconnaissance or brute-force |
+| **AzureDiagnostics** (FrontDoorWebApplicationFirewallLog) | Front Door WAF rule matches — same structure as Application Gateway WAF | Analytics: 90d / Lake: 365d | Global edge WAF visibility — detects attacks before they reach the origin. | Evidence of attacks blocked at the edge — proves your global attack surface and the geographic distribution of attack sources | SQL injection blocked at edge before reaching origin |
 
 > [!TIP]
 > If you migrate to **resource-specific tables**, Application Gateway exposes `AGWFirewallLogs` and `AGWAccessLogs` as structured alternatives to `AzureDiagnostics`. Use resource-specific mode where available.
@@ -52,20 +53,40 @@ These logs are critical for detecting application-layer attacks that network fir
 
 ### Application-Layer Attacks
 
-| Detection | Table(s) | MITRE ATT&CK | Description |
-|:----------|:---------|:-------------|:------------|
-| SQL injection attempt | ApplicationGatewayFirewallLog | T1190 | WAF rule 942xxx triggered — SQL injection patterns in request body or query string |
-| Cross-site scripting (XSS) | ApplicationGatewayFirewallLog | T1059.007 | WAF rule 941xxx triggered — script injection in URL or form data |
-| Remote code execution attempt | ApplicationGatewayFirewallLog | T1190 | WAF rule detecting command injection, path traversal, or RFI/LFI |
-| Directory traversal | ApplicationGatewayFirewallLog | T1083 | Path traversal patterns (../) in request URI |
+| Detection | Table(s) | MITRE ATT&CK | Detection Strategy | Description |
+|:----------|:---------|:-------------|:-------------------|:------------|
+| SQL injection attempt | ApplicationGatewayFirewallLog | [T1190](https://attack.mitre.org/techniques/T1190/) | [DET0080](https://attack.mitre.org/detectionstrategies/DET0080/) — Exploit Public-Facing Application | WAF rule 942xxx triggered — SQL injection patterns in request body or query string |
+| Cross-site scripting (XSS) | ApplicationGatewayFirewallLog | [T1059.007](https://attack.mitre.org/techniques/T1059/007/) | [DET0264](https://attack.mitre.org/detectionstrategies/DET0264/) — JavaScript Execution Abuse | WAF rule 941xxx triggered — script injection in URL or form data |
+| Remote code execution attempt | ApplicationGatewayFirewallLog | [T1190](https://attack.mitre.org/techniques/T1190/) | [DET0080](https://attack.mitre.org/detectionstrategies/DET0080/) — Exploit Public-Facing Application | WAF rule detecting command injection, path traversal, or RFI/LFI |
+| Directory traversal | ApplicationGatewayFirewallLog | [T1083](https://attack.mitre.org/techniques/T1083/) | [DET0370](https://attack.mitre.org/detectionstrategies/DET0370/) — File and Directory Discovery | Path traversal patterns (../) in request URI |
 
 ### Reconnaissance and Abuse
 
-| Detection | Table(s) | MITRE ATT&CK | Description |
-|:----------|:---------|:-------------|:------------|
-| Web scanning / enumeration | ApplicationGatewayAccessLog | T1595 | High volume of 404 responses from single source — automated scanning |
-| Credential brute-force on login endpoint | ApplicationGatewayAccessLog | T1110 | High volume of POST requests to authentication endpoints |
-| Bot activity | ApplicationGatewayFirewallLog | T1595 | Bot protection rules triggered — known bad bots or scrapers |
+| Detection | Table(s) | MITRE ATT&CK | Detection Strategy | Description |
+|:----------|:---------|:-------------|:-------------------|:------------|
+| Web scanning / enumeration | ApplicationGatewayAccessLog | [T1595](https://attack.mitre.org/techniques/T1595/) | [DET0830](https://attack.mitre.org/detectionstrategies/DET0830/) — Active Scanning | High volume of 404 responses from single source — automated scanning |
+| Credential brute-force on login endpoint | ApplicationGatewayAccessLog | [T1110](https://attack.mitre.org/techniques/T1110/) | [DET0463](https://attack.mitre.org/detectionstrategies/DET0463/) — Brute Force | High volume of POST requests to authentication endpoints |
+| Bot activity | ApplicationGatewayFirewallLog | [T1595](https://attack.mitre.org/techniques/T1595/) | [DET0830](https://attack.mitre.org/detectionstrategies/DET0830/) — Active Scanning | Bot protection rules triggered — known bad bots or scrapers |
+
+---
+
+## MITRE Detection Strategies
+
+Curated list of MITRE [Detection Strategies](https://attack.mitre.org/detectionstrategies/) relevant to the techniques referenced on this page.
+
+| Technique | Detection Strategy |
+|:----------|:-------------------|
+| [T1190](https://attack.mitre.org/techniques/T1190/) | [DET0080](https://attack.mitre.org/detectionstrategies/DET0080/) &mdash; Exploit Public-Facing Application – multi-signal correlation (request → error → post-exploit process/egress) |
+| [T1059.007](https://attack.mitre.org/techniques/T1059/007/) | [DET0264](https://attack.mitre.org/detectionstrategies/DET0264/) &mdash; Cross-Platform Detection of JavaScript Execution Abuse |
+| [T1083](https://attack.mitre.org/techniques/T1083/) | [DET0370](https://attack.mitre.org/detectionstrategies/DET0370/) &mdash; Recursive Enumeration of Files and Directories Across Privilege Contexts |
+| [T1595](https://attack.mitre.org/techniques/T1595/) | [DET0830](https://attack.mitre.org/detectionstrategies/DET0830/) &mdash; Detection of Active Scanning |
+| [T1110](https://attack.mitre.org/techniques/T1110/) | [DET0463](https://attack.mitre.org/detectionstrategies/DET0463/) &mdash; Brute Force Authentication Failures with Multi-Platform Log Correlation |
+
+> [!NOTE]
+> This page intentionally omits the third MITRE-evidence column. For broad platform-family strategies, MITRE may cite provider-specific source names that do not map 1:1 to Azure WAF tables; keeping this section as Technique + Detection Strategy avoids a brittle translation layer.
+
+> [!TIP]
+> Detection Strategies are MITRE-published *pseudo-code analytics*, not vendor rules — they tell you **what** to correlate across data sources. Use them to validate that your Sentinel analytic rules and KQL hunting queries cover the published correlation logic.
 
 ---
 

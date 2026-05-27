@@ -10,6 +10,7 @@
 - [Tables and Rationale](#tables-and-rationale)
 - [Key Events to Monitor](#key-events-to-monitor)
 - [Example Detections](#example-detections)
+- [MITRE Detection Strategies](#mitre-detection-strategies)
 - [MCSB Control Mapping](#mcsb-control-mapping)
 - [Recommended Configuration](#recommended-configuration)
 - [Notes](#notes)
@@ -53,17 +54,17 @@ The Syslog table ingests messages from Linux syslog facilities. The key faciliti
 
 | Facility | Severity | Description | Retention Recommendation | Rationale | Forensic Value | Example Detection |
 |:---------|:---------|:------------|:------------------------|:----------|:---------------|:------------------|
-| **auth** | Info and above | Authentication events (login, su, sudo) | Analytics: 90d / Lake: 365d | **Core Linux security logging.** Captures SSH logons, `su` and `sudo` usage, PAM events. MCSB IM-1 (Centralise identity management). Essential for detecting brute-force, credential abuse, and privilege escalation. | Full authentication timeline on Linux hosts — proves who logged in, when, from where, and which privilege escalation commands were used | SSH brute-force (T1110), Unauthorized sudo usage (T1548.003) |
+| **auth** | Info and above | Authentication events (login, su, sudo) | Analytics: 90d / Lake: 365d | **Core Linux security logging.** Captures SSH logons, `su` and `sudo` usage, PAM events. Essential for detecting brute-force, credential abuse, and privilege escalation. | Full authentication timeline on Linux hosts — proves who logged in, when, from where, and which privilege escalation commands were used | SSH brute-force, Unauthorized sudo usage |
 | **authpriv** | Info and above | Private authentication messages (PAM, SSH) | Analytics: 90d / Lake: 365d | Detailed authentication internals — key accepted/rejected, PAM session opened/closed, auth failures. Often contains more detail than `auth` for SSH-based attacks. | Granular SSH forensics — proves which SSH keys were used or rejected and exact PAM session lifecycle | PAM authentication failure, SSH key rejected from unknown source |
 
 #### System and Kernel
 
 | Facility | Severity | Description | Retention Recommendation | Rationale | Forensic Value | Example Detection |
 |:---------|:---------|:------------|:------------------------|:----------|:---------------|:------------------|
-| **kern** | Warning and above | Kernel messages | Analytics: 90d / Lake: 365d | Detects kernel-level attacks (module loading, exploit attempts), hardware issues, and firewall events (iptables/nftables logged via kern). MCSB LT-3. | Evidence of kernel-level compromise — proves rootkit module loading and kernel exploit attempts that no user-space tool can reliably detect | Unexpected kernel module loaded — rootkit detection (T1547.006) |
-| **daemon** | Info and above | System daemon messages | Analytics: 90d / Lake: 365d | Covers services like sshd, cron, systemd, and custom daemons. Service starts/stops, crashes, and configuration changes are logged here. | Trace service-level persistence — proves when services were created, started, or modified by an attacker | New systemd service created and started (T1543.002) |
-| **cron** | Info and above | Cron job execution | Analytics: 90d / Lake: 365d | Persistence detection — cron jobs are a primary Linux persistence mechanism (MITRE T1053.003). Tracks when cron jobs execute and whether they succeed or fail. | Prove cron-based persistence — shows exactly when cron jobs were added and executed, linking persistence to attack timeline | New cron entry executing suspicious binary from /tmp (T1053.003) |
-| **syslog** | Info and above | General system messages | Analytics: 90d / Lake: 365d | Catch-all for messages not routed to other facilities. Provides general operational context. | General operational evidence — captures logging service state changes that indicate anti-forensic activity | rsyslog service stopped — potential anti-forensic activity (T1562.006) |
+| **kern** | Warning and above | Kernel messages | Analytics: 90d / Lake: 365d | Detects kernel-level attacks (module loading, exploit attempts), hardware issues, and firewall events (iptables/nftables logged via kern). | Evidence of kernel-level compromise — proves rootkit module loading and kernel exploit attempts that no user-space tool can reliably detect | Unexpected kernel module loaded — rootkit detection |
+| **daemon** | Info and above | System daemon messages | Analytics: 90d / Lake: 365d | Covers services like sshd, cron, systemd, and custom daemons. Service starts/stops, crashes, and configuration changes are logged here. | Trace service-level persistence — proves when services were created, started, or modified by an attacker | New systemd service created and started |
+| **cron** | Info and above | Cron job execution | Analytics: 90d / Lake: 365d | Persistence detection — cron jobs are a primary Linux persistence mechanism. Tracks when cron jobs execute and whether they succeed or fail. | Prove cron-based persistence — shows exactly when cron jobs were added and executed, linking persistence to attack timeline | New cron entry executing suspicious binary from /tmp |
+| **syslog** | Info and above | General system messages | Analytics: 90d / Lake: 365d | Catch-all for messages not routed to other facilities. Provides general operational context. | General operational evidence — captures logging service state changes that indicate anti-forensic activity | rsyslog service stopped — potential anti-forensic activity |
 
 #### Application and Network
 
@@ -94,7 +95,7 @@ The Syslog table ingests messages from Linux syslog facilities. The key faciliti
 |:--------------|:-------|:-------------|:------------|
 | `CRON.*CMD` | cron | T1053.003 | Cron job execution — watch for unusual commands or new cron entries |
 | `systemd.*Started` / `systemd.*Stopped` | daemon | T1543.002 | Service lifecycle — detects new or restarted services (potential persistence) |
-| `kernel:.*module.*loaded` | kern | T1547.006 | Kernel module loading — rootkit detection (MITRE T1014) |
+| `kernel:.*module.*loaded` | kern | T1547.006 | Kernel module loading — rootkit detection |
 | `useradd` / `usermod` / `userdel` | auth/authpriv | T1136.001 | Account management events — new accounts or group changes |
 | `groupadd` / `groupmod` | auth/authpriv | T1098 | Group membership changes — privilege escalation via group addition |
 
@@ -121,6 +122,37 @@ The Syslog table ingests messages from Linux syslog facilities. The key faciliti
 | User created / modified | auth/authpriv | T1136.001 | New local user created, especially if added to sudo/wheel group |
 | Syslog service stopped | syslog | T1562.006 | rsyslog or syslog-ng stopped — attacker may be disabling logging |
 | SSH key-based logon from unusual source | auth/authpriv | T1078.004 | Public key authentication from an IP not in baseline |
+
+---
+
+## MITRE Detection Strategies
+
+Curated list of MITRE [Detection Strategies](https://attack.mitre.org/detectionstrategies/) relevant to the techniques referenced on this page. The **MITRE Log Sources (Linux)** column lists the exact log channels and event codes referenced by the analytic of each strategy on the Linux platform — taken verbatim from the strategy's published `log_sources` field in the [ATT&CK STIX bundle](https://github.com/mitre-attack/attack-stix-data).
+
+| Technique | Detection Strategy | MITRE Log Sources (Linux) |
+|:----------|:-------------------|:-----------|
+| [T1014](https://attack.mitre.org/techniques/T1014/) | [DET0377](https://attack.mitre.org/detectionstrategies/DET0377/) &mdash; Detection of Kernel/User-Level Rootkit Behavior Across Platforms | `auditd:EXECVE` &middot; `linux:osquery`: file_events &middot; `linux:syslog`: kmod |
+| [T1053.003](https://attack.mitre.org/techniques/T1053/003/) | [DET0290](https://attack.mitre.org/detectionstrategies/DET0290/) &mdash; Cross-Platform Detection of Cron Job Abuse for Persistence and Execution | `auditd:SYSCALL`: execve, write |
+| [T1078](https://attack.mitre.org/techniques/T1078/) | [DET0560](https://attack.mitre.org/detectionstrategies/DET0560/) &mdash; Detection of Valid Account Abuse Across Platforms | `auditd:SYSCALL`: execve &middot; `NSM:Connections`: sshd or PAM logins |
+| [T1078.004](https://attack.mitre.org/techniques/T1078/004/) | [DET0546](https://attack.mitre.org/detectionstrategies/DET0546/) &mdash; Detection of Abused or Compromised Cloud Accounts for Access and Persistence | *MITRE has not published a Linux analytic for this strategy* |
+| [T1098](https://attack.mitre.org/techniques/T1098/) | [DET0096](https://attack.mitre.org/detectionstrategies/DET0096/) &mdash; Account Manipulation Behavior Chain Detection | `auditd:PATH`: /etc/passwd or /etc/group file write &middot; `auditd:SYSCALL`: usermod, groupmod, passwd |
+| [T1110](https://attack.mitre.org/techniques/T1110/) | [DET0463](https://attack.mitre.org/detectionstrategies/DET0463/) &mdash; Brute Force Authentication Failures with Multi-Platform Log Correlation | `auditd:USER_LOGIN`: USER_AUTH |
+| [T1110.001](https://attack.mitre.org/techniques/T1110/001/) | [DET0551](https://attack.mitre.org/detectionstrategies/DET0551/) &mdash; Password Guessing via Multi-Source Authentication Failure Correlation | `linux:syslog`: sshd[pid]: Failed password |
+| [T1136.001](https://attack.mitre.org/techniques/T1136/001/) | [DET0447](https://attack.mitre.org/detectionstrategies/DET0447/) &mdash; Local Account Creation Across Platforms | `auditd:SYSCALL`: useradd or adduser executed, write operation on /etc/passwd or /etc/shadow |
+| [T1543.002](https://attack.mitre.org/techniques/T1543/002/) | [DET0253](https://attack.mitre.org/detectionstrategies/DET0253/) &mdash; Detection of Systemd Service Creation or Modification on Linux | `auditd:SYSCALL`: execution of systemctl or service with enable/start parameters; fork/exec of service via PID 1 (systemd); modification of existing .service file; write, open, or rename to /etc/systemd/system/*.service &middot; `linux:osquery`: newly registered unit file with ExecStart pointing to unknown binary |
+| [T1547.006](https://attack.mitre.org/techniques/T1547/006/) | [DET0450](https://attack.mitre.org/detectionstrategies/DET0450/) &mdash; Detection Strategy for Kernel Modules and Extensions Autostart Execution | `auditd:SYSCALL`: access or modification to /lib/modules or creation of .ko files; execution of insmod, modprobe, or rmmod commands by non-standard users or outside expected timeframes &middot; `linux:osquery`: new or modified kernel object files (.ko) within /lib/modules directory |
+| [T1548.003](https://attack.mitre.org/techniques/T1548/003/) | [DET0052](https://attack.mitre.org/detectionstrategies/DET0052/) &mdash; Behavioral Detection Strategy for Abuse of Sudo and Sudo Caching | `auditd:SYSCALL`: execve call for modification of /etc/sudoers or writing to /var/db/sudo; execve call for sudo where euid != uid |
+| [T1562.004](https://attack.mitre.org/techniques/T1562/004/) *(revoked &rarr; [T1686](https://attack.mitre.org/techniques/T1686/))* | [DET0145](https://attack.mitre.org/detectionstrategies/DET0145/) &mdash; Detection of Disabled or Modified System Firewalls across OS Platforms | `auditd:SYSCALL`: execve: iptables, nft, firewall-cmd modifications &middot; `linux:osquery`: execution of known firewall binaries |
+| [T1562.006](https://attack.mitre.org/techniques/T1562/006/) *(revoked &rarr; [T1685](https://attack.mitre.org/techniques/T1685/))* | [DET0497](https://attack.mitre.org/detectionstrategies/DET0497/) &mdash; Detection of Defense Impairment through Disabled or Modified Tools across OS Platforms | `auditd:CONFIG_CHANGE`: delete: modification of systemd unit files or config for security agents &middot; `auditd:SYSCALL`: execve: systemctl stop, service stop, or kill -9 on security daemons (e.g., falcon-sensor, auditd) |
+
+> [!NOTE]
+> **Log sources are verbatim from MITRE.** The third column is generated directly from each strategy's published `x_mitre_log_source_references` field in the [ATT&CK STIX 2.1 bundle](https://github.com/mitre-attack/attack-stix-data) — it is **not** a hand-picked list of "events that look related on this connector page". Where MITRE has not published a Linux analytic, the cell says so explicitly.
+
+> [!NOTE]
+> **MITRE legacy technique IDs.** Some technique IDs cited on this page are *legacy* IDs that MITRE has revoked and remapped: T1562.004 &rarr; T1686; T1562.006 &rarr; T1685. Published Detection Strategies are attached to the current technique IDs only; the table above follows the `revoked-by` chain so each strategy still applies to the legacy ID cited above.
+
+> [!TIP]
+> Detection Strategies are MITRE-published *pseudo-code analytics*, not vendor rules — they tell you **what** to correlate across data sources. Use them to validate that your Sentinel analytic rules and KQL hunting queries cover the published correlation logic.
 
 ---
 

@@ -9,6 +9,7 @@
 - [Overview](#overview)
 - [Tables and Rationale](#tables-and-rationale)
 - [Example Detections](#example-detections)
+- [MITRE Detection Strategies](#mitre-detection-strategies)
 - [MCSB Control Mapping](#mcsb-control-mapping)
 - [Important Considerations](#important-considerations)
 - [Notes](#notes)
@@ -46,7 +47,7 @@ For Azure Firewall DNS proxy logs, see the [Azure Firewall](azure-firewall.md) p
 
 | Table | Description | Retention Recommendation | Rationale | Forensic Value | Example Detection |
 |:------|:------------|:------------------------|:----------|:---------------|:------------------|
-| **DnsEvents** | DNS query events from Windows endpoints — queried domain, query type, result, client IP | Analytics: 90d / Lake: 365d | **Core DNS forensics table.** Detects C2 over DNS, DNS tunnelling, DGA, and domain reputation matches. MCSB LT-4. | Proves exactly which endpoint queried which domain — the definitive source for tracking C2 beaconing, phishing domain resolution, and data exfiltration attempts via DNS. | DNS tunnelling — high query volume to single domain (T1071.004), DGA detection — algorithmically generated subdomains (T1568.002) |
+| **DnsEvents** | DNS query events from Windows endpoints — queried domain, query type, result, client IP | Analytics: 90d / Lake: 365d | **Core DNS forensics table.** Detects C2 over DNS, DNS tunnelling, DGA, and domain reputation matches. | Proves exactly which endpoint queried which domain — the definitive source for tracking C2 beaconing, phishing domain resolution, and data exfiltration attempts via DNS. | DNS tunnelling — high query volume to single domain, DGA detection — algorithmically generated subdomains |
 | **DnsInventory** | DNS server inventory — zones, records, configuration | Analytics: 90d / Lake: 365d | Infrastructure context for DNS investigations. | Understanding of DNS infrastructure state — which zones existed and which records were configured at the time of an incident | Rogue DNS zone created on internal DNS server |
 
 ### Azure DNS
@@ -61,20 +62,39 @@ For Azure Firewall DNS proxy logs, see the [Azure Firewall](azure-firewall.md) p
 
 ### C2 and Tunnelling
 
-| Detection | Table(s) | MITRE ATT&CK | Description |
-|:----------|:---------|:-------------|:------------|
-| DNS tunnelling | DnsEvents | T1071.004 | High-entropy or excessively long subdomain queries to a single domain — data exfiltration via DNS |
-| DGA domain resolution | DnsEvents | T1568.002 | Algorithmically generated domain names — characteristic of malware families using DGA for C2 |
-| DNS beaconing | DnsEvents | T1071.004 | Regular, periodic DNS queries to a single domain — C2 beacon pattern |
-| Rare domain query | DnsEvents | T1071.004 | DNS query for a domain seen by only one endpoint — potential unique C2 infrastructure |
+| Detection | Table(s) | MITRE ATT&CK | Detection Strategy | Description |
+|:----------|:---------|:-------------|:-------------------|:------------|
+| DNS tunnelling | DnsEvents | [T1071.004](https://attack.mitre.org/techniques/T1071/004/) | [DET0400](https://attack.mitre.org/detectionstrategies/DET0400/) — DNS Tunneling | High-entropy or excessively long subdomain queries to a single domain — data exfiltration via DNS |
+| DGA domain resolution | DnsEvents | [T1568.002](https://attack.mitre.org/techniques/T1568/002/) | [DET0419](https://attack.mitre.org/detectionstrategies/DET0419/) — Domain Generation Algorithms | Algorithmically generated domain names — characteristic of malware families using DGA for C2 |
+| DNS beaconing | DnsEvents | [T1071.004](https://attack.mitre.org/techniques/T1071/004/) | [DET0400](https://attack.mitre.org/detectionstrategies/DET0400/) — DNS Tunneling | Regular, periodic DNS queries to a single domain — C2 beacon pattern |
+| Rare domain query | DnsEvents | [T1071.004](https://attack.mitre.org/techniques/T1071/004/) | [DET0400](https://attack.mitre.org/detectionstrategies/DET0400/) — DNS Tunneling | DNS query for a domain seen by only one endpoint — potential unique C2 infrastructure |
 
 ### Reputation and Threat Intel
 
-| Detection | Table(s) | MITRE ATT&CK | Description |
-|:----------|:---------|:-------------|:------------|
-| Known malicious domain query | DnsEvents + ThreatIntelligenceIndicator | T1071.004 | DNS query matching a known bad domain from threat intelligence feeds |
-| Newly registered domain | DnsEvents | T1583.001 | DNS query for a domain registered within the last 14 days — common for phishing and C2 |
-| Dynamic DNS domain | DnsEvents | T1568.001 | DNS query for a domain on dynamic DNS providers (duckdns.org, no-ip.com, etc.) |
+| Detection | Table(s) | MITRE ATT&CK | Detection Strategy | Description |
+|:----------|:---------|:-------------|:-------------------|:------------|
+| Known malicious domain query | DnsEvents + ThreatIntelligenceIndicator | [T1071.004](https://attack.mitre.org/techniques/T1071/004/) | [DET0400](https://attack.mitre.org/detectionstrategies/DET0400/) — DNS Tunneling | DNS query matching a known bad domain from threat intelligence feeds |
+| Newly registered domain | DnsEvents | [T1583.001](https://attack.mitre.org/techniques/T1583/001/) | [DET0892](https://attack.mitre.org/detectionstrategies/DET0892/) — Detection of Domains | DNS query for a domain registered within the last 14 days — common for phishing and C2 |
+| Dynamic DNS domain | DnsEvents | [T1568.001](https://attack.mitre.org/techniques/T1568/001/) | [DET0485](https://attack.mitre.org/detectionstrategies/DET0485/) — Fast Flux DNS | DNS query for a domain on dynamic DNS providers (duckdns.org, no-ip.com, etc.) |
+
+---
+
+## MITRE Detection Strategies
+
+Curated list of MITRE [Detection Strategies](https://attack.mitre.org/detectionstrategies/) relevant to the techniques referenced on this page. The **MITRE Log Sources (Windows)** column lists the exact log channels and event codes referenced by the analytic of each strategy on the relevant platform — taken verbatim from the strategy's published `log_sources` field in the [ATT&CK STIX bundle](https://github.com/mitre-attack/attack-stix-data).
+
+| Technique | Detection Strategy | MITRE Log Sources (Windows) |
+|:----------|:-------------------|:-----------|
+| [T1071.004](https://attack.mitre.org/techniques/T1071/004/) | [DET0400](https://attack.mitre.org/detectionstrategies/DET0400/) &mdash; Behavioral Detection of DNS Tunneling and Application Layer Abuse | `NSM:Flow`: dns.log &middot; `WinEventLog:Sysmon`: EventCode=3, 22 |
+| [T1568.002](https://attack.mitre.org/techniques/T1568/002/) | [DET0419](https://attack.mitre.org/detectionstrategies/DET0419/) &mdash; Detection Strategy for Dynamic Resolution using Domain Generation Algorithms. | `WinEventLog:Security`: EventCode=4688 &middot; `WinEventLog:Sysmon`: EventCode=3, 22 |
+| [T1583.001](https://attack.mitre.org/techniques/T1583/001/) | [DET0892](https://attack.mitre.org/detectionstrategies/DET0892/) &mdash; Detection of Domains | *MITRE has not published a Windows analytic for this strategy* |
+| [T1568.001](https://attack.mitre.org/techniques/T1568/001/) | [DET0485](https://attack.mitre.org/detectionstrategies/DET0485/) &mdash; Detection Strategy for Dynamic Resolution using Fast Flux DNS | `WinEventLog:Security`: EventCode=1 &middot; `WinEventLog:Sysmon`: EventCode=3, 22 |
+
+> [!NOTE]
+> **Log sources are verbatim from MITRE.** The third column is generated directly from each strategy's published `x_mitre_log_source_references` field in the [ATT&CK STIX 2.1 bundle](https://github.com/mitre-attack/attack-stix-data) — it is **not** a hand-picked list of "events that look related on this connector page". MITRE's published analytics for DNS techniques rely on Sysmon network events and `NSM:Flow` dns.log; the connector's own `DnsEvents` table is the primary detection surface in Sentinel.
+
+> [!TIP]
+> Detection Strategies are MITRE-published *pseudo-code analytics*, not vendor rules — they tell you **what** to correlate across data sources. Use them to validate that your Sentinel analytic rules and KQL hunting queries cover the published correlation logic.
 
 ---
 

@@ -12,6 +12,7 @@
     - [Licensing Benefits](#licensing-benefits)
   - [Tables and Rationale](#tables-and-rationale)
   - [Example Detections](#example-detections)
+  - [MITRE Detection Strategies](#mitre-detection-strategies)
   - [MCSB Control Mapping](#mcsb-control-mapping)
   - [Important Considerations](#important-considerations)
   - [Notes](#notes)
@@ -41,23 +42,50 @@ These additional event sources are essential for detecting sophisticated attacks
 
 | Table | Description | Retention Recommendation | Rationale | Forensic Value | Example Detection |
 |:------|:------------|:------------------------|:----------|:---------------|:------------------|
-| **WindowsEvent** (PowerShell) | PowerShell ScriptBlock logging (Event ID 4104) — full script content for all executed scripts | Analytics: 90d / Lake: 365d | PowerShell is the most commonly abused tool in modern attacks — ScriptBlock logging captures the actual code executed | Provides the exact malicious script content — the most valuable single event source for investigating fileless attacks | Encoded PowerShell command execution (T1059.001) |
-| **WindowsEvent** (WMI) | WMI activity events — WMI subscriptions, queries, and method executions | Analytics: 90d / Lake: 365d | WMI is a primary LOTL technique for persistence, lateral movement, and reconnaissance | Identifies WMI-based persistence mechanisms and remote execution — common in APT tradecraft | WMI event subscription created for persistence (T1546.003) |
-| **WindowsEvent** (AppLocker/WDAC) | Application control enforcement events — allowed, blocked, and audit mode events | Analytics: 90d / Lake: 365d | Application control is the strongest preventive control — monitoring enforcement events detects bypass attempts | Proves which applications were blocked or audited — identifies attack attempts against application control | Application blocked by AppLocker but bypassed via alternate binary (T1218) |
-| **WindowsEvent** (Sysmon) | Sysmon events — process creation with hashes, network connections, file creation, registry modification | Analytics: 90d / Lake: 365d | Sysmon provides the richest endpoint telemetry for threat detection — process lineage, file hashes, network connections | Complete process tree reconstruction with file hashes — definitive endpoint forensic data | Parent-child process chain indicating Cobalt Strike beacon (T1059.001) |
-| **WindowsEvent** (Firewall) | Windows Filtering Platform events — firewall rule changes and blocked connections | Analytics: 30d / Lake: 180d | Detects firewall tampering and blocked connection attempts from malware | Identifies firewall changes made by attackers to enable communication — proves connectivity attempts | Windows Firewall rule disabled or modified (T1562.004) |
+| **WindowsEvent** (PowerShell) | PowerShell ScriptBlock logging (Event ID 4104) — full script content for all executed scripts | Analytics: 90d / Lake: 365d | PowerShell is the most commonly abused tool in modern attacks — ScriptBlock logging captures the actual code executed | Provides the exact malicious script content — the most valuable single event source for investigating fileless attacks | Encoded PowerShell command execution |
+| **WindowsEvent** (WMI) | WMI activity events — WMI subscriptions, queries, and method executions | Analytics: 90d / Lake: 365d | WMI is a primary LOTL technique for persistence, lateral movement, and reconnaissance | Identifies WMI-based persistence mechanisms and remote execution — common in APT tradecraft | WMI event subscription created for persistence |
+| **WindowsEvent** (AppLocker/WDAC) | Application control enforcement events — allowed, blocked, and audit mode events | Analytics: 90d / Lake: 365d | Application control is the strongest preventive control — monitoring enforcement events detects bypass attempts | Proves which applications were blocked or audited — identifies attack attempts against application control | Application blocked by AppLocker but bypassed via alternate binary |
+| **WindowsEvent** (Sysmon) | Sysmon events — process creation with hashes, network connections, file creation, registry modification | Analytics: 90d / Lake: 365d | Sysmon provides the richest endpoint telemetry for threat detection — process lineage, file hashes, network connections | Complete process tree reconstruction with file hashes — definitive endpoint forensic data | Parent-child process chain indicating Cobalt Strike beacon |
+| **WindowsEvent** (Firewall) | Windows Filtering Platform events — firewall rule changes and blocked connections | Analytics: 30d / Lake: 180d | Detects firewall tampering and blocked connection attempts from malware | Identifies firewall changes made by attackers to enable communication — proves connectivity attempts | Windows Firewall rule disabled or modified |
 
 ---
 
 ## Example Detections
 
-| Detection | Table(s) | MITRE ATT&CK | Description |
-|:----------|:---------|:-------------|:------------|
-| Base64-encoded PowerShell execution | WindowsEvent (4104) | T1059.001 | PowerShell ScriptBlock containing encoded commands — common obfuscation technique |
-| PowerShell download cradle | WindowsEvent (4104) | T1059.001, T1105 | ScriptBlock containing `Invoke-WebRequest`, `Net.WebClient`, or `DownloadString` — payload staging |
-| WMI persistence subscription | WindowsEvent (WMI) | T1546.003 | `__EventFilter` and `__EventConsumer` WMI objects created — classic persistence mechanism |
-| LOLBAS execution via AppLocker bypass | WindowsEvent (AppLocker) | T1218 | Living-off-the-land binary execution blocked or audited — indicates bypass attempt |
-| Sysmon — process injection detected | WindowsEvent (Sysmon 8/10) | T1055 | Sysmon CreateRemoteThread or ProcessAccess events indicating process injection |
+| Detection | Table(s) / Event ID(s) | MITRE ATT&CK | Detection Strategy | Description |
+|:----------|:-----------------------|:-------------|:-------------------|:------------|
+| Base64-encoded PowerShell execution | WindowsEvent (4104) | [T1059.001](https://attack.mitre.org/techniques/T1059/001/) | [DET0455](https://attack.mitre.org/detectionstrategies/DET0455/) — Abuse of PowerShell for Arbitrary Execution | PowerShell ScriptBlock containing encoded commands — common obfuscation technique |
+| PowerShell download cradle | WindowsEvent (4104) | [T1059.001](https://attack.mitre.org/techniques/T1059/001/), [T1105](https://attack.mitre.org/techniques/T1105/) | [DET0455](https://attack.mitre.org/detectionstrategies/DET0455/) — Abuse of PowerShell · [DET0060](https://attack.mitre.org/detectionstrategies/DET0060/) — Ingress Tool Transfers | ScriptBlock containing `Invoke-WebRequest`, `Net.WebClient`, or `DownloadString` — payload staging |
+| WMI persistence subscription | WindowsEvent (WMI) | [T1546.003](https://attack.mitre.org/techniques/T1546/003/) | [DET0086](https://attack.mitre.org/detectionstrategies/DET0086/) — WMI Event Subscription for Persistence | `__EventFilter` and `__EventConsumer` WMI objects created — classic persistence mechanism |
+| LOLBAS execution via AppLocker bypass | WindowsEvent (AppLocker) | [T1218](https://attack.mitre.org/techniques/T1218/) | [DET0081](https://attack.mitre.org/detectionstrategies/DET0081/) — Proxy Execution via Trusted Signed Binaries | Living-off-the-land binary execution blocked or audited — indicates bypass attempt |
+| Sysmon — process injection detected | WindowsEvent (Sysmon 8/10) | [T1055](https://attack.mitre.org/techniques/T1055/) | [DET0508](https://attack.mitre.org/detectionstrategies/DET0508/) — Behavioral Detection of Process Injection | Sysmon CreateRemoteThread or ProcessAccess events indicating process injection |
+
+---
+
+## MITRE Detection Strategies
+
+Curated list of MITRE [Detection Strategies](https://attack.mitre.org/detectionstrategies/) relevant to the techniques referenced on this page. The **MITRE Log Sources (Windows)** column lists the exact log channels and event codes referenced by the analytic of each strategy on the relevant platform — taken verbatim from the strategy's published `log_sources` field in the [ATT&CK STIX bundle](https://github.com/mitre-attack/attack-stix-data).
+
+> [!TIP]
+> This page covers the *advanced* Windows event channels (PowerShell, WMI, AppLocker/WDAC, Sysmon, Firewall). The Tier 1 [Windows Security Events](windows-security-events.md#mitre-detection-strategies) page enumerates the broader catalogue of strategies that depend on the `Security` channel — start there for foundational coverage, then use the table below to extend into the advanced channels.
+
+| Technique | Detection Strategy | MITRE Log Sources (Windows) |
+|:----------|:-------------------|:-----------|
+| [T1059.001](https://attack.mitre.org/techniques/T1059/001/) | [DET0455](https://attack.mitre.org/detectionstrategies/DET0455/) &mdash; Abuse of PowerShell for Arbitrary Execution | `WinEventLog:PowerShell`: EventCode=400, 403, EventCode=4103, 4104, 4105, 4106 &middot; `WinEventLog:Sysmon`: EventCode=1, EventCode=7 |
+| [T1546.003](https://attack.mitre.org/techniques/T1546/003/) | [DET0086](https://attack.mitre.org/detectionstrategies/DET0086/) &mdash; Detect WMI Event Subscription for Persistence via WmiPrvSE Process and MOF Compilation | `WinEventLog:Sysmon`: EventCode=1, EventCode=7 &middot; `WinEventLog:WMI`: EventCode=5857, 5858, 5860, 5861 |
+| [T1218](https://attack.mitre.org/techniques/T1218/) | [DET0081](https://attack.mitre.org/detectionstrategies/DET0081/) &mdash; Detection of Proxy Execution via Trusted Signed Binaries Across Platforms | `WinEventLog:Sysmon`: EventCode=1, EventCode=3, 22, EventCode=7 |
+| [T1562.004](https://attack.mitre.org/techniques/T1562/004/) *(revoked &rarr; [T1686](https://attack.mitre.org/techniques/T1686/))* | [DET0145](https://attack.mitre.org/detectionstrategies/DET0145/) &mdash; Detection of Disabled or Modified System Firewalls across OS Platforms. | `WinEventLog:Security`: EventCode=4688 &middot; `WinEventLog:Sysmon`: EventCode=13, 14 |
+| [T1105](https://attack.mitre.org/techniques/T1105/) | [DET0060](https://attack.mitre.org/detectionstrategies/DET0060/) &mdash; Detect Ingress Tool Transfers via Behavioral Chain | `WinEventLog:Sysmon`: EventCode=1, EventCode=11, EventCode=3, 22 |
+| [T1055](https://attack.mitre.org/techniques/T1055/) | [DET0508](https://attack.mitre.org/detectionstrategies/DET0508/) &mdash; Behavioral Detection of Process Injection Across Platforms | `etw:Microsoft-Windows-Kernel-Process`: API calls &middot; `WinEventLog:Sysmon`: EventCode=1, EventCode=10, EventCode=7 |
+
+> [!NOTE]
+> **Log sources are verbatim from MITRE.** The third column is generated directly from each strategy's published `x_mitre_log_source_references` field in the [ATT&CK STIX 2.1 bundle](https://github.com/mitre-attack/attack-stix-data) — it is **not** a hand-picked list of "events that look related on this connector page". Where MITRE has not published an analytic on the relevant platform, the cell says so explicitly.
+
+> [!NOTE]
+> **MITRE legacy technique IDs.** Some technique IDs cited on this page are *legacy* IDs that MITRE has revoked and remapped: T1562.004 &rarr; T1686. Published Detection Strategies are attached to the current technique IDs only; the table above follows the `revoked-by` chain so each strategy still applies to the legacy ID cited above.
+
+> [!TIP]
+> Detection Strategies are MITRE-published *pseudo-code analytics*, not vendor rules — they tell you **what** to correlate across data sources. Use them to validate that your Sentinel analytic rules and KQL hunting queries cover the published correlation logic.
 
 ---
 

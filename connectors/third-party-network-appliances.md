@@ -10,6 +10,7 @@
 - [Tables and Rationale](#tables-and-rationale)
 - [Common Vendors with Sentinel Support](#common-vendors-with-sentinel-support)
 - [Example Detections](#example-detections)
+- [MITRE Detection Strategies](#mitre-detection-strategies)
 - [MCSB Control Mapping](#mcsb-control-mapping)
 - [Important Considerations](#important-considerations)
 - [Notes](#notes)
@@ -41,7 +42,7 @@ This is the catch-all connector page for all third-party network security device
 
 | Table | Description | Retention Recommendation | Rationale | Forensic Value | Example Detection |
 |:------|:------------|:------------------------|:----------|:---------------|:------------------|
-| **CommonSecurityLog** | CEF-formatted events from firewalls, proxies, IDS/IPS — source/dest IP, port, protocol, action, device vendor, severity | Analytics: 90d / Lake: 365d | **Core third-party network forensics.** Detects perimeter attacks, C2, exfiltration, and lateral movement through non-Microsoft network appliances. MCSB LT-4. | Proves all traffic decisions made by third-party network security devices — essential when on-premises or hybrid infrastructure uses non-Microsoft firewalls | C2 callback blocked by firewall (T1071), data exfiltration detected by proxy (T1567), IDS signature match (T1190) |
+| **CommonSecurityLog** | CEF-formatted events from firewalls, proxies, IDS/IPS — source/dest IP, port, protocol, action, device vendor, severity | Analytics: 90d / Lake: 365d | **Core third-party network forensics.** Detects perimeter attacks, C2, exfiltration, and lateral movement through non-Microsoft network appliances. | Proves all traffic decisions made by third-party network security devices — essential when on-premises or hybrid infrastructure uses non-Microsoft firewalls | C2 callback blocked by firewall, data exfiltration detected by proxy, IDS signature match |
 | **Syslog** | Raw syslog events from devices without CEF support — facility, severity, message | Analytics: 90d / Lake: 365d | Fallback for legacy devices. Less structured than CEF but still valuable for forensic timeline. | Raw event data from legacy appliances — may require custom parsing but provides timeline evidence | Legacy firewall deny event correlating with attack timeline |
 
 ---
@@ -67,20 +68,41 @@ This is the catch-all connector page for all third-party network security device
 
 ### Perimeter Security
 
-| Detection | Table(s) | MITRE ATT&CK | Description |
-|:----------|:---------|:-------------|:------------|
-| Outbound C2 blocked | CommonSecurityLog | T1071 | Firewall denying outbound traffic to known C2 infrastructure |
-| IDS/IPS signature match | CommonSecurityLog | T1190 | Network intrusion detection signature triggered |
-| Proxy bypass attempt | CommonSecurityLog | T1090 | Direct internet access bypassing the configured web proxy |
-| Mass denied connections | CommonSecurityLog | T1046 | Single source generating many denied connections — scanning or misconfigured lateral movement |
+| Detection | Table(s) | MITRE ATT&CK | Detection Strategy | Description |
+|:----------|:---------|:-------------|:-------------------|:------------|
+| Outbound C2 blocked | CommonSecurityLog | [T1071](https://attack.mitre.org/techniques/T1071/) | [DET0444](https://attack.mitre.org/detectionstrategies/DET0444/) — Application Layer Protocol C2 | Firewall denying outbound traffic to known C2 infrastructure |
+| IDS/IPS signature match | CommonSecurityLog | [T1190](https://attack.mitre.org/techniques/T1190/) | [DET0080](https://attack.mitre.org/detectionstrategies/DET0080/) — Exploit Public-Facing Application | Network intrusion detection signature triggered |
+| Proxy bypass attempt | CommonSecurityLog | [T1090](https://attack.mitre.org/techniques/T1090/) | [DET0445](https://attack.mitre.org/detectionstrategies/DET0445/) — Proxy | Direct internet access bypassing the configured web proxy |
+| Mass denied connections | CommonSecurityLog | [T1046](https://attack.mitre.org/techniques/T1046/) | [DET0376](https://attack.mitre.org/detectionstrategies/DET0376/) — Network Service Discovery | Single source generating many denied connections — scanning or misconfigured lateral movement |
 
 ### Data Exfiltration
 
-| Detection | Table(s) | MITRE ATT&CK | Description |
-|:----------|:---------|:-------------|:------------|
-| Large upload via proxy | CommonSecurityLog | T1567 | Unusually large outbound transfer through the web proxy |
-| Access to file-sharing service from server | CommonSecurityLog | T1567 | Server accessing consumer file-sharing services (indicates compromised server exfiltrating) |
-| Encrypted traffic to unusual destination | CommonSecurityLog | T1573 | TLS connection to an IP/domain not in baseline communication pattern |
+| Detection | Table(s) | MITRE ATT&CK | Detection Strategy | Description |
+|:----------|:---------|:-------------|:-------------------|:------------|
+| Large upload via proxy | CommonSecurityLog | [T1567](https://attack.mitre.org/techniques/T1567/) | [DET0548](https://attack.mitre.org/detectionstrategies/DET0548/) — Exfiltration Over Web Service | Unusually large outbound transfer through the web proxy |
+| Access to file-sharing service from server | CommonSecurityLog | [T1567](https://attack.mitre.org/techniques/T1567/) | [DET0548](https://attack.mitre.org/detectionstrategies/DET0548/) — Exfiltration Over Web Service | Server accessing consumer file-sharing services (indicates compromised server exfiltrating) |
+| Encrypted traffic to unusual destination | CommonSecurityLog | [T1573](https://attack.mitre.org/techniques/T1573/) | [DET0273](https://attack.mitre.org/detectionstrategies/DET0273/) — Encrypted Channel | TLS connection to an IP/domain not in baseline communication pattern |
+
+---
+
+## MITRE Detection Strategies
+
+Curated list of MITRE [Detection Strategies](https://attack.mitre.org/detectionstrategies/) relevant to the techniques referenced on this page.
+
+| Technique | Detection Strategy |
+|:----------|:-------------------|
+| [T1071](https://attack.mitre.org/techniques/T1071/) | [DET0444](https://attack.mitre.org/detectionstrategies/DET0444/) &mdash; Detection of Command and Control Over Application Layer Protocols |
+| [T1190](https://attack.mitre.org/techniques/T1190/) | [DET0080](https://attack.mitre.org/detectionstrategies/DET0080/) &mdash; Exploit Public-Facing Application – multi-signal correlation (request → error → post-exploit process/egress) |
+| [T1090](https://attack.mitre.org/techniques/T1090/) | [DET0445](https://attack.mitre.org/detectionstrategies/DET0445/) &mdash; Detection of Proxy Infrastructure Setup and Traffic Bridging |
+| [T1046](https://attack.mitre.org/techniques/T1046/) | [DET0376](https://attack.mitre.org/detectionstrategies/DET0376/) &mdash; Behavioral Detection Strategy for Network Service Discovery Across Platforms |
+| [T1567](https://attack.mitre.org/techniques/T1567/) | [DET0548](https://attack.mitre.org/detectionstrategies/DET0548/) &mdash; Detection Strategy for Exfiltration Over Web Service |
+| [T1573](https://attack.mitre.org/techniques/T1573/) | [DET0273](https://attack.mitre.org/detectionstrategies/DET0273/) &mdash; Detection Strategy for Encrypted Channel across OS Platforms |
+
+> [!NOTE]
+> This page intentionally omits the third MITRE-evidence column. For broad platform-family strategies, MITRE may cite provider-specific source names that do not map 1:1 across third-party network appliances; keeping this section as Technique + Detection Strategy avoids a brittle translation layer.
+
+> [!TIP]
+> Detection Strategies are MITRE-published *pseudo-code analytics*, not vendor rules — they tell you **what** to correlate across data sources. Use them to validate that your Sentinel analytic rules and KQL hunting queries cover the published correlation logic.
 
 ---
 

@@ -15,6 +15,7 @@
     - [IAM and Access](#iam-and-access)
     - [Resource Security](#resource-security)
     - [Data Access](#data-access)
+  - [MITRE Detection Strategies](#mitre-detection-strategies)
   - [MCSB Control Mapping](#mcsb-control-mapping)
   - [Important Considerations](#important-considerations)
     - [Connector Architecture](#connector-architecture)
@@ -51,7 +52,7 @@ The same ACSC cloud logging priorities that apply to Azure and AWS apply to GCP.
 
 | Table | Description | Retention Recommendation | Rationale | Forensic Value | Example Detection |
 |:------|:------------|:------------------------|:----------|:---------------|:------------------|
-| **GCPAuditLogs** | All GCP Cloud Audit Logs — Admin Activity, Data Access, System Events, Policy Denied | Analytics: 90d / Lake: 365d | **Core GCP control plane audit trail.** Equivalent of AzureActivity and AWSCloudTrail. Detects IAM privilege escalation, firewall rule changes, resource deployment, and data access anomalies. MCSB LT-3. | Proves exactly which GCP API calls were made, by which principal, from which IP, and when. The authoritative evidence for GCP infrastructure investigations. | Service account key created for existing service account (T1098.001), VPC firewall rule opened to 0.0.0.0/0 (T1562.007), IAM policy binding granting Owner role (T1098) |
+| **GCPAuditLogs** | All GCP Cloud Audit Logs — Admin Activity, Data Access, System Events, Policy Denied | Analytics: 90d / Lake: 365d | **Core GCP control plane audit trail.** Equivalent of AzureActivity and AWSCloudTrail. Detects IAM privilege escalation, firewall rule changes, resource deployment, and data access anomalies. | Proves exactly which GCP API calls were made, by which principal, from which IP, and when. The authoritative evidence for GCP infrastructure investigations. | Service account key created for existing service account, VPC firewall rule opened to 0.0.0.0/0, IAM policy binding granting Owner role |
 
 ---
 
@@ -59,29 +60,57 @@ The same ACSC cloud logging priorities that apply to Azure and AWS apply to GCP.
 
 ### IAM and Access
 
-| Detection | Table(s) | MITRE ATT&CK | Description |
-|:----------|:---------|:-------------|:------------|
-| IAM Owner binding added | GCPAuditLogs | T1098 | SetIamPolicy granting Owner or Editor role at project/org level |
-| Service account key created | GCPAuditLogs | T1098.001 | CreateServiceAccountKey — new credentials for service account (lateral movement risk) |
-| Service account impersonation | GCPAuditLogs | T1550 | GenerateAccessToken or SignBlob for service account impersonation |
-| Console login from unusual location | GCPAuditLogs | T1078 | Admin Activity showing authentication from geo-anomalous IP |
+| Detection | Table(s) | MITRE ATT&CK | Detection Strategy | Description |
+|:----------|:---------|:-------------|:-------------------|:------------|
+| IAM Owner binding added | GCPAuditLogs | [T1098](https://attack.mitre.org/techniques/T1098/) | [DET0096](https://attack.mitre.org/detectionstrategies/DET0096/) — Account Manipulation | SetIamPolicy granting Owner or Editor role at project/org level |
+| Service account key created | GCPAuditLogs | [T1098.001](https://attack.mitre.org/techniques/T1098/001/) | [DET0531](https://attack.mitre.org/detectionstrategies/DET0531/) — Additional Cloud Credentials | CreateServiceAccountKey — new credentials for service account (lateral movement risk) |
+| Service account impersonation | GCPAuditLogs | [T1550](https://attack.mitre.org/techniques/T1550/) | [DET0338](https://attack.mitre.org/detectionstrategies/DET0338/) — Alternate Authentication Material | GenerateAccessToken or SignBlob for service account impersonation |
+| Console login from unusual location | GCPAuditLogs | [T1078](https://attack.mitre.org/techniques/T1078/) | [DET0560](https://attack.mitre.org/detectionstrategies/DET0560/) — Valid Account Abuse | Admin Activity showing authentication from geo-anomalous IP |
 
 ### Resource Security
 
-| Detection | Table(s) | MITRE ATT&CK | Description |
-|:----------|:---------|:-------------|:------------|
-| VPC firewall rule allowing all inbound | GCPAuditLogs | T1562.007 | CreateFirewall or UpdateFirewall with 0.0.0.0/0 source range on sensitive ports |
-| Cloud Storage bucket made public | GCPAuditLogs | T1530 | SetIamPolicy on storage bucket granting allUsers or allAuthenticatedUsers access |
-| Audit logging disabled | GCPAuditLogs | T1562.008 | SetIamPolicy or UpdateSink removing audit log exports — attacker covering tracks |
-| Compute instance created in unusual region | GCPAuditLogs | T1496 | Instance creation in a region not used by the organisation — potential crypto mining |
+| Detection | Table(s) | MITRE ATT&CK | Detection Strategy | Description |
+|:----------|:---------|:-------------|:-------------------|:------------|
+| VPC firewall rule allowing all inbound | GCPAuditLogs | [T1562.007](https://attack.mitre.org/techniques/T1562/007/) *(revoked &rarr; [T1686.001](https://attack.mitre.org/techniques/T1686/001/))* | [DET0424](https://attack.mitre.org/detectionstrategies/DET0424/) — Disable or Modify Cloud Firewall | CreateFirewall or UpdateFirewall with 0.0.0.0/0 source range on sensitive ports |
+| Cloud Storage bucket made public | GCPAuditLogs | [T1530](https://attack.mitre.org/techniques/T1530/) | [DET0484](https://attack.mitre.org/detectionstrategies/DET0484/) — Cloud Storage Exfiltration | SetIamPolicy on storage bucket granting allUsers or allAuthenticatedUsers access |
+| Audit logging disabled | GCPAuditLogs | [T1562.008](https://attack.mitre.org/techniques/T1562/008/) *(revoked &rarr; [T1685.002](https://attack.mitre.org/techniques/T1685/002/))* | [DET0289](https://attack.mitre.org/detectionstrategies/DET0289/) — Disable or Modify Cloud Log | SetIamPolicy or UpdateSink removing audit log exports — attacker covering tracks |
+| Compute instance created in unusual region | GCPAuditLogs | [T1496](https://attack.mitre.org/techniques/T1496/) | [DET0267](https://attack.mitre.org/detectionstrategies/DET0267/) — Resource Hijacking | Instance creation in a region not used by the organisation — potential crypto mining |
 
 ### Data Access
 
-| Detection | Table(s) | MITRE ATT&CK | Description |
-|:----------|:---------|:-------------|:------------|
-| Bulk BigQuery export | GCPAuditLogs (Data Access) | T1530 | Large query or export from BigQuery tables containing sensitive data |
-| Secret Manager access from new principal | GCPAuditLogs | T1552.004 | AccessSecretVersion from a service account or user not seen before |
-| KMS key usage anomaly | GCPAuditLogs | T1552 | Decrypt operations from unexpected services or principals |
+| Detection | Table(s) | MITRE ATT&CK | Detection Strategy | Description |
+|:----------|:---------|:-------------|:-------------------|:------------|
+| Bulk BigQuery export | GCPAuditLogs (Data Access) | [T1530](https://attack.mitre.org/techniques/T1530/) | [DET0484](https://attack.mitre.org/detectionstrategies/DET0484/) — Cloud Storage Exfiltration | Large query or export from BigQuery tables containing sensitive data |
+| Secret Manager access from new principal | GCPAuditLogs | [T1552.004](https://attack.mitre.org/techniques/T1552/004/) | [DET0549](https://attack.mitre.org/detectionstrategies/DET0549/) — Private Key Access | AccessSecretVersion from a service account or user not seen before |
+| KMS key usage anomaly | GCPAuditLogs | [T1552](https://attack.mitre.org/techniques/T1552/) | [DET0412](https://attack.mitre.org/detectionstrategies/DET0412/) — Unsecured Credentials | Decrypt operations from unexpected services or principals |
+
+---
+
+## MITRE Detection Strategies
+
+Curated list of MITRE [Detection Strategies](https://attack.mitre.org/detectionstrategies/) relevant to the techniques referenced on this page.
+
+| Technique | Detection Strategy |
+|:----------|:-------------------|
+| [T1098](https://attack.mitre.org/techniques/T1098/) | [DET0096](https://attack.mitre.org/detectionstrategies/DET0096/) &mdash; Account Manipulation Behavior Chain Detection |
+| [T1098.001](https://attack.mitre.org/techniques/T1098/001/) | [DET0531](https://attack.mitre.org/detectionstrategies/DET0531/) &mdash; Detection Strategy for Additional Cloud Credentials in IaaS/IdP/SaaS |
+| [T1550](https://attack.mitre.org/techniques/T1550/) | [DET0338](https://attack.mitre.org/detectionstrategies/DET0338/) &mdash; Behavioral Detection Strategy for Use Alternate Authentication Material (T1550) |
+| [T1078](https://attack.mitre.org/techniques/T1078/) | [DET0560](https://attack.mitre.org/detectionstrategies/DET0560/) &mdash; Detection of Valid Account Abuse Across Platforms |
+| [T1562.007](https://attack.mitre.org/techniques/T1562/007/) *(revoked &rarr; [T1686.001](https://attack.mitre.org/techniques/T1686/001/))* | [DET0424](https://attack.mitre.org/detectionstrategies/DET0424/) &mdash; Detection Strategy for Disable or Modify Cloud Firewall |
+| [T1530](https://attack.mitre.org/techniques/T1530/) | [DET0484](https://attack.mitre.org/detectionstrategies/DET0484/) &mdash; Multi-Platform Cloud Storage Exfiltration Behavior Chain |
+| [T1562.008](https://attack.mitre.org/techniques/T1562/008/) *(revoked &rarr; [T1685.002](https://attack.mitre.org/techniques/T1685/002/))* | [DET0289](https://attack.mitre.org/detectionstrategies/DET0289/) &mdash; Detection Strategy for Disable or Modify Cloud Log |
+| [T1496](https://attack.mitre.org/techniques/T1496/) | [DET0267](https://attack.mitre.org/detectionstrategies/DET0267/) &mdash; Resource Hijacking Detection Strategy |
+| [T1552.004](https://attack.mitre.org/techniques/T1552/004/) | [DET0549](https://attack.mitre.org/detectionstrategies/DET0549/) &mdash; Detect Suspicious Access to Private Key Files and Export Attempts Across Platforms |
+| [T1552](https://attack.mitre.org/techniques/T1552/) | [DET0412](https://attack.mitre.org/detectionstrategies/DET0412/) &mdash; Detect Access or Search for Unsecured Credentials Across Platforms |
+
+> [!NOTE]
+> This page intentionally omits the third MITRE-evidence column. For cloud platform-family strategies, MITRE may cite provider-specific source names that do not map 1:1 to GCP connector tables; keeping this section as Technique + Detection Strategy avoids a brittle translation layer.
+
+> [!NOTE]
+> **MITRE legacy technique IDs.** Some technique IDs cited on this page are *legacy* IDs that MITRE has revoked and remapped: T1562.007 &rarr; T1686.001; T1562.008 &rarr; T1685.002. Published Detection Strategies are attached to the current technique IDs only; the table above follows the `revoked-by` chain so each strategy still applies to the legacy ID cited above.
+
+> [!TIP]
+> Detection Strategies are MITRE-published *pseudo-code analytics*, not vendor rules — they tell you **what** to correlate across data sources. Use them to validate that your Sentinel analytic rules and KQL hunting queries cover the published correlation logic.
 
 ---
 

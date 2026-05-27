@@ -89,26 +89,26 @@ The ACSC logging guidance treats cloud logging as a **generic requirement** — 
 
 ## MITRE Detection Strategies
 
-Curated list of MITRE [Detection Strategies](https://attack.mitre.org/detectionstrategies/) relevant to the techniques referenced on this page. The **Connector Evidence (IaaS)** column translates MITRE's published cloud-analytic intent into the analogous AWS evidence available in this connector.
+Curated list of MITRE [Detection Strategies](https://attack.mitre.org/detectionstrategies/) relevant to the techniques referenced on this page.
 
-| Technique | Detection Strategy | Connector Evidence (IaaS) |
-|:----------|:-------------------|:-----------|
-| [T1136](https://attack.mitre.org/techniques/T1136/) | [DET0583](https://attack.mitre.org/detectionstrategies/DET0583/) &mdash; Detection Strategy for T1136 - Create Account across platforms | `AWSCloudTrail`: `CreateUser`, `AttachUserPolicy`, and related IAM account-creation activity |
-| [T1078](https://attack.mitre.org/techniques/T1078/) | [DET0560](https://attack.mitre.org/detectionstrategies/DET0560/) &mdash; Detection of Valid Account Abuse Across Platforms | *MITRE has not published an IaaS analytic for this strategy* |
-| [T1550](https://attack.mitre.org/techniques/T1550/) | [DET0338](https://attack.mitre.org/detectionstrategies/DET0338/) &mdash; Behavioral Detection Strategy for Use Alternate Authentication Material (T1550) | `AWSCloudTrail`: `AssumeRole`, `GetCallerIdentity`, and other alternate-authentication API activity |
-| [T1078.004](https://attack.mitre.org/techniques/T1078/004/) | [DET0546](https://attack.mitre.org/detectionstrategies/DET0546/) &mdash; Detection of Abused or Compromised Cloud Accounts for Access and Persistence | `AWSCloudTrail`: `ConsoleLogin`, `AssumeRole`, `ListAccessKeys`, `CreateUser`, and other compromised-cloud-account behaviours |
-| [T1530](https://attack.mitre.org/techniques/T1530/) | [DET0484](https://attack.mitre.org/detectionstrategies/DET0484/) &mdash; Multi-Platform Cloud Storage Exfiltration Behavior Chain | `AWSCloudTrail`: `GetObject`, `CopyObject`, bucket-access changes; `AWSVPCFlow`: unusual outbound transfer from S3 endpoints |
-| [T1562.007](https://attack.mitre.org/techniques/T1562/007/) *(revoked &rarr; [T1686.001](https://attack.mitre.org/techniques/T1686/001/))* | [DET0424](https://attack.mitre.org/detectionstrategies/DET0424/) &mdash; Detection Strategy for Disable or Modify Cloud Firewall | `AWSCloudTrail`: security-group ingress / egress rule changes and related network-control modification activity |
-| [T1562.008](https://attack.mitre.org/techniques/T1562/008/) *(revoked &rarr; [T1685.002](https://attack.mitre.org/techniques/T1685/002/))* | [DET0289](https://attack.mitre.org/detectionstrategies/DET0289/) &mdash; Detection Strategy for Disable or Modify Cloud Log | `AWSCloudTrail`: `StopLogging`, trail updates / deletion, or other logging-impairment operations |
-| [T1098](https://attack.mitre.org/techniques/T1098/) | [DET0096](https://attack.mitre.org/detectionstrategies/DET0096/) &mdash; Account Manipulation Behavior Chain Detection | *MITRE has not published an IaaS analytic for this strategy* |
-| [T1496](https://attack.mitre.org/techniques/T1496/) | [DET0267](https://attack.mitre.org/detectionstrategies/DET0267/) &mdash; Resource Hijacking Detection Strategy | `AWSCloudTrail`: `RunInstances` and related compute deployment activity; `AWSGuardDuty`: cryptocurrency-mining findings; `AWSVPCFlow`: mining-pool egress |
-| [T1552](https://attack.mitre.org/techniques/T1552/) | [DET0412](https://attack.mitre.org/detectionstrategies/DET0412/) &mdash; Detect Access or Search for Unsecured Credentials Across Platforms | *MITRE has not published an IaaS analytic for this strategy* |
-| [T1046](https://attack.mitre.org/techniques/T1046/) | [DET0376](https://attack.mitre.org/detectionstrategies/DET0376/) &mdash; Behavioral Detection Strategy for Network Service Discovery Across Platforms | *MITRE has not published an IaaS analytic for this strategy* |
-| [T1021](https://attack.mitre.org/techniques/T1021/) | [DET0269](https://attack.mitre.org/detectionstrategies/DET0269/) &mdash; Behavioral Detection Strategy for Remote Service Logins and Post-Access Activity | `AWSCloudTrail`: `ConsoleLogin`, `StartSession`; `AWSVPCFlow`: connections to administrative ports such as 22 and 3389 |
-| [T1071](https://attack.mitre.org/techniques/T1071/) | [DET0444](https://attack.mitre.org/detectionstrategies/DET0444/) &mdash; Detection of Command and Control Over Application Layer Protocols | *MITRE has not published an IaaS analytic for this strategy* |
+| Technique | Detection Strategy |
+|:----------|:-------------------|
+| [T1136](https://attack.mitre.org/techniques/T1136/) | [DET0583](https://attack.mitre.org/detectionstrategies/DET0583/) &mdash; Detection Strategy for T1136 - Create Account across platforms |
+| [T1078](https://attack.mitre.org/techniques/T1078/) | [DET0560](https://attack.mitre.org/detectionstrategies/DET0560/) &mdash; Detection of Valid Account Abuse Across Platforms |
+| [T1550](https://attack.mitre.org/techniques/T1550/) | [DET0338](https://attack.mitre.org/detectionstrategies/DET0338/) &mdash; Behavioral Detection Strategy for Use Alternate Authentication Material (T1550) |
+| [T1078.004](https://attack.mitre.org/techniques/T1078/004/) | [DET0546](https://attack.mitre.org/detectionstrategies/DET0546/) &mdash; Detection of Abused or Compromised Cloud Accounts for Access and Persistence |
+| [T1530](https://attack.mitre.org/techniques/T1530/) | [DET0484](https://attack.mitre.org/detectionstrategies/DET0484/) &mdash; Multi-Platform Cloud Storage Exfiltration Behavior Chain |
+| [T1562.007](https://attack.mitre.org/techniques/T1562/007/) *(revoked &rarr; [T1686.001](https://attack.mitre.org/techniques/T1686/001/))* | [DET0424](https://attack.mitre.org/detectionstrategies/DET0424/) &mdash; Detection Strategy for Disable or Modify Cloud Firewall |
+| [T1562.008](https://attack.mitre.org/techniques/T1562/008/) *(revoked &rarr; [T1685.002](https://attack.mitre.org/techniques/T1685/002/))* | [DET0289](https://attack.mitre.org/detectionstrategies/DET0289/) &mdash; Detection Strategy for Disable or Modify Cloud Log |
+| [T1098](https://attack.mitre.org/techniques/T1098/) | [DET0096](https://attack.mitre.org/detectionstrategies/DET0096/) &mdash; Account Manipulation Behavior Chain Detection |
+| [T1496](https://attack.mitre.org/techniques/T1496/) | [DET0267](https://attack.mitre.org/detectionstrategies/DET0267/) &mdash; Resource Hijacking Detection Strategy |
+| [T1552](https://attack.mitre.org/techniques/T1552/) | [DET0412](https://attack.mitre.org/detectionstrategies/DET0412/) &mdash; Detect Access or Search for Unsecured Credentials Across Platforms |
+| [T1046](https://attack.mitre.org/techniques/T1046/) | [DET0376](https://attack.mitre.org/detectionstrategies/DET0376/) &mdash; Behavioral Detection Strategy for Network Service Discovery Across Platforms |
+| [T1021](https://attack.mitre.org/techniques/T1021/) | [DET0269](https://attack.mitre.org/detectionstrategies/DET0269/) &mdash; Behavioral Detection Strategy for Remote Service Logins and Post-Access Activity |
+| [T1071](https://attack.mitre.org/techniques/T1071/) | [DET0444](https://attack.mitre.org/detectionstrategies/DET0444/) &mdash; Detection of Command and Control Over Application Layer Protocols |
 
 > [!NOTE]
-> **Connector-native evidence mapping.** MITRE's published Detection Strategies for the IaaS platform family sometimes mix source names across cloud vendors. To keep this page AWS-native and readable, the third column translates MITRE's analytic intent into the analogous evidence available in `AWSCloudTrail`, `AWSVPCFlow`, and `AWSGuardDuty`.
+> This page intentionally omits the third MITRE-evidence column. For cloud platform-family strategies, MITRE may cite provider-specific source names that do not map 1:1 to AWS connector tables; keeping this section as Technique + Detection Strategy avoids a brittle translation layer.
 
 > [!NOTE]
 > **MITRE legacy technique IDs.** Some technique IDs cited on this page are *legacy* IDs that MITRE has revoked and remapped: T1562.007 &rarr; T1686.001; T1562.008 &rarr; T1685.002. Published Detection Strategies are attached to the current technique IDs only; the table above follows the `revoked-by` chain so each strategy still applies to the legacy ID cited above.

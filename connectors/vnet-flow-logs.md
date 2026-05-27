@@ -14,6 +14,7 @@
   - [Example Detections](#example-detections)
     - [Lateral Movement](#lateral-movement)
     - [Exfiltration and Anomalies](#exfiltration-and-anomalies)
+  - [MITRE Detection Strategies](#mitre-detection-strategies)
   - [MCSB Control Mapping](#mcsb-control-mapping)
   - [Important Considerations](#important-considerations)
     - [VNet Flow Logs vs. NSG Flow Logs](#vnet-flow-logs-vs-nsg-flow-logs)
@@ -53,7 +54,7 @@ While Azure Firewall logs cover traffic at the centralised egress/ingress point,
 
 | Table | Description | Retention Recommendation | Rationale | Forensic Value | Example Detection |
 |:------|:------------|:------------------------|:----------|:---------------|:------------------|
-| **NTANetAnalytics** | Traffic Analytics enriched flow records — source/dest, geo, port, protocol, flow status, anomaly flags, encryption state | Analytics: 90d / Lake: 365d | **Core east-west visibility.** Detects lateral movement, internal reconnaissance, and data exfiltration over internal paths. MCSB LT-4. Replaces `AzureNetworkAnalytics_CL` from NSG Flow Logs. | Proves exactly which internal resources communicated with each other, on which ports, and how much data was transferred — the definitive evidence for lateral movement investigation | Lateral movement — VM-to-VM RDP from unexpected source (T1021.001) |
+| **NTANetAnalytics** | Traffic Analytics enriched flow records — source/dest, geo, port, protocol, flow status, anomaly flags, encryption state | Analytics: 90d / Lake: 365d | **Core east-west visibility.** Detects lateral movement, internal reconnaissance, and data exfiltration over internal paths. Replaces `AzureNetworkAnalytics_CL` from NSG Flow Logs. | Proves exactly which internal resources communicated with each other, on which ports, and how much data was transferred — the definitive evidence for lateral movement investigation | Lateral movement — VM-to-VM RDP from unexpected source |
 | **NTAIpDetails** | Public IP enrichment — WHOIS, geo-location, threat intelligence attribution for public IPs seen in flows | Analytics: 90d / Lake: 365d | Enrichment layer for public IP context. Replaces `AzureNetworkAnalyticsIPDetails_CL`. | Links external IPs in flow data to geographic location, ASN ownership, and threat intelligence — proves whether traffic was directed at known malicious infrastructure | Outbound flow to IP flagged as C2 by Microsoft threat intelligence |
 
 ---
@@ -62,20 +63,41 @@ While Azure Firewall logs cover traffic at the centralised egress/ingress point,
 
 ### Lateral Movement
 
-| Detection | Table(s) | MITRE ATT&CK | Description |
-|:----------|:---------|:-------------|:------------|
-| Internal RDP from unexpected source | NTANetAnalytics | T1021.001 | RDP (3389) traffic between VMs that don't normally communicate |
-| Internal SMB lateral movement | NTANetAnalytics | T1021.002 | SMB (445) traffic patterns indicating file share access or PsExec-style movement |
-| Internal port scanning | NTANetAnalytics | T1046 | Single source connecting to many destinations on sequential ports |
-| Unusual spoke-to-spoke traffic | NTANetAnalytics | T1021 | Flow between spoke VNets that have no business justification for direct communication |
+| Detection | Table(s) | MITRE ATT&CK | Detection Strategy | Description |
+|:----------|:---------|:-------------|:-------------------|:------------|
+| Internal RDP from unexpected source | NTANetAnalytics | [T1021.001](https://attack.mitre.org/techniques/T1021/001/) | [DET0327](https://attack.mitre.org/detectionstrategies/DET0327/) — RDP Remote Login | RDP (3389) traffic between VMs that don't normally communicate |
+| Internal SMB lateral movement | NTANetAnalytics | [T1021.002](https://attack.mitre.org/techniques/T1021/002/) | [DET0530](https://attack.mitre.org/detectionstrategies/DET0530/) — SMB Admin Shares | SMB (445) traffic patterns indicating file share access or PsExec-style movement |
+| Internal port scanning | NTANetAnalytics | [T1046](https://attack.mitre.org/techniques/T1046/) | [DET0376](https://attack.mitre.org/detectionstrategies/DET0376/) — Network Service Discovery | Single source connecting to many destinations on sequential ports |
+| Unusual spoke-to-spoke traffic | NTANetAnalytics | [T1021](https://attack.mitre.org/techniques/T1021/) | [DET0269](https://attack.mitre.org/detectionstrategies/DET0269/) — Remote Services | Flow between spoke VNets that have no business justification for direct communication |
 
 ### Exfiltration and Anomalies
 
-| Detection | Table(s) | MITRE ATT&CK | Description |
-|:----------|:---------|:-------------|:------------|
-| Large data transfer to external IP | NTANetAnalytics | T1048 | Abnormally high byte count outbound to an IP not seen in baseline traffic |
-| Denied traffic spike | NTANetAnalytics | T1046 | Sudden increase in denied flows — may indicate scanning or misconfigured pivot attempt |
-| Traffic to geo-anomalous destination | NTANetAnalytics, NTAIpDetails | T1071 | Outbound connections to countries not in baseline communication pattern |
+| Detection | Table(s) | MITRE ATT&CK | Detection Strategy | Description |
+|:----------|:---------|:-------------|:-------------------|:------------|
+| Large data transfer to external IP | NTANetAnalytics | [T1048](https://attack.mitre.org/techniques/T1048/) | [DET0131](https://attack.mitre.org/detectionstrategies/DET0131/) — Exfiltration Over Alternative Protocol | Abnormally high byte count outbound to an IP not seen in baseline traffic |
+| Denied traffic spike | NTANetAnalytics | [T1046](https://attack.mitre.org/techniques/T1046/) | [DET0376](https://attack.mitre.org/detectionstrategies/DET0376/) — Network Service Discovery | Sudden increase in denied flows — may indicate scanning or misconfigured pivot attempt |
+| Traffic to geo-anomalous destination | NTANetAnalytics, NTAIpDetails | [T1071](https://attack.mitre.org/techniques/T1071/) | [DET0444](https://attack.mitre.org/detectionstrategies/DET0444/) — Application Layer Protocol C2 | Outbound connections to countries not in baseline communication pattern |
+
+---
+
+## MITRE Detection Strategies
+
+Curated list of MITRE [Detection Strategies](https://attack.mitre.org/detectionstrategies/) relevant to the techniques referenced on this page.
+
+| Technique | Detection Strategy |
+|:----------|:-------------------|
+| [T1021.001](https://attack.mitre.org/techniques/T1021/001/) | [DET0327](https://attack.mitre.org/detectionstrategies/DET0327/) &mdash; Multi-event Detection Strategy for RDP-Based Remote Logins and Post-Access Activity |
+| [T1021.002](https://attack.mitre.org/techniques/T1021/002/) | [DET0530](https://attack.mitre.org/detectionstrategies/DET0530/) &mdash; Multi-Event Detection for SMB Admin Share Lateral Movement |
+| [T1046](https://attack.mitre.org/techniques/T1046/) | [DET0376](https://attack.mitre.org/detectionstrategies/DET0376/) &mdash; Behavioral Detection Strategy for Network Service Discovery Across Platforms |
+| [T1021](https://attack.mitre.org/techniques/T1021/) | [DET0269](https://attack.mitre.org/detectionstrategies/DET0269/) &mdash; Behavioral Detection Strategy for Remote Service Logins and Post-Access Activity |
+| [T1048](https://attack.mitre.org/techniques/T1048/) | [DET0131](https://attack.mitre.org/detectionstrategies/DET0131/) &mdash; Behavioral Detection Strategy for Exfiltration Over Alternative Protocol |
+| [T1071](https://attack.mitre.org/techniques/T1071/) | [DET0444](https://attack.mitre.org/detectionstrategies/DET0444/) &mdash; Detection of Command and Control Over Application Layer Protocols |
+
+> [!NOTE]
+> This page intentionally omits the third MITRE-evidence column. For broad platform-family strategies, MITRE may cite source names that do not map 1:1 to `NTANetAnalytics`; keeping this section as Technique + Detection Strategy avoids a brittle translation layer.
+
+> [!TIP]
+> Detection Strategies are MITRE-published *pseudo-code analytics*, not vendor rules — they tell you **what** to correlate across data sources. Use them to validate that your Sentinel analytic rules and KQL hunting queries cover the published correlation logic.
 
 ---
 

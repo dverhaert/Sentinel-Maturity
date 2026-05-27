@@ -9,6 +9,7 @@
 - [Overview](#overview)
 - [Tables and Rationale](#tables-and-rationale)
 - [Example Detections](#example-detections)
+- [MITRE Detection Strategies](#mitre-detection-strategies)
 - [MCSB Control Mapping](#mcsb-control-mapping)
 - [Important Considerations](#important-considerations)
 - [Notes](#notes)
@@ -39,22 +40,48 @@ While Azure Activity Logs (Tier 1) capture AKS cluster-level operations (create,
 
 | Table | Description | Retention Recommendation | Rationale | Forensic Value | Example Detection |
 |:------|:------------|:------------------------|:----------|:---------------|:------------------|
-| **AKSAudit** | Kubernetes API server audit events (resource-specific mode) — create, update, delete operations for all Kubernetes resources | Analytics: 90d / Lake: 365d | Primary Kubernetes security audit trail — captures all cluster operations including RBAC changes, secret access, and workload modifications | Reconstructs attacker actions within the Kubernetes cluster — which pods were created, what secrets were accessed, what RBAC changes were made | Privileged pod created in default namespace (T1610) |
-| **AKSAuditAdmin** | Filtered view of AKS audit events — excludes read-only (GET/LIST) operations, reducing volume significantly | Analytics: 90d / Lake: 365d | Same security value as full audit with dramatically reduced volume — ideal for most security monitoring use cases | Same forensic value for write operations — all mutations are captured | ClusterRoleBinding created granting cluster-admin (T1098) |
-| **AKSControlPlane** | AKS control plane component logs — API server, controller manager, scheduler, admission webhooks | Analytics: 30d / Lake: 180d | Operational health and debugging data for the control plane — less security-focused but valuable for troubleshooting | Identifies control plane issues that may indicate compromise — failed admission webhooks, scheduler anomalies | API server admission webhook disabled (T1562.001) |
+| **AKSAudit** | Kubernetes API server audit events (resource-specific mode) — create, update, delete operations for all Kubernetes resources | Analytics: 90d / Lake: 365d | Primary Kubernetes security audit trail — captures all cluster operations including RBAC changes, secret access, and workload modifications | Reconstructs attacker actions within the Kubernetes cluster — which pods were created, what secrets were accessed, what RBAC changes were made | Privileged pod created in default namespace |
+| **AKSAuditAdmin** | Filtered view of AKS audit events — excludes read-only (GET/LIST) operations, reducing volume significantly | Analytics: 90d / Lake: 365d | Same security value as full audit with dramatically reduced volume — ideal for most security monitoring use cases | Same forensic value for write operations — all mutations are captured | ClusterRoleBinding created granting cluster-admin |
+| **AKSControlPlane** | AKS control plane component logs — API server, controller manager, scheduler, admission webhooks | Analytics: 30d / Lake: 180d | Operational health and debugging data for the control plane — less security-focused but valuable for troubleshooting | Identifies control plane issues that may indicate compromise — failed admission webhooks, scheduler anomalies | API server admission webhook disabled |
 
 ---
 
 ## Example Detections
 
-| Detection | Table(s) | MITRE ATT&CK | Description |
-|:----------|:---------|:-------------|:------------|
-| Privileged container created | AKSAudit, AKSAuditAdmin | T1610 | Pod created with privileged security context or host namespace access — potential container escape |
-| Secret accessed from unusual pod | AKSAudit | T1552.007 | Kubernetes Secret read by a pod that doesn't normally access secrets |
-| ClusterRole or ClusterRoleBinding modified | AKSAuditAdmin | T1098 | RBAC escalation — new ClusterRoleBinding granting cluster-admin or broad permissions |
-| Container image from untrusted registry | AKSAudit | T1195.002 | Pod created with a container image from an unapproved registry — supply chain risk |
-| Exec into running container | AKSAudit | T1609 | `kubectl exec` into a running container — interactive shell access to a workload |
-| Namespace deletion | AKSAuditAdmin | T1485 | Kubernetes namespace deleted — could indicate destructive attack or cleanup after compromise |
+| Detection | Table(s) | MITRE ATT&CK | Detection Strategy | Description |
+|:----------|:---------|:-------------|:-------------------|:------------|
+| Privileged container created | AKSAudit, AKSAuditAdmin | [T1610](https://attack.mitre.org/techniques/T1610/) | [DET0249](https://attack.mitre.org/detectionstrategies/DET0249/) — Deploy Container | Pod created with privileged security context or host namespace access — potential container escape |
+| Secret accessed from unusual pod | AKSAudit | [T1552.007](https://attack.mitre.org/techniques/T1552/007/) | [DET0198](https://attack.mitre.org/detectionstrategies/DET0198/) — Container API Credential Access | Kubernetes Secret read by a pod that doesn't normally access secrets |
+| ClusterRole or ClusterRoleBinding modified | AKSAuditAdmin | [T1098](https://attack.mitre.org/techniques/T1098/) | [DET0096](https://attack.mitre.org/detectionstrategies/DET0096/) — Account Manipulation | RBAC escalation — new ClusterRoleBinding granting cluster-admin or broad permissions |
+| Container image from untrusted registry | AKSAudit | [T1195.002](https://attack.mitre.org/techniques/T1195/002/) | [DET0309](https://attack.mitre.org/detectionstrategies/DET0309/) — Compromise Software Supply Chain | Pod created with a container image from an unapproved registry — supply chain risk |
+| Exec into running container | AKSAudit | [T1609](https://attack.mitre.org/techniques/T1609/) | [DET0065](https://attack.mitre.org/detectionstrategies/DET0065/) — Container Administration Command | `kubectl exec` into a running container — interactive shell access to a workload |
+| Namespace deletion | AKSAuditAdmin | [T1485](https://attack.mitre.org/techniques/T1485/) | [DET0146](https://attack.mitre.org/detectionstrategies/DET0146/) — Data Destruction | Kubernetes namespace deleted — could indicate destructive attack or cleanup after compromise |
+| Admission webhook disabled | AKSControlPlane | [T1562.001](https://attack.mitre.org/techniques/T1562/001/) *(revoked &rarr; [T1685](https://attack.mitre.org/techniques/T1685/))* | [DET0497](https://attack.mitre.org/detectionstrategies/DET0497/) — Defense Impairment | API server admission webhook disabled or patched |
+
+---
+
+## MITRE Detection Strategies
+
+Curated list of MITRE [Detection Strategies](https://attack.mitre.org/detectionstrategies/) relevant to the techniques referenced on this page.
+
+| Technique | Detection Strategy |
+|:----------|:-------------------|
+| [T1610](https://attack.mitre.org/techniques/T1610/) | [DET0249](https://attack.mitre.org/detectionstrategies/DET0249/) &mdash; Behavior-chain detection for T1610 Deploy Container across Docker & Kubernetes control/node planes |
+| [T1552.007](https://attack.mitre.org/techniques/T1552/007/) | [DET0198](https://attack.mitre.org/detectionstrategies/DET0198/) &mdash; Detect Abuse of Container APIs for Credential Access |
+| [T1098](https://attack.mitre.org/techniques/T1098/) | [DET0096](https://attack.mitre.org/detectionstrategies/DET0096/) &mdash; Account Manipulation Behavior Chain Detection |
+| [T1195.002](https://attack.mitre.org/techniques/T1195/002/) | [DET0309](https://attack.mitre.org/detectionstrategies/DET0309/) &mdash; Compromised software/update chain (installer/write → first-run/child → egress/signature anomaly) |
+| [T1609](https://attack.mitre.org/techniques/T1609/) | [DET0065](https://attack.mitre.org/detectionstrategies/DET0065/) &mdash; Detection Strategy for Container Administration Command Abuse |
+| [T1485](https://attack.mitre.org/techniques/T1485/) | [DET0146](https://attack.mitre.org/detectionstrategies/DET0146/) &mdash; Detection of Data Destruction Across Platforms via Mass Overwrite and Deletion Patterns |
+| [T1562.001](https://attack.mitre.org/techniques/T1562/001/) *(revoked &rarr; [T1685](https://attack.mitre.org/techniques/T1685/))* | [DET0497](https://attack.mitre.org/detectionstrategies/DET0497/) &mdash; Detection of Defense Impairment through Disabled or Modified Tools across OS Platforms. |
+
+> [!NOTE]
+> This page intentionally omits the third MITRE-evidence column. For broad platform-family strategies, MITRE may cite runtime- or orchestrator-specific source names that do not map 1:1 to AKS tables; keeping this section as Technique + Detection Strategy avoids a brittle translation layer.
+
+> [!NOTE]
+> **MITRE legacy technique IDs.** Some technique IDs cited on this page are *legacy* IDs that MITRE has revoked and remapped: T1562.001 &rarr; T1685. Published Detection Strategies are attached to the current technique IDs only; the table above follows the `revoked-by` chain so each strategy still applies to the legacy ID cited above.
+
+> [!TIP]
+> Detection Strategies are MITRE-published *pseudo-code analytics*, not vendor rules — they tell you **what** to correlate across data sources. Use them to validate that your Sentinel analytic rules and KQL hunting queries cover the published correlation logic.
 
 ---
 

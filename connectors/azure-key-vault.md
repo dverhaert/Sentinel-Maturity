@@ -9,6 +9,7 @@
 - [Overview](#overview)
 - [Tables and Rationale](#tables-and-rationale)
 - [Example Detections](#example-detections)
+- [MITRE Detection Strategies](#mitre-detection-strategies)
 - [MCSB Control Mapping](#mcsb-control-mapping)
 - [Important Considerations](#important-considerations)
 - [Notes](#notes)
@@ -39,7 +40,7 @@ In a breach scenario, the first question after *"which accounts were compromised
 
 | Table | Description | Retention Recommendation | Rationale | Forensic Value | Example Detection |
 |:------|:------------|:------------------------|:----------|:---------------|:------------------|
-| **AKVAuditLogs** (resource-specific) | All Key Vault operations — secret get/set/delete, key operations, certificate operations, access policy changes | Analytics: 90d / Lake: 365d | **Core secrets audit trail.** Detects unauthorized secret access, bulk secret enumeration, and access policy tampering. MCSB DP-6, LT-3. | Proves exactly which secrets were accessed, by which identity, from which IP, and when. The definitive evidence for determining whether an attacker obtained secret material during a breach. | Mass secret retrieval from unusual IP — potential credential theft (T1552.004) |
+| **AKVAuditLogs** (resource-specific) | All Key Vault operations — secret get/set/delete, key operations, certificate operations, access policy changes | Analytics: 90d / Lake: 365d | **Core secrets audit trail.** Detects unauthorized secret access, bulk secret enumeration, and access policy tampering. MCSB DP-6, LT-3. | Proves exactly which secrets were accessed, by which identity, from which IP, and when. The definitive evidence for determining whether an attacker obtained secret material during a breach. | Mass secret retrieval from unusual IP — potential credential theft |
 | **AzureDiagnostics** (KeyVault) | Legacy diagnostic mode — same data in unstructured format | Analytics: 90d / Lake: 365d | Fallback for Key Vaults not yet migrated to resource-specific mode. | Same forensic value as AKVAuditLogs but harder to query | Same as above |
 
 > [!TIP]
@@ -51,20 +52,40 @@ In a breach scenario, the first question after *"which accounts were compromised
 
 ### Secret Access
 
-| Detection | Table(s) | MITRE ATT&CK | Description |
-|:----------|:---------|:-------------|:------------|
-| Mass secret retrieval | AKVAuditLogs | T1552.004 | Single identity retrieving many secrets in a short timeframe — bulk credential theft |
-| Secret access from unusual IP | AKVAuditLogs | T1552.004 | Secret retrieval from an IP not seen in baseline vault access patterns |
-| Secret access from unexpected identity | AKVAuditLogs | T1078 | Service principal or user accessing secrets they have not accessed before |
-| Access denied spike | AKVAuditLogs | T1087 | Sudden increase in 403 responses — may indicate reconnaissance or misconfigured stolen credentials |
+| Detection | Table(s) | MITRE ATT&CK | Detection Strategy | Description |
+|:----------|:---------|:-------------|:-------------------|:------------|
+| Mass secret retrieval | AKVAuditLogs | [T1552.004](https://attack.mitre.org/techniques/T1552/004/) | [DET0549](https://attack.mitre.org/detectionstrategies/DET0549/) — Private Key Access | Single identity retrieving many secrets in a short timeframe — bulk credential theft |
+| Secret access from unusual IP | AKVAuditLogs | [T1552.004](https://attack.mitre.org/techniques/T1552/004/) | [DET0549](https://attack.mitre.org/detectionstrategies/DET0549/) — Private Key Access | Secret retrieval from an IP not seen in baseline vault access patterns |
+| Secret access from unexpected identity | AKVAuditLogs | [T1078](https://attack.mitre.org/techniques/T1078/) | [DET0560](https://attack.mitre.org/detectionstrategies/DET0560/) — Valid Accounts | Service principal or user accessing secrets they have not accessed before |
+| Access denied spike | AKVAuditLogs | [T1087](https://attack.mitre.org/techniques/T1087/) | [DET0587](https://attack.mitre.org/detectionstrategies/DET0587/) — Account Discovery | Sudden increase in 403 responses — may indicate reconnaissance or misconfigured stolen credentials |
 
 ### Administrative Changes
 
-| Detection | Table(s) | MITRE ATT&CK | Description |
-|:----------|:---------|:-------------|:------------|
-| Key Vault access policy modified | AKVAuditLogs + AzureActivity | T1098 | Access policy change granting new identities access to secrets |
-| Soft-delete disabled | AKVAuditLogs | T1485 | Disabling soft-delete on a Key Vault — potential preparation for destructive action |
-| Key Vault purged | AKVAuditLogs + AzureActivity | T1485 | Deletion of a Key Vault containing cryptographic keys or secrets |
+| Detection | Table(s) | MITRE ATT&CK | Detection Strategy | Description |
+|:----------|:---------|:-------------|:-------------------|:------------|
+| Key Vault access policy modified | AKVAuditLogs + AzureActivity | [T1098](https://attack.mitre.org/techniques/T1098/) | [DET0096](https://attack.mitre.org/detectionstrategies/DET0096/) — Account Manipulation | Access policy change granting new identities access to secrets |
+| Soft-delete disabled | AKVAuditLogs | [T1485](https://attack.mitre.org/techniques/T1485/) | [DET0146](https://attack.mitre.org/detectionstrategies/DET0146/) — Data Destruction | Disabling soft-delete on a Key Vault — potential preparation for destructive action |
+| Key Vault purged | AKVAuditLogs + AzureActivity | [T1485](https://attack.mitre.org/techniques/T1485/) | [DET0146](https://attack.mitre.org/detectionstrategies/DET0146/) — Data Destruction | Deletion of a Key Vault containing cryptographic keys or secrets |
+
+---
+
+## MITRE Detection Strategies
+
+Curated list of MITRE [Detection Strategies](https://attack.mitre.org/detectionstrategies/) relevant to the techniques referenced on this page.
+
+| Technique | Detection Strategy |
+|:----------|:-------------------|
+| [T1552.004](https://attack.mitre.org/techniques/T1552/004/) | [DET0549](https://attack.mitre.org/detectionstrategies/DET0549/) &mdash; Detect Suspicious Access to Private Key Files and Export Attempts Across Platforms |
+| [T1078](https://attack.mitre.org/techniques/T1078/) | [DET0560](https://attack.mitre.org/detectionstrategies/DET0560/) &mdash; Detection of Valid Account Abuse Across Platforms |
+| [T1087](https://attack.mitre.org/techniques/T1087/) | [DET0587](https://attack.mitre.org/detectionstrategies/DET0587/) &mdash; Enumeration of User or Account Information Across Platforms |
+| [T1098](https://attack.mitre.org/techniques/T1098/) | [DET0096](https://attack.mitre.org/detectionstrategies/DET0096/) &mdash; Account Manipulation Behavior Chain Detection |
+| [T1485](https://attack.mitre.org/techniques/T1485/) | [DET0146](https://attack.mitre.org/detectionstrategies/DET0146/) &mdash; Detection of Data Destruction Across Platforms via Mass Overwrite and Deletion Patterns |
+
+> [!NOTE]
+> This page intentionally omits the third MITRE-evidence column. For cloud platform-family strategies, MITRE may cite provider-specific source names that do not map 1:1 to Azure Key Vault tables; keeping this section as Technique + Detection Strategy avoids a brittle translation layer.
+
+> [!TIP]
+> Detection Strategies are MITRE-published *pseudo-code analytics*, not vendor rules — they tell you **what** to correlate across data sources. Use them to validate that your Sentinel analytic rules and KQL hunting queries cover the published correlation logic.
 
 ---
 

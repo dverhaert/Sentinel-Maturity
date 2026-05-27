@@ -26,6 +26,7 @@ A separate repo (`mathijsvermaat.github.io`) hosts the assessment HTML checklist
 5. **Spelling**: Use British English (organisation, defence, behaviour, specialised, etc.).
 6. **File naming**: Lowercase with hyphens (`azure-firewall.md`, not `AzureFirewall.md`).
 7. **Link style**: Use relative paths within the repo. Never use absolute filesystem paths in markdown content.
+8. **TOC edits are minimal**: preserve each page's existing TOC style (flat vs nested, indentation style) and only add missing items required by your change.
 
 ---
 
@@ -92,7 +93,7 @@ Template: `connectors/_TEMPLATE.md`
 6. **Tables and Rationale** — Core table(s) with columns: `| Table | Description | Retention Recommendation | Rationale | Forensic Value | Example Detection |`
    - Group into H3 subsections when >5 tables (e.g., "### Authentication Tables")
 7. **Example Detections** — H3 subsections by category. Table: `| Detection | Table(s) / Event ID(s) | MITRE ATT&CK | Detection Strategy | Description |`
-8. **MITRE Detection Strategies** — Curated list of MITRE [Detection Strategies](https://attack.mitre.org/detectionstrategies/) relevant to the techniques referenced on the page. Table: `| Technique | Detection Strategy | Relevant Event IDs / Tables |`. See "MITRE Detection Strategies mapping" below for the build rules.
+8. **MITRE Detection Strategies** — Curated list of MITRE [Detection Strategies](https://attack.mitre.org/detectionstrategies/) relevant to the techniques referenced on the page. Default table: `| Technique | Detection Strategy |`. Add a third evidence/log-sources column only for explicitly raw-channel pages. See "MITRE Detection Strategies mapping" below for the build rules.
 9. **MCSB Control Mapping** — Table: `| MCSB Control | Relevance |`
 10. **Notes** — Operational guidance bullets
 11. **Tools** — Table: `| Tool | Type | Purpose | Source | Guide |`
@@ -165,10 +166,18 @@ Refresh these derived files with your local MITRE-mapping build process after pu
 
 ### Raw-channel vs portal-abstracted connectors
 
-The `MITRE Log Sources (<Platform>)` column **only** belongs on connectors that ingest raw channels at the same abstraction level MITRE references in `x_mitre_log_source_references`. For connectors that surface telemetry through a vendor-normalised schema, the column is misleading and must be omitted.
+Default to the 2-column MITRE table (`| Technique | Detection Strategy |`).
 
-- **Raw-channel** (column included): `windows-security-events`, `windows-forwarded-events`, `syslog-linux`, `office-365` (m365 unified audit), `microsoft-entra-id` (signinlogs / audit), `amazon-web-services` (CloudTrail), `google-cloud-platform`, `iis-web-server-logs`, `dns-security-logs`, `azure-activity-logs`, `azure-firewall`, `azure-waf`, `azure-storage-account`, `azure-key-vault`, `vnet-flow-logs`, `third-party-network-appliances`, `azure-kubernetes-service`.
-- **Portal-abstracted** (omit log-sources column; render 2-column `| Technique | Detection Strategy |` table and add a `[!NOTE]` explaining why): `microsoft-defender-xdr`, `microsoft-defender-cloud-apps`, `microsoft-defender-for-cloud`, `microsoft-defender-for-iot`, `microsoft-intune`, `microsoft-purview-data-map`, `microsoft-purview-information-protection`, `copilot-ai-governance`, `sentinel-health`, `threat-intelligence`, `global-secure-access`, `sap`, `sql-database-audit`, `azure-devops`, `github-enterprise`, `custom-applications`.
+Use a third column only on pages explicitly maintained as raw-channel mappings where it stays clear for readers:
+- `windows-security-events`
+- `windows-forwarded-events`
+- `syslog-linux`
+- `dns-security-logs`
+- `iis-web-server-logs`
+
+On all other connector pages, omit the third column and include a `[!NOTE]` explaining why.
+
+When editing a page that already has a settled TOC format, preserve that TOC style and only insert the missing `MITRE Detection Strategies` entry.
 
 **When in doubt, omit the column.** The cost of an omitted column is small (readers still follow strategy links to MITRE's pages); the cost of a misleading column is high (readers assume their connector emits raw channels it does not).
 

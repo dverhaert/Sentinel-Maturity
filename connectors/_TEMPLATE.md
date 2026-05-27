@@ -63,11 +63,16 @@
 
 <!--
   Curated list of MITRE Detection Strategies (https://attack.mitre.org/detectionstrategies/)
-  relevant to the techniques referenced on this page. The third column lists the
-  EXACT log channels and event codes referenced by each strategy's analytic for
-  this connector's platform — taken verbatim from MITRE's published
-  `x_mitre_log_source_references` field. Never hand-pick "similar-looking"
-  events from this connector's own tables.
+  relevant to the techniques referenced on this page.
+
+  DEFAULT FORMAT:
+    Use a 2-column table:
+      | Technique | Detection Strategy |
+
+  OPTIONAL 3RD COLUMN (raw-channel pages only):
+    Only add a third column (`MITRE Log Sources (<Platform>)` or
+    `Connector Evidence (<Platform>)`) on explicitly raw-channel pages where
+    the mapping remains clear to the reader.
 
   SOURCE OF TRUTH (local, no fixed path required):
     - MITRE STIX 2.1 enterprise-attack bundle
@@ -75,7 +80,7 @@
     - Local MITRE mapping detail export (one row per CitedTech+Strategy+Analytic+LogSource)
       with fields including Platform, Channel, EventCode
 
-  HOW TO FILL THE THIRD COLUMN:
+  HOW TO FILL THE THIRD COLUMN (if used):
     1. Rename the column header "MITRE Log Sources (<Platform>)" — substitute
        this connector's primary platform: (Windows), (Linux), (macOS), (Azure),
        (IaaS), (Containers), (Identity Provider), (SaaS), (Network Devices),
@@ -102,14 +107,13 @@
     appears in your local MITRE mapping summary export.
 -->
 
-| Technique | Detection Strategy | MITRE Log Sources (<Platform>) / Connector Evidence (<Platform>) |
-|:----------|:-------------------|:---------------------------------------------------------------|
-| [Txxxx.xxx](https://attack.mitre.org/techniques/Txxxx/xxx/) — [Name] | [DET####](https://attack.mitre.org/detectionstrategies/DET####/) — [Strategy name] | `Channel`: <codes> · `Channel`: <codes> |
-| [Txxxx.xxx](https://attack.mitre.org/techniques/Txxxx/xxx/) — [Name] *(revoked → [Tyyyy.yyy](https://attack.mitre.org/techniques/Tyyyy/yyy/))* | [DET####](https://attack.mitre.org/detectionstrategies/DET####/) — [Strategy name] | `ConnectorTable`: operation family / telemetry pattern |
-| [Txxxx.xxx](https://attack.mitre.org/techniques/Txxxx/xxx/) — [Name] | [DET####](https://attack.mitre.org/detectionstrategies/DET####/) — [Strategy name] | *MITRE has not published a [Platform] analytic for this strategy* |
+| Technique | Detection Strategy |
+|:----------|:-------------------|
+| [Txxxx.xxx](https://attack.mitre.org/techniques/Txxxx/xxx/) — [Name] | [DET####](https://attack.mitre.org/detectionstrategies/DET####/) — [Strategy name] |
+| [Txxxx.xxx](https://attack.mitre.org/techniques/Txxxx/xxx/) — [Name] *(revoked → [Tyyyy.yyy](https://attack.mitre.org/techniques/Tyyyy/yyy/))* | [DET####](https://attack.mitre.org/detectionstrategies/DET####/) — [Strategy name] |
 
 > [!NOTE]
-> **Choose the right third-column mode.** Use **MITRE Log Sources (<Platform>)** when the connector's native evidence aligns closely with MITRE's published source names. Use **Connector Evidence (<Platform>)** when verbatim MITRE source names would point at another vendor's tables and confuse readers; in that case, translate MITRE's analytic intent into the analogous evidence available on the current connector page.
+> This page intentionally omits the third MITRE-evidence column by default. Add a third column only on explicitly raw-channel pages where verbatim log-source mapping remains clear.
 
 > [!NOTE]
 > *(Include only if the page cites any revoked techniques)* **MITRE legacy technique IDs.** Some technique IDs cited on this page are *legacy* IDs that MITRE later revoked and moved to a new family. Detection Strategies are attached to the current technique IDs — the parenthetical *(revoked → Txxxx.xxx)* in each row shows the current ID. Pages may continue to cite legacy IDs because that is what Microsoft Sentinel docs and built-in analytic rules still reference.

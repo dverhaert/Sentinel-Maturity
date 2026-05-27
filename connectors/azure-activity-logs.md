@@ -15,6 +15,7 @@
     - [Resource-Based](#resource-based)
     - [Identity / RBAC](#identity--rbac)
     - [Key Vault](#key-vault)
+  - [MITRE Detection Strategies](#mitre-detection-strategies)
   - [MCSB Control Mapping](#mcsb-control-mapping)
   - [Important Considerations](#important-considerations)
     - [Log Categories to Enable](#log-categories-to-enable)
@@ -46,11 +47,11 @@ Azure Activity Logs capture **subscription-level events** across all your Azure 
 
 | Table | Category | Description | Retention Recommendation | Rationale | Forensic Value | Example Detection |
 |:------|:---------|:------------|:------------------------|:----------|:---------------|:------------------|
-| **AzureActivity** | Administrative | Resource creation, modification, deletion (PUT, PATCH, DELETE operations) | Analytics: 90d / Lake: 365d | Detects unauthorized resource deployment (crypto-mining VMs, exfiltration infrastructure), resource deletion (sabotage), and configuration changes. MCSB AM-2 (Use only approved services), LT-3. | Complete audit trail of every Azure control plane operation — proves who created, modified, or deleted which resource, when, and from which IP. The authoritative evidence for Azure infrastructure investigations. | Crypto-mining VM deployment in unusual region (T1496), Mass resource group deletion (T1485) |
+| **AzureActivity** | Administrative | Resource creation, modification, deletion (PUT, PATCH, DELETE operations) | Analytics: 90d / Lake: 365d | Detects unauthorized resource deployment (crypto-mining VMs, exfiltration infrastructure), resource deletion (sabotage), and configuration changes. MCSB AM-2 (Use only approved services), LT-3. | Complete audit trail of every Azure control plane operation — proves who created, modified, or deleted which resource, when, and from which IP. The authoritative evidence for Azure infrastructure investigations. | Crypto-mining VM deployment in unusual region, Mass resource group deletion |
 | **AzureActivity** | Security | Security Center / Defender for Cloud alerts and recommendations | Analytics: 90d / Lake: 365d | Provides a secondary view of Defender for Cloud alerts at the platform level. | Correlate security alerts with resource changes — proves whether a Defender for Cloud alert was followed by remediation or further malicious activity | Defender for Cloud alert correlation with resource changes |
 | **AzureActivity** | ServiceHealth | Azure service incidents, planned maintenance | Analytics: 90d / Lake: 365d | Operational context — helps distinguish between attacker activity and platform issues during investigations. | Rule out platform issues as root cause — proves whether an outage was due to an Azure incident or an attacker's actions | Rule out platform issue during incident investigation |
 | **AzureActivity** | Alert | Azure Monitor alert events | Analytics: 90d / Lake: 365d | Operational alerting correlated with security context. | Correlate operational alerts with security events — shows whether infrastructure alerts preceded or followed suspicious activity | Azure Monitor alert correlated with suspicious activity |
-| **AzureActivity** | Policy | Azure Policy evaluation results (compliance/non-compliance) | Analytics: 90d / Lake: 365d | Tracks policy violations that may indicate security drift. MCSB GS-3 (Align organisation roles and responsibilities). | Compliance audit trail — proves which resources were non-compliant, when policy was bypassed, and whether exemptions were created to circumvent controls | Non-compliant resource deployed bypassing policy (T1562.001) |
+| **AzureActivity** | Policy | Azure Policy evaluation results (compliance/non-compliance) | Analytics: 90d / Lake: 365d | Tracks policy violations that may indicate security drift. | Compliance audit trail — proves which resources were non-compliant, when policy was bypassed, and whether exemptions were created to circumvent controls | Non-compliant resource deployed bypassing policy |
 | **AzureActivity** | Autoscale | Autoscale engine events | Analytics: 90d / Lake: 365d | Can indicate unusual resource consumption patterns potentially triggered by an attacker. | Detect resource abuse — abnormal autoscale events may indicate crypto-mining or other compute abuse triggering scale-out | Unexpected autoscale triggered by resource abuse |
 | **AzureActivity** | ResourceHealth | Resource health status changes | Analytics: 90d / Lake: 365d | Operational context for resource availability investigations. | Timeline correlation — resource health degradation events help establish whether an attacker impacted availability | Resource health degradation correlated with attack activity |
 
@@ -60,29 +61,57 @@ Azure Activity Logs capture **subscription-level events** across all your Azure 
 
 ### Resource-Based
 
-| Detection | Operation(s) | MITRE ATT&CK | Description |
-|:----------|:-------------|:-------------|:------------|
-| Crypto-mining VM deployment | Microsoft.Compute/virtualMachines/write | T1496 | Creation of GPU-optimised or high-CPU VMs in unusual regions or resource groups |
-| Resource group deletion | Microsoft.Resources/subscriptions/resourceGroups/delete | T1485 | Mass deletion of resource groups — potential sabotage or destructive attack |
-| Storage account public access enabled | Microsoft.Storage/storageAccounts/write | T1530 | Storage account configured with public blob/container access |
-| Network Security Group rule modified | Microsoft.Network/networkSecurityGroups/securityRules/write | T1562.007 | NSG rules opened to allow inbound traffic from any source (0.0.0.0/0) |
-| Virtual Network modification | Microsoft.Network/virtualNetworks/write | T1599 | Unauthorized changes to network topology (peering, subnets) |
+| Detection | Operation(s) | MITRE ATT&CK | Detection Strategy | Description |
+|:----------|:-------------|:-------------|:-------------------|:------------|
+| Crypto-mining VM deployment | Microsoft.Compute/virtualMachines/write | [T1496](https://attack.mitre.org/techniques/T1496/) | [DET0267](https://attack.mitre.org/detectionstrategies/DET0267/) — Resource Hijacking | Creation of GPU-optimised or high-CPU VMs in unusual regions or resource groups |
+| Resource group deletion | Microsoft.Resources/subscriptions/resourceGroups/delete | [T1485](https://attack.mitre.org/techniques/T1485/) | [DET0146](https://attack.mitre.org/detectionstrategies/DET0146/) — Data Destruction | Mass deletion of resource groups — potential sabotage or destructive attack |
+| Storage account public access enabled | Microsoft.Storage/storageAccounts/write | [T1530](https://attack.mitre.org/techniques/T1530/) | [DET0484](https://attack.mitre.org/detectionstrategies/DET0484/) — Cloud Storage Exfiltration | Storage account configured with public blob/container access |
+| Network Security Group rule modified | Microsoft.Network/networkSecurityGroups/securityRules/write | [T1562.007](https://attack.mitre.org/techniques/T1562/007/) *(revoked &rarr; [T1686.001](https://attack.mitre.org/techniques/T1686/001/))* | [DET0424](https://attack.mitre.org/detectionstrategies/DET0424/) — Modify Cloud Firewall | NSG rules opened to allow inbound traffic from any source (0.0.0.0/0) |
+| Virtual Network modification | Microsoft.Network/virtualNetworks/write | [T1599](https://attack.mitre.org/techniques/T1599/) | [DET0006](https://attack.mitre.org/detectionstrategies/DET0006/) — Network Boundary Bridging | Unauthorized changes to network topology (peering, subnets) |
 
 ### Identity / RBAC
 
-| Detection | Operation(s) | MITRE ATT&CK | Description |
-|:----------|:-------------|:-------------|:------------|
-| Owner/Contributor role assigned | Microsoft.Authorization/roleAssignments/write | T1098.001 | Privilege escalation via RBAC — assigning Owner or Contributor role at subscription level |
-| Custom role created with elevated permissions | Microsoft.Authorization/roleDefinitions/write | T1098 | Creation of custom roles that include wildcard (*) actions |
-| Diagnostic settings deleted | Microsoft.Insights/diagnosticSettings/delete | T1562.008 | Attacker disabling logging to cover tracks — anti-forensic activity |
-| Policy exemption created | Microsoft.Authorization/policyExemptions/write | T1562.001 | Exempting resources from security policies to bypass controls |
+| Detection | Operation(s) | MITRE ATT&CK | Detection Strategy | Description |
+|:----------|:-------------|:-------------|:-------------------|:------------|
+| Owner/Contributor role assigned | Microsoft.Authorization/roleAssignments/write | [T1098.001](https://attack.mitre.org/techniques/T1098/001/) | [DET0531](https://attack.mitre.org/detectionstrategies/DET0531/) — Additional Cloud Credentials | Privilege escalation via RBAC — assigning Owner or Contributor role at subscription level |
+| Custom role created with elevated permissions | Microsoft.Authorization/roleDefinitions/write | [T1098](https://attack.mitre.org/techniques/T1098/) | [DET0096](https://attack.mitre.org/detectionstrategies/DET0096/) — Account Manipulation | Creation of custom roles that include wildcard (*) actions |
+| Diagnostic settings deleted | Microsoft.Insights/diagnosticSettings/delete | [T1562.008](https://attack.mitre.org/techniques/T1562/008/) *(revoked &rarr; [T1685.002](https://attack.mitre.org/techniques/T1685/002/))* | [DET0289](https://attack.mitre.org/detectionstrategies/DET0289/) — Disable or Modify Cloud Log | Attacker disabling logging to cover tracks — anti-forensic activity |
+| Policy exemption created | Microsoft.Authorization/policyExemptions/write | [T1562.001](https://attack.mitre.org/techniques/T1562/001/) *(revoked &rarr; [T1685](https://attack.mitre.org/techniques/T1685/))* | [DET0497](https://attack.mitre.org/detectionstrategies/DET0497/) — Defense Impairment | Exempting resources from security policies to bypass controls |
 
 ### Key Vault
 
-| Detection | Operation(s) | MITRE ATT&CK | Description |
-|:----------|:-------------|:-------------|:------------|
-| Key Vault access policy modified | Microsoft.KeyVault/vaults/write | T1552.004 | Unauthorized changes to Key Vault access policies — potential secret exfiltration setup |
-| Key Vault deleted / purged | Microsoft.KeyVault/vaults/delete | T1485 | Deletion of key vaults containing cryptographic keys or secrets |
+| Detection | Operation(s) | MITRE ATT&CK | Detection Strategy | Description |
+|:----------|:-------------|:-------------|:-------------------|:------------|
+| Key Vault access policy modified | Microsoft.KeyVault/vaults/write | [T1552.004](https://attack.mitre.org/techniques/T1552/004/) | [DET0549](https://attack.mitre.org/detectionstrategies/DET0549/) — Private Key Access | Unauthorized changes to Key Vault access policies — potential secret exfiltration setup |
+| Key Vault deleted / purged | Microsoft.KeyVault/vaults/delete | [T1485](https://attack.mitre.org/techniques/T1485/) | [DET0146](https://attack.mitre.org/detectionstrategies/DET0146/) — Data Destruction | Deletion of key vaults containing cryptographic keys or secrets |
+
+---
+
+## MITRE Detection Strategies
+
+Curated list of MITRE [Detection Strategies](https://attack.mitre.org/detectionstrategies/) relevant to the techniques referenced on this page.
+
+| Technique | Detection Strategy |
+|:----------|:-------------------|
+| [T1496](https://attack.mitre.org/techniques/T1496/) | [DET0267](https://attack.mitre.org/detectionstrategies/DET0267/) &mdash; Resource Hijacking Detection Strategy |
+| [T1485](https://attack.mitre.org/techniques/T1485/) | [DET0146](https://attack.mitre.org/detectionstrategies/DET0146/) &mdash; Detection of Data Destruction Across Platforms via Mass Overwrite and Deletion Patterns |
+| [T1530](https://attack.mitre.org/techniques/T1530/) | [DET0484](https://attack.mitre.org/detectionstrategies/DET0484/) &mdash; Multi-Platform Cloud Storage Exfiltration Behavior Chain |
+| [T1562.007](https://attack.mitre.org/techniques/T1562/007/) *(revoked &rarr; [T1686.001](https://attack.mitre.org/techniques/T1686/001/))* | [DET0424](https://attack.mitre.org/detectionstrategies/DET0424/) &mdash; Detection Strategy for Disable or Modify Cloud Firewall |
+| [T1599](https://attack.mitre.org/techniques/T1599/) | [DET0006](https://attack.mitre.org/detectionstrategies/DET0006/) &mdash; Detection Strategy for Network Boundary Bridging |
+| [T1098.001](https://attack.mitre.org/techniques/T1098/001/) | [DET0531](https://attack.mitre.org/detectionstrategies/DET0531/) &mdash; Detection Strategy for Additional Cloud Credentials in IaaS/IdP/SaaS |
+| [T1098](https://attack.mitre.org/techniques/T1098/) | [DET0096](https://attack.mitre.org/detectionstrategies/DET0096/) &mdash; Account Manipulation Behavior Chain Detection |
+| [T1562.008](https://attack.mitre.org/techniques/T1562/008/) *(revoked &rarr; [T1685.002](https://attack.mitre.org/techniques/T1685/002/))* | [DET0289](https://attack.mitre.org/detectionstrategies/DET0289/) &mdash; Detection Strategy for Disable or Modify Cloud Log |
+| [T1562.001](https://attack.mitre.org/techniques/T1562/001/) *(revoked &rarr; [T1685](https://attack.mitre.org/techniques/T1685/))* | [DET0497](https://attack.mitre.org/detectionstrategies/DET0497/) &mdash; Detection of Defense Impairment through Disabled or Modified Tools across OS Platforms. |
+| [T1552.004](https://attack.mitre.org/techniques/T1552/004/) | [DET0549](https://attack.mitre.org/detectionstrategies/DET0549/) &mdash; Detect Suspicious Access to Private Key Files and Export Attempts Across Platforms |
+
+> [!NOTE]
+> This page intentionally omits the third MITRE-evidence column. For cloud platform-family strategies, MITRE may cite provider-specific source names that do not map 1:1 to `AzureActivity`; keeping this section as Technique + Detection Strategy avoids a brittle translation layer.
+
+> [!NOTE]
+> **MITRE legacy technique IDs.** Some technique IDs cited on this page are *legacy* IDs that MITRE has revoked and remapped: T1562.007 &rarr; T1686.001; T1562.008 &rarr; T1685.002; T1562.001 &rarr; T1685. Published Detection Strategies are attached to the current technique IDs only; the table above follows the `revoked-by` chain so each strategy still applies to the legacy ID cited above.
+
+> [!TIP]
+> Detection Strategies are MITRE-published *pseudo-code analytics*, not vendor rules — they tell you **what** to correlate across data sources. Use them to validate that your Sentinel analytic rules and KQL hunting queries cover the published correlation logic.
 
 ---
 

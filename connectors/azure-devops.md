@@ -1,6 +1,6 @@
 # Azure DevOps
 
-**Tier:** 3 (Advanced) · **Connector type:** Microsoft first-party · **Free ingestion:** No
+**Tier:** 3 (Advanced) · **Connector type:** Microsoft first-party · **Free ingestion:** No (paid ingestion)
 
 ---
 
@@ -26,13 +26,12 @@ An attacker with access to your DevOps environment can modify build pipelines to
 
 ### Licensing Benefits
 
-| License | What it unlocks |
-|:--------|:----------------|
-| **Azure DevOps (any plan)** | Audit log streaming via Azure DevOps diagnostic settings |
-| **Microsoft Sentinel** | Analytics rules and hunting queries for DevOps security monitoring |
+| Sentinel cost classification | Microsoft Sentinel benefit |
+|:-----------------------------|:---------------------------|
+| **No (paid ingestion)** | No built-in Sentinel ingestion benefit is documented for this connector; ingestion is billed based on enabled data types and volume. |
 
 > [!NOTE]
-> Azure DevOps audit logs are available for all Azure DevOps organisations. Streaming to Sentinel requires enabling audit log streaming in the Azure DevOps organisation settings. Content Hub includes a **DevOps** solution with pre-built analytics rules.
+> This is a connector-level Sentinel classification used for cost planning.
 
 ---
 

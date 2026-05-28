@@ -1,6 +1,6 @@
 # Azure Firewall
 
-**Tier:** 2 (Extended Visibility) · **Connector type:** Microsoft first-party · **Free ingestion:** No
+**Tier:** 2 (Extended Visibility) · **Connector type:** Microsoft first-party · **Free ingestion:** No (paid ingestion)
 
 ---
 
@@ -26,13 +26,12 @@ For organisations using Azure Firewall as their central egress point (hub-spoke 
 
 ### Licensing Benefits
 
-| License | What it unlocks |
-|:--------|:----------------|
-| **Azure Firewall Standard** | Network rules, application rules, threat intelligence, NAT rules |
-| **Azure Firewall Premium** | All Standard features + TLS inspection, IDPS, URL filtering, web categories |
+| Sentinel cost classification | Microsoft Sentinel benefit |
+|:-----------------------------|:---------------------------|
+| **No (paid ingestion)** | No built-in Sentinel ingestion benefit is documented for this connector; ingestion is billed based on enabled data types and volume. |
 
 > [!NOTE]
-> Azure Firewall diagnostic logs are **not** a free data source. Log volume can be significant depending on network traffic. Use **resource-specific** diagnostic settings (not Azure Diagnostics mode) for structured tables.
+> This is a connector-level Sentinel classification used for cost planning.
 
 ---
 

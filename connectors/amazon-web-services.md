@@ -1,6 +1,6 @@
 # Amazon Web Services (AWS)
 
-**Tier:** 2 (Extended Visibility) · **Connector type:** Multi-cloud · **Free ingestion:** No · **Conditional:** Only applicable with AWS workloads
+**Tier:** 2 (Extended Visibility) · **Connector type:** Multi-cloud · **Free ingestion:** No (paid ingestion) · **Conditional:** Only applicable with AWS workloads
 
 ---
 
@@ -35,14 +35,12 @@ The ACSC logging guidance treats cloud logging as a **generic requirement** — 
 
 ### Licensing Benefits
 
-| License | What it unlocks |
-|:--------|:----------------|
-| **AWS CloudTrail (free tier)** | 90 days of management event history — free, but not forwarded to Sentinel |
-| **AWS CloudTrail (trail)** | Management events forwarded to S3 → Sentinel. Data events (S3 object access, Lambda invocations) available at additional AWS cost |
-| **Amazon GuardDuty** | AWS-native threat detection alerts — can be forwarded to Sentinel as correlated alerts |
+| Sentinel cost classification | Microsoft Sentinel benefit |
+|:-----------------------------|:---------------------------|
+| **No (paid ingestion)** | No built-in Sentinel ingestion benefit is documented for this connector; ingestion is billed based on enabled data types and volume. |
 
 > [!NOTE]
-> AWS CloudTrail logs are **not** a free data source in Sentinel. Ingestion cost is borne by the Sentinel workspace. Additionally, AWS charges for S3 storage of CloudTrail logs and SQS message delivery.
+> This is a connector-level Sentinel classification used for cost planning.
 
 ---
 

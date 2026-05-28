@@ -1,6 +1,6 @@
 # SQL / Database Audit Logs
 
-**Tier:** 3 (Advanced) · **Connector type:** Microsoft first-party (Diagnostic Settings) · **Free ingestion:** No
+**Tier:** 3 (Advanced) · **Connector type:** Microsoft first-party (Diagnostic Settings) · **Free ingestion:** No (paid ingestion)
 
 ---
 
@@ -30,13 +30,12 @@ For organisations with databases containing sensitive data (PII, financial recor
 
 ### Licensing Benefits
 
-| License | What it unlocks |
-|:--------|:----------------|
-| **Azure SQL Database (any tier)** | SQL Auditing — captures all database operations and events |
-| **Defender for SQL** | Advanced Threat Protection — adds active threat detection alerts for SQL injection, anomalous access patterns, and brute-force attacks |
+| Sentinel cost classification | Microsoft Sentinel benefit |
+|:-----------------------------|:---------------------------|
+| **No (paid ingestion)** | No built-in Sentinel ingestion benefit is documented for this connector; ingestion is billed based on enabled data types and volume. |
 
 > [!NOTE]
-> SQL Auditing is a built-in feature of Azure SQL — no additional license required to enable. **Defender for SQL** adds threat detection alerts that flow through `SecurityAlert` (covered by the Tier 2 Defender for Cloud connector). The audit logs themselves require Sentinel ingestion.
+> This is a connector-level Sentinel classification used for cost planning.
 
 ---
 

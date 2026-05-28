@@ -24,13 +24,12 @@ The Office 365 connector provides **audit log data for Exchange Online, SharePoi
 
 ### Licensing Benefits
 
-| License | What it unlocks |
-|:--------|:----------------|
-| **Any Microsoft 365 license (E3/E5/Business)** | Exchange, SharePoint, and Teams audit logs |
-| **Microsoft 365 E5** | Additional Audit (Premium) events — long-running search, more detailed MailItemsAccessed, Send events |
+| Sentinel cost classification | Microsoft Sentinel benefit |
+|:-----------------------------|:---------------------------|
+| **Yes (free data source)** | This connector is treated as a free Sentinel data source for connector-level cost planning. |
 
 > [!NOTE]
-> The Office 365 connector is a **free data source** in Sentinel. Enable it with all three workloads (Exchange, SharePoint, Teams).
+> This is a connector-level Sentinel classification. Product-side licensing still controls feature availability.
 
 ---
 
@@ -124,7 +123,7 @@ Curated list of MITRE [Detection Strategies](https://attack.mitre.org/detections
 | Aspect | OfficeActivity | CloudAppEvents (Defender XDR) |
 |:-------|:---------------|:------------------------------|
 | **Source** | Office 365 Management API | Microsoft Defender for Cloud Apps |
-| **Cost** | Free data source | Free (E5 data grant) |
+| **Cost** | Free data source | Free (E5 data grant — see [Microsoft Sentinel benefit for M365 E5 customers](https://azure.microsoft.com/en-us/pricing/offers/sentinel-microsoft-365-offer)) |
 | **Coverage** | Exchange, SharePoint, Teams | Office 365 + third-party SaaS (if connected) |
 | **Schema** | Native Office 365 audit format | Normalized Defender XDR schema |
 | **Recommendation** | **Enable both** — OfficeActivity for detailed native fields, CloudAppEvents for cross-app correlation | |
@@ -160,6 +159,7 @@ Curated list of MITRE [Detection Strategies](https://attack.mitre.org/detections
 | Title | Description | Link |
 |:------|:------------|:-----|
 | Connect Office 365 Logs to Microsoft Sentinel | Connector setup guide — Exchange, SharePoint, and Teams activity logs | [learn.microsoft.com](https://learn.microsoft.com/en-us/azure/sentinel/data-connectors/microsoft-365) |
+| Microsoft Sentinel benefit for M365 E5 customers | Official offer details for entitlement-based Sentinel Analytics-tier ingestion benefits | [azure.microsoft.com](https://azure.microsoft.com/en-us/pricing/offers/sentinel-microsoft-365-offer) |
 | Microsoft Purview auditing solutions overview | Overview of Audit (Standard) vs Audit (Premium) — activation, retention, and premium-only events such as `MailItemsAccessed`, `Send`, `SearchQueryInitiatedExchange`, requiring Microsoft 365 E5 or the Audit add-on | [learn.microsoft.com](https://learn.microsoft.com/purview/audit-solutions-overview) |
 
 ### Community & Third-Party Resources

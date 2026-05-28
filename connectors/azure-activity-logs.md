@@ -34,12 +34,12 @@ Azure Activity Logs capture **subscription-level events** across all your Azure 
 
 ### Licensing Benefits
 
-| License | What it unlocks |
-|:--------|:----------------|
-| **Any Azure subscription** | Full activity log data — no additional license required |
+| Sentinel cost classification | Microsoft Sentinel benefit |
+|:-----------------------------|:---------------------------|
+| **Yes (free data source)** | This connector is treated as a free Sentinel data source for connector-level cost planning. |
 
 > [!NOTE]
-> Azure Activity Logs are a **free data source** in Sentinel. Every Azure subscription generates these logs. Connect all subscriptions.
+> This is a connector-level Sentinel classification. Product-side licensing still controls feature availability.
 
 ---
 

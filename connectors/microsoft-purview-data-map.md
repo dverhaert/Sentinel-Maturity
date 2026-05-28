@@ -1,6 +1,6 @@
 # Microsoft Purview (Data Map / Discovery)
 
-**Tier:** 2 (Extended Visibility) · **Connector type:** Microsoft first-party (Diagnostic Settings) · **Free ingestion:** No
+**Tier:** 2 (Extended Visibility) · **Connector type:** Microsoft first-party (Diagnostic Settings) · **Free ingestion:** No (paid ingestion)
 
 > [!IMPORTANT]
 > This is the **Microsoft Purview** connector for the **Purview Data Map / Governance** account. It is a **different connector** than [Microsoft Purview Information Protection (Preview)](microsoft-purview-information-protection.md). Enable both for full data-protection coverage:
@@ -41,15 +41,14 @@ Configure on the **Purview account** in the Azure portal:
 4. Under **Destination details**, **Send to Log Analytics workspace** (the workspace enabled for Sentinel)
 5. Save, then run a Purview **scan** so events flow
 
-### Licensing
+### Licensing Benefits
 
-| License | What it unlocks |
-|:--------|:----------------|
-| **Pay-as-you-go Purview Data Map** | Per-asset metering for scanning Azure, AWS, on-premises sources |
-| **Microsoft 365 E5 Compliance** | Includes Purview governance entitlements; complements information protection capabilities |
+| Sentinel cost classification | Microsoft Sentinel benefit |
+|:-----------------------------|:---------------------------|
+| **No (paid ingestion)** | No built-in Sentinel ingestion benefit is documented for this connector; ingestion is billed based on enabled data types and volume. |
 
 > [!NOTE]
-> `PurviewDataSensitivityLogs` is **not** on Sentinel's [free data sources](https://learn.microsoft.com/azure/sentinel/billing#free-data-sources) list — it incurs standard Log Analytics ingestion cost. Volume depends on how often scans run and how many sources are scanned.
+> This is a connector-level Sentinel classification used for cost planning.
 
 ---
 

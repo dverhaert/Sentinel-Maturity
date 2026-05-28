@@ -1,6 +1,6 @@
 # Microsoft Defender XDR
 
-**Tier:** 1 (Bare Minimum) · **Connector type:** Microsoft first-party · **Free ingestion:** Yes — Analytics tier only ([E5 Security data grant](https://azure.microsoft.com/en-us/pricing/offers/sentinel-microsoft-365-offer))
+**Tier:** 1 (Bare Minimum) · **Connector type:** Microsoft first-party · **Free ingestion:** Ingestion benefit only (conditional) — Analytics tier grant via eligible E5 Security entitlement ([Microsoft Sentinel benefit for M365 E5 customers](https://azure.microsoft.com/en-us/pricing/offers/sentinel-microsoft-365-offer))
 
 ---
 
@@ -24,16 +24,12 @@ The Microsoft Defender XDR connector ingests advanced hunting data from Microsof
 
 ### Licensing Benefits
 
-| License | What it unlocks |
-|:--------|:----------------|
-| **Microsoft 365 E5 / E5 Security** | Full MDE, MDO, MDI, MDA data — ingested free into Sentinel **Analytics tier** (not Lake direct ingest) |
-| **Defender for Endpoint P2 (standalone)** | MDE data for endpoints |
+| Sentinel cost classification | Microsoft Sentinel benefit |
+|:-----------------------------|:---------------------------|
+| **Ingestion benefit only (conditional)** | Entitlement-based Analytics-tier ingestion benefit applies for eligible data types; verify current scope in [Microsoft Sentinel benefit for M365 E5 customers](https://azure.microsoft.com/en-us/pricing/offers/sentinel-microsoft-365-offer). |
 
 > [!NOTE]
-> The E5 security data grant covers ingestion of Defender XDR advanced hunting tables into the Sentinel **Analytics tier** at no additional cost. Ingesting directly to the Sentinel Data Lake (Lake) does **not** qualify for the free grant. See [Microsoft Sentinel benefit for M365 E5 customers](https://azure.microsoft.com/en-us/pricing/offers/sentinel-microsoft-365-offer) for details.
-
-> [!IMPORTANT]
-> Defender for Servers P2 provides a [500 MB/day ingestion benefit](https://learn.microsoft.com/en-us/azure/defender-for-cloud/data-ingestion-benefit) for specific security data types (`SecurityEvent`, the `Microsoft-SecurityEvent` `WindowsEvent` stream, `SecurityAlert`, `WindowsFirewall`, `ProtectionStatus`, etc.) but this does **not** apply to Defender XDR advanced hunting tables.
+> This classification is Sentinel-centric and connector-level. Coverage can change over time.
 
 ---
 

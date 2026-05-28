@@ -1,6 +1,6 @@
 # Custom Applications (Crown Jewels)
 
-**Tier:** 3 (Advanced) · **Connector type:** Custom (DCR / Log Analytics API / Logstash) · **Free ingestion:** No
+**Tier:** 3 (Advanced) · **Connector type:** Custom (DCR / Log Analytics API / Logstash) · **Free ingestion:** No (paid ingestion)
 
 ---
 
@@ -28,13 +28,12 @@ The security value is unique: only your custom applications know what "normal" b
 
 ### Licensing Benefits
 
-| License | What it unlocks |
-|:--------|:----------------|
-| **Any Azure subscription** | Log Analytics workspace with custom table ingestion via DCR or API |
-| **Microsoft Sentinel** | Analytics rules, hunting queries, and automation on custom log data |
+| Sentinel cost classification | Microsoft Sentinel benefit |
+|:-----------------------------|:---------------------------|
+| **No (paid ingestion)** | No built-in Sentinel ingestion benefit is documented for this connector; ingestion is billed based on enabled data types and volume. |
 
 > [!NOTE]
-> Custom application logs are ingested into **custom tables** (ending in `_CL`) in Log Analytics. Cost depends entirely on the volume your applications generate. Use DCR transformations to filter, parse, and reduce volume at ingestion time.
+> This is a connector-level Sentinel classification used for cost planning.
 
 ---
 

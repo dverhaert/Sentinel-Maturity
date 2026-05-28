@@ -1,6 +1,6 @@
 # VNet Flow Logs & Traffic Analytics
 
-**Tier:** 2 (Extended Visibility) · **Connector type:** Microsoft first-party · **Free ingestion:** No
+**Tier:** 2 (Extended Visibility) · **Connector type:** Microsoft first-party · **Free ingestion:** No (paid ingestion)
 
 ---
 
@@ -10,6 +10,7 @@
   - [Contents](#contents)
   - [Overview](#overview)
     - [Components](#components)
+  - [Licensing Benefits](#licensing-benefits)
   - [Tables and Rationale](#tables-and-rationale)
   - [Example Detections](#example-detections)
     - [Lateral Movement](#lateral-movement)
@@ -47,6 +48,15 @@ While Azure Firewall logs cover traffic at the centralised egress/ingress point,
 
 > [!NOTE]
 > VNet Flow Logs + Traffic Analytics incur both **storage cost** (flow logs are stored in a Storage Account) and **processing cost** (Traffic Analytics has per-GB processing pricing). The enriched data in Log Analytics incurs standard Sentinel ingestion cost.
+
+### Licensing Benefits
+
+| Sentinel cost classification | Microsoft Sentinel benefit |
+|:-----------------------------|:---------------------------|
+| **No (paid ingestion)** | No built-in Sentinel ingestion benefit is documented for this connector; ingestion is billed based on enabled data types and volume. |
+
+> [!NOTE]
+> This is a connector-level Sentinel classification used for cost planning.
 
 ---
 

@@ -1,12 +1,13 @@
 # Third-Party Network & Proxy Appliances (CEF / Syslog)
 
-**Tier:** 2 (Extended Visibility) · **Connector type:** Third-party · **Free ingestion:** No · **Conditional:** Only applicable with non-Microsoft network appliances
+**Tier:** 2 (Extended Visibility) · **Connector type:** Third-party · **Free ingestion:** No (paid ingestion) · **Conditional:** Only applicable with non-Microsoft network appliances
 
 ---
 
 ## Contents
 
 - [Overview](#overview)
+- [Licensing Benefits](#licensing-benefits)
 - [Tables and Rationale](#tables-and-rationale)
 - [Common Vendors with Sentinel Support](#common-vendors-with-sentinel-support)
 - [Example Detections](#example-detections)
@@ -35,6 +36,15 @@ This is the catch-all connector page for all third-party network security device
 
 > [!NOTE]
 > `CommonSecurityLog` is **not** covered by the Defender for Servers P2 500 MB/day data ingestion benefit — see the list of [eligible tables](https://learn.microsoft.com/en-us/azure/defender-for-cloud/data-ingestion-benefit). CEF/Syslog traffic from network appliances is billed at standard ingestion rates; use DCR transformations to drop non-security traffic and manage volume.
+
+### Licensing Benefits
+
+| Sentinel cost classification | Microsoft Sentinel benefit |
+|:-----------------------------|:---------------------------|
+| **No (paid ingestion)** | No built-in Sentinel ingestion benefit is documented for this connector; ingestion is billed based on enabled data types and volume. |
+
+> [!NOTE]
+> This is a connector-level Sentinel classification used for cost planning.
 
 ---
 

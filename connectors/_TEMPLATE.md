@@ -1,6 +1,6 @@
 # [Connector Name]
 
-**Tier:** [1/2/3] · **Connector type:** [Microsoft first-party / Third-party] · **Free ingestion:** [Yes/No — details]
+**Tier:** [1/2/3] · **Connector type:** [Microsoft first-party / Third-party] · **Free ingestion:** [Yes (free data source) / Ingestion benefit only (conditional) / No (paid ingestion) — details + doc link]
 
 ---
 
@@ -10,13 +10,12 @@
 
 ### Licensing Benefits
 
-| License | What it unlocks |
-|:--------|:----------------|
-| **[License name]** | [What tables/features become available] |
-| **[License name]** | [What tables/features become available] |
+| Sentinel cost classification | Microsoft Sentinel benefit |
+|:-----------------------------|:---------------------------|
+| **[Yes (free data source) / Ingestion benefit only (conditional) / No (paid ingestion)]** | [Sentinel-side benefit and billing effect] |
 
 > [!NOTE]
-> [Key licensing or cost note — e.g., free data source, E5 data grant, P2 ingestion benefit.]
+> [Sentinel-centric cost note. Keep this section to a single row by default. For conditional ingestion benefits, include Microsoft documentation so coverage can be verified over time.]
 
 ---
 

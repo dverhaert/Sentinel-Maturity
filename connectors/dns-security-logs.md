@@ -1,6 +1,6 @@
 # DNS Security Logs
 
-**Tier:** 2 (Extended Visibility) · **Connector type:** Microsoft first-party · **Free ingestion:** No
+**Tier:** 2 (Extended Visibility) · **Connector type:** Microsoft first-party · **Free ingestion:** No (paid ingestion)
 
 ---
 
@@ -31,13 +31,12 @@ For Azure Firewall DNS proxy logs, see the [Azure Firewall](azure-firewall.md) p
 
 ### Licensing Benefits
 
-| License | What it unlocks |
-|:--------|:----------------|
-| **Microsoft Sentinel + AMA** | DNS event collection from Windows endpoints via NXlog DNS extension |
-| **Defender for DNS** | Adds threat detection alerts for DNS anomalies (alerts flow through `SecurityAlert` → Tier 2 Defender for Cloud page) |
+| Sentinel cost classification | Microsoft Sentinel benefit |
+|:-----------------------------|:---------------------------|
+| **No (paid ingestion)** | No built-in Sentinel ingestion benefit is documented for this connector; ingestion is billed based on enabled data types and volume. |
 
 > [!NOTE]
-> DNS logs can be **high-volume**. Budget for ingestion cost based on the number of endpoints and DNS query rates.
+> This is a connector-level Sentinel classification used for cost planning.
 
 ---
 

@@ -1,6 +1,6 @@
 # GitHub Enterprise
 
-**Tier:** 3 (Advanced) · **Connector type:** Microsoft first-party · **Free ingestion:** No
+**Tier:** 3 (Advanced) · **Connector type:** Microsoft first-party · **Free ingestion:** No (paid ingestion)
 
 ---
 
@@ -26,13 +26,12 @@ GitHub is often the central nervous system of software development — it holds 
 
 ### Licensing Benefits
 
-| License | What it unlocks |
-|:--------|:----------------|
-| **GitHub Enterprise Cloud** | Enterprise audit log streaming to Sentinel via the GitHub connector |
-| **GitHub Advanced Security** | Secret scanning, code scanning, and Dependabot alerts — additional security event data |
+| Sentinel cost classification | Microsoft Sentinel benefit |
+|:-----------------------------|:---------------------------|
+| **No (paid ingestion)** | No built-in Sentinel ingestion benefit is documented for this connector; ingestion is billed based on enabled data types and volume. |
 
 > [!NOTE]
-> Audit log streaming requires **GitHub Enterprise Cloud**. GitHub Enterprise Server (self-hosted) requires a different data forwarding approach. The Sentinel Content Hub includes a GitHub solution with pre-built analytics rules.
+> This is a connector-level Sentinel classification used for cost planning.
 
 ---
 

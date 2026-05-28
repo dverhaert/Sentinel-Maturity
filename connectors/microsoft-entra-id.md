@@ -1,6 +1,6 @@
 # Microsoft Entra ID
 
-**Tier:** 1 (Bare Minimum) · **Connector type:** Microsoft first-party · **Free ingestion:** Yes (free data source)
+**Tier:** 1 (Bare Minimum) · **Connector type:** Microsoft first-party · **Free ingestion:** Ingestion benefit only (conditional) — verify current included data types in [Microsoft Sentinel free data sources](https://learn.microsoft.com/en-us/azure/sentinel/billing?tabs=simplified%2Ccommitment-tiers#free-data-sources) and [Microsoft Sentinel benefit for M365 E5 customers](https://azure.microsoft.com/en-us/pricing/offers/sentinel-microsoft-365-offer)
 
 ---
 
@@ -34,19 +34,12 @@ The Microsoft Entra ID (formerly Azure AD) connector is **essential for every Se
 
 ### Licensing Benefits
 
-| License | What it unlocks |
-|:--------|:----------------|
-| **Entra ID Free / P1** | SigninLogs, AuditLogs, AADNonInteractiveUserSignInLogs, AADServicePrincipalSignInLogs, AADManagedIdentitySignInLogs, AADProvisioningLogs, ADFSSignInLogs, MicrosoftGraphActivityLogs |
-| **Entra ID P2 (included in E5)** | All of the above + AADRiskyUsers, AADUserRiskEvents (Identity Protection data) |
-| **Workload Identities Premium** | AADRiskyServicePrincipals, AADServicePrincipalRiskEvents — risk detections for service principals and managed identities |
-| **Microsoft 365 E5 / Defender (opt-in)** | EnrichedOffice365AuditLogs — enriched Office 365 audit logs (requires enablement in the Defender portal) |
-| **Entra ID with Global Secure Access** | NetworkAccessTraffic (Entra Internet/Private Access) |
+| Sentinel cost classification | Microsoft Sentinel benefit |
+|:-----------------------------|:---------------------------|
+| **Ingestion benefit only (conditional)** | Entitlement-based Analytics-tier ingestion benefit applies for eligible data types; verify current scope in [Microsoft Sentinel benefit for M365 E5 customers](https://azure.microsoft.com/en-us/pricing/offers/sentinel-microsoft-365-offer). |
 
 > [!NOTE]
-> Entra ID sign-in and audit logs are **free data sources** in Microsoft Sentinel. There is no reason not to enable this connector. The table names above are the Log Analytics / Sentinel table names; the corresponding **diagnostic setting log categories** in the Entra portal use the unprefixed names (e.g. `NonInteractiveUserSignInLogs`, `ServicePrincipalSignInLogs`, `ManagedIdentitySignInLogs`, `ADFSSignInLogs`).
-
-> [!TIP]
-> If your organisation uses **Global Secure Access** (Entra Internet Access / Entra Private Access), see the dedicated [Global Secure Access](global-secure-access.md) Tier 2 connector page for network traffic logging via `NetworkAccessTraffic`. This page covers **authentication events**; the GSA page covers **what users accessed after authenticating**.
+> This classification is Sentinel-centric and connector-level. Coverage can change over time.
 
 ---
 
@@ -205,6 +198,7 @@ Curated list of MITRE [Detection Strategies](https://attack.mitre.org/detections
 | Title | Description | Link |
 |:------|:------------|:-----|
 | Connect Microsoft Entra ID to Microsoft Sentinel | Connector setup guide — diagnostic settings for sign-in, audit, and risk logs | [learn.microsoft.com](https://learn.microsoft.com/en-us/azure/sentinel/connect-azure-active-directory) |
+| Microsoft Sentinel benefit for M365 E5 customers | Official offer details for entitlement-based Sentinel Analytics-tier ingestion benefits | [azure.microsoft.com](https://azure.microsoft.com/en-us/pricing/offers/sentinel-microsoft-365-offer) |
 | Microsoft Entra audit log reference | Schema reference for all Entra ID audit log categories | [learn.microsoft.com](https://learn.microsoft.com/en-us/entra/identity/monitoring-health/reference-audit-activities) |
 | Microsoft Entra ID Protection overview | Overview of risk-based identity protection features | [learn.microsoft.com](https://learn.microsoft.com/en-us/entra/id-protection/overview-identity-protection) |
 | Risky users and risk detections | Investigating identity risk signals | [learn.microsoft.com](https://learn.microsoft.com/en-us/entra/id-protection/howto-identity-protection-investigate-risk) |

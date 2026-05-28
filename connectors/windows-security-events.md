@@ -1,6 +1,6 @@
 # Windows Security Events / Windows Events
 
-**Tier:** 1 (Bare Minimum) · **Connector type:** Microsoft first-party (AMA) · **Free ingestion:** Pooled 500 MB/day × Defender for Servers P2-licensed servers for `SecurityEvent`
+**Tier:** 1 (Bare Minimum) · **Connector type:** Microsoft first-party (AMA) · **Free ingestion:** Ingestion benefit only (conditional) — pooled 500 MB/day × Defender for Servers P2-licensed servers for eligible tables ([Defender for Cloud data ingestion benefit](https://learn.microsoft.com/en-us/azure/defender-for-cloud/data-ingestion-benefit))
 
 ---
 
@@ -53,14 +53,12 @@ There are two approaches to collecting these events:
 
 ### Licensing Benefits
 
-| License | What it unlocks |
-|:--------|:----------------|
-| **[Defender for Servers P2](https://learn.microsoft.com/en-us/azure/defender-for-cloud/data-ingestion-benefit)** | [Pooled 500 MB/day × Defender for Servers P2-licensed servers](https://learn.microsoft.com/en-us/azure/defender-for-cloud/data-ingestion-benefit) for eligible security tables — applies to `SecurityEvent` (and the `Microsoft-SecurityEvent` stream in `WindowsEvent`) |
-| **Defender for Servers P1** | MDE on servers, but no free data ingestion for Sentinel |
-| **No Defender for Servers** | Full ingestion cost — still recommended for critical servers |
+| Sentinel cost classification | Microsoft Sentinel benefit |
+|:-----------------------------|:---------------------------|
+| **Ingestion benefit only (conditional)** | [Pooled 500 MB/day × Defender for Servers P2-licensed servers](https://learn.microsoft.com/en-us/azure/defender-for-cloud/data-ingestion-benefit) for eligible security tables — applies to `SecurityEvent` (and the `Microsoft-SecurityEvent` stream in `WindowsEvent`). |
 
 > [!NOTE]
-> The P2 benefit is a **pooled allowance across the subscription** (500 MB × number of **Defender for Servers P2 licences**, i.e. the count of servers metered/billed under the P2 plan), not a per-machine cap and not per AMA-covered machine. Individual servers can ingest more as long as the pool isn’t exceeded. Use the [Defender for Servers P2 Count](https://github.com/mathijsvermaat/DefenderForServersP2Count) KQL to enumerate the licensed/billed server count across your subscriptions. The allowance applies only to [eligible tables](https://learn.microsoft.com/en-us/azure/defender-for-cloud/data-ingestion-benefit) — `SecurityAlert`, `SecurityBaseline`, `SecurityBaselineSummary`, `SecurityDetection`, `SecurityEvent`, `WindowsFirewall`, `ProtectionStatus`, `MDCFileIntegrityMonitoringEvents`, the `Microsoft-SecurityEvent` stream that lands in `SecurityEvent` (via `WindowsEvent`), and `Update` / `UpdateSummary` (only when the Update Management solution isn't running in the workspace, or solution targeting is enabled). `LinuxAuditLog`, the general `Syslog` table, `CommonSecurityLog`, `W3CIISLog`, and non-SecurityEvent `WindowsEvent` channels (PowerShell, Sysmon, AppLocker) are **not** eligible. This is one of the key cost arguments for deploying Defender for Servers P2.
+> This classification is Sentinel-centric and connector-level. Coverage can change over time.
 
 ---
 

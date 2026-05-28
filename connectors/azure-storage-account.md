@@ -1,6 +1,6 @@
 # Azure Storage Account
 
-**Tier:** 3 (Advanced) · **Connector type:** Microsoft first-party (Diagnostic Settings) · **Free ingestion:** No
+**Tier:** 3 (Advanced) · **Connector type:** Microsoft first-party (Diagnostic Settings) · **Free ingestion:** No (paid ingestion)
 
 > [!NOTE]
 > Microsoft Sentinel lists this connector as **Azure Storage Account** in the data connectors reference. It was previously referred to in this guide as "Azure Storage Analytics" — only the name changed; the underlying diagnostic settings and tables are the same.
@@ -29,13 +29,12 @@ For organisations storing sensitive documents, backups, application data, or dat
 
 ### Licensing Benefits
 
-| License | What it unlocks |
-|:--------|:----------------|
-| **Any Azure subscription** | Storage diagnostic logging — no additional license required |
-| **Defender for Storage** | Adds threat detection alerts for anomalous access patterns, malware upload, and sensitive data exposure (alerts flow through Defender for Cloud → Tier 2) |
+| Sentinel cost classification | Microsoft Sentinel benefit |
+|:-----------------------------|:---------------------------|
+| **No (paid ingestion)** | No built-in Sentinel ingestion benefit is documented for this connector; ingestion is billed based on enabled data types and volume. |
 
 > [!NOTE]
-> Storage analytics logs can generate **extremely high volume** on active storage accounts. Enable logging selectively on storage accounts containing sensitive data and use DCR transformations to filter read operations on non-sensitive containers.
+> This is a connector-level Sentinel classification used for cost planning.
 
 ---
 

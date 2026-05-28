@@ -1,6 +1,6 @@
 # Microsoft Intune (Endpoint Management)
 
-**Tier:** 2 (Extended Visibility) · **Connector type:** Microsoft first-party · **Free ingestion:** No — Intune tables are billed at standard Log Analytics ingestion rates
+**Tier:** 2 (Extended Visibility) · **Connector type:** Microsoft first-party · **Free ingestion:** No (paid ingestion)
 
 > [!IMPORTANT]
 > **Microsoft Intune is not a Sentinel data connector.** It does not appear in **Content Hub** or under **Data connectors** in the Sentinel/Defender portal. Intune log ingestion is configured directly from the **Intune admin center → Reports → Diagnostics settings**, sending logs to your Log Analytics workspace. Detections that use Intune tables come from generic or cross-solution analytic-rule templates rather than a dedicated Intune solution.
@@ -28,13 +28,12 @@ This connector bridges endpoint **management** (Intune) with endpoint **detectio
 
 ### Licensing Benefits
 
-| License | What it unlocks |
-|:--------|:----------------|
-| **Microsoft Intune Plan 1** (included in M365 E3/E5) | Device management, compliance policies, configuration profiles, audit logs |
-| **Microsoft Intune Plan 2 / Suite** | Advanced features — Tunnel, Endpoint Privilege Management, remote actions |
+| Sentinel cost classification | Microsoft Sentinel benefit |
+|:-----------------------------|:---------------------------|
+| **No (paid ingestion)** | No built-in Sentinel ingestion benefit is documented for this connector; ingestion is billed based on enabled data types and volume. |
 
 > [!NOTE]
-> Intune tables are **not** on Sentinel's [free data sources](https://learn.microsoft.com/azure/sentinel/billing#free-data-sources) list — all four (`IntuneAuditLogs`, `IntuneOperationalLogs`, `IntuneDevices`, `IntuneDeviceComplianceOrg`) are billed at standard Log Analytics ingestion rates. Use DCR transformations and Microsoft Sentinel data lake (Auxiliary / Total retention) tiers to manage volume on `IntuneOperationalLogs` and `IntuneDevices`, which are typically the highest-volume tables.
+> This is a connector-level Sentinel classification used for cost planning.
 
 ---
 

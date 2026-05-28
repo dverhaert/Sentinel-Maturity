@@ -1,6 +1,6 @@
 # Microsoft Copilot / AI Governance
 
-**Tier:** 2 (Extended Visibility) · **Connector type:** Microsoft first-party · **Free ingestion:** No · **Conditional:** Requires Copilot licensing
+**Tier:** 2 (Extended Visibility) · **Connector type:** Microsoft first-party · **Free ingestion:** No (paid ingestion) · **Conditional:** Requires Copilot licensing
 
 ---
 
@@ -39,14 +39,12 @@ The Copilot/AI governance logging story in Sentinel is evolving rapidly. This pa
 
 ### Licensing Benefits
 
-| License | What it unlocks |
-|:--------|:----------------|
-| **Microsoft 365 E5 + Copilot** | M365 Copilot interaction audit events in OfficeActivity |
-| **Security Copilot** | Security Copilot session and query audit logs |
-| **Azure OpenAI Service** | Prompt and completion logging via diagnostic settings |
+| Sentinel cost classification | Microsoft Sentinel benefit |
+|:-----------------------------|:---------------------------|
+| **No (paid ingestion)** | No built-in Sentinel ingestion benefit is documented for this connector; ingestion is billed based on enabled data types and volume. |
 
 > [!NOTE]
-> AI governance logging is an evolving area. New tables and connector capabilities are being released regularly. Check the Sentinel Content Hub for the latest AI-related solutions.
+> This is a connector-level Sentinel classification used for cost planning.
 
 ---
 

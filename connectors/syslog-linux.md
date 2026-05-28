@@ -1,6 +1,6 @@
 # Syslog for Linux Servers
 
-**Tier:** 1 (Bare Minimum) · **Connector type:** Microsoft first-party (AMA) · **Free ingestion:** None — neither `LinuxAuditLog` nor the general `Syslog` table is on the Defender for Servers P2 [eligible-tables list](https://learn.microsoft.com/en-us/azure/defender-for-cloud/data-ingestion-benefit); both are billed as regular ingestion
+**Tier:** 1 (Bare Minimum) · **Connector type:** Microsoft first-party (AMA) · **Free ingestion:** No (paid ingestion)
 
 ---
 
@@ -33,14 +33,12 @@ Like Windows Security Events, this connector has moved from the legacy Log Analy
 
 ### Licensing Benefits
 
-| License | What it unlocks |
-|:--------|:----------------|
-| **[Defender for Servers P2](https://learn.microsoft.com/en-us/azure/defender-for-cloud/data-ingestion-benefit)** | MDE on Linux, vulnerability assessment, file integrity monitoring, and other server-protection features. **No Sentinel data ingestion benefit applies to Linux logging** — neither `LinuxAuditLog` nor the general `Syslog` table is on the [eligible-tables list](https://learn.microsoft.com/en-us/azure/defender-for-cloud/data-ingestion-benefit) |
-| **Defender for Servers P1** | MDE on Linux, but no free data ingestion for Sentinel |
-| **No Defender for Servers** | Full ingestion cost |
+| Sentinel cost classification | Microsoft Sentinel benefit |
+|:-----------------------------|:---------------------------|
+| **No (paid ingestion)** | No built-in Sentinel ingestion benefit is documented for this connector; ingestion is billed based on enabled data types and volume. |
 
 > [!NOTE]
-> Linux log collection sits **outside** the Defender for Servers P2 500 MB/day pooled allowance. Both the general `Syslog` table and `LinuxAuditLog` are billed at standard ingestion rates — see the canonical [eligible-tables list](https://learn.microsoft.com/en-us/azure/defender-for-cloud/data-ingestion-benefit). Cost control on Linux therefore depends on DCR-side filtering (facility/severity), transformations, and Basic / Auxiliary log tiers — not on the P2 ingestion benefit.
+> This is a connector-level Sentinel classification used for cost planning.
 
 ---
 

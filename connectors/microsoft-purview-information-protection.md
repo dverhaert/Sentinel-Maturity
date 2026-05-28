@@ -1,6 +1,6 @@
 # Microsoft Purview Information Protection (Preview)
 
-**Tier:** 2 (Extended Visibility) · **Connector type:** Microsoft first-party (Office Management API) · **Free ingestion:** No · **Status:** Preview
+**Tier:** 2 (Extended Visibility) · **Connector type:** Microsoft first-party (Office Management API) · **Free ingestion:** No (paid ingestion) · **Status:** Preview
 
 > [!IMPORTANT]
 > This is the **Microsoft Purview Information Protection (Preview)** connector. It is a **different connector** than [Microsoft Purview (Data Map / Discovery)](microsoft-purview-data-map.md). It also **replaces the retired Azure Information Protection (AIP) connector** — do not enable both. Enable both *Purview* connectors for full data-protection coverage:
@@ -18,7 +18,7 @@
   - [Contents](#contents)
   - [Overview](#overview)
     - [Setup](#setup)
-    - [Licensing](#licensing)
+    - [Licensing Benefits](#licensing-benefits)
   - [Tables and Rationale](#tables-and-rationale)
   - [Example Detections](#example-detections)
     - [Data Protection](#data-protection)
@@ -51,17 +51,14 @@ Enable from the **Sentinel Data connectors** page:
 3. Click **Connect** (requires *Microsoft Sentinel Contributor* on the workspace and *Global Reader* / appropriate Office permissions on the tenant)
 4. Apply (or wait for) sensitivity labels from MIP clients so events flow
 
-### Licensing
+### Licensing Benefits
 
-| License | What it unlocks |
-|:--------|:----------------|
-| **Microsoft 365 E5 Compliance** | Full Purview suite — Information Protection, DLP, Insider Risk |
-| **Microsoft 365 E5** | Includes E5 Compliance |
-| **Microsoft 365 E7** | Includes E5 Compliance |
-| **Microsoft Purview Information Protection (standalone)** | Information Protection labelling and protection |
+| Sentinel cost classification | Microsoft Sentinel benefit |
+|:-----------------------------|:---------------------------|
+| **No (paid ingestion)** | No built-in Sentinel ingestion benefit is documented for this connector; ingestion is billed based on enabled data types and volume. |
 
 > [!NOTE]
-> `MicrosoftPurviewInformationProtection` is **not** on Sentinel's [free data sources](https://learn.microsoft.com/azure/sentinel/billing#free-data-sources) list — it incurs standard Log Analytics ingestion cost. Evaluate whether the detection value justifies the ingestion cost for your environment.
+> This is a connector-level Sentinel classification used for cost planning.
 
 ---
 

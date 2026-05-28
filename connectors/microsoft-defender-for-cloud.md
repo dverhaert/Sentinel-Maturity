@@ -1,6 +1,6 @@
 # Microsoft Defender for Cloud
 
-**Tier:** 2 (Extended Visibility) · **Connector type:** Microsoft first-party · **Free ingestion:** Yes — SecurityAlert table is a free data source
+**Tier:** 2 (Extended Visibility) · **Connector type:** Microsoft first-party · **Free ingestion:** Yes (free data source)
 
 > [!IMPORTANT]
 > The **Tenant-based Microsoft Defender for Cloud (Preview)** connector is only listed in the **Azure portal** Data connectors page — it is **not visible** in the Defender portal (`security.microsoft.com`). Install the **Microsoft Defender for Cloud** solution from Content Hub and configure the tenant-based connector from the Azure portal. See [Ingest Microsoft Defender for Cloud alerts to Microsoft Sentinel](https://learn.microsoft.com/azure/sentinel/connect-defender-for-cloud#prerequisites).
@@ -41,13 +41,12 @@ This connector adds the **"so what"** layer on top of the raw telemetry from Tie
 
 ### Licensing Benefits
 
-| License | What it unlocks |
-|:--------|:----------------|
-| **Defender for Cloud (Free tier)** | Security recommendations, Secure Score — limited alerts |
-| **Defender for Cloud (workload plans)** | Full threat detection alerts — Defender for Servers, Storage, SQL, Containers, Key Vault, Resource Manager, DNS, App Service |
+| Sentinel cost classification | Microsoft Sentinel benefit |
+|:-----------------------------|:---------------------------|
+| **Yes (free data source)** | This connector is treated as a free Sentinel data source for connector-level cost planning. |
 
 > [!NOTE]
-> The `SecurityAlert` table from Defender for Cloud is a **free data source** in Sentinel. Alerts cost nothing to ingest. Recommendations and compliance data (`SecurityRecommendation`, `SecurityRegulatoryCompliance`) do incur ingestion cost.
+> This is a connector-level Sentinel classification. Product-side licensing still controls feature availability.
 
 ---
 

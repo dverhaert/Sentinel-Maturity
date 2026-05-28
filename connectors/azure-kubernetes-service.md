@@ -1,6 +1,6 @@
 # Azure Kubernetes Service (AKS) Audit
 
-**Tier:** 3 (Advanced) · **Connector type:** Microsoft first-party (Diagnostic Settings) · **Free ingestion:** No
+**Tier:** 3 (Advanced) · **Connector type:** Microsoft first-party (Diagnostic Settings) · **Free ingestion:** No (paid ingestion)
 
 ---
 
@@ -26,13 +26,12 @@ While Azure Activity Logs (Tier 1) capture AKS cluster-level operations (create,
 
 ### Licensing Benefits
 
-| License | What it unlocks |
-|:--------|:----------------|
-| **Any AKS cluster** | Kubernetes audit log streaming via AKS diagnostic settings |
-| **Defender for Containers** | Runtime threat detection and vulnerability scanning for containers (alerts flow through Defender for Cloud → Tier 2) |
+| Sentinel cost classification | Microsoft Sentinel benefit |
+|:-----------------------------|:---------------------------|
+| **No (paid ingestion)** | No built-in Sentinel ingestion benefit is documented for this connector; ingestion is billed based on enabled data types and volume. |
 
 > [!NOTE]
-> AKS audit logs can generate **very high volume** on active clusters. Use the `kube-audit-admin` category instead of `kube-audit` to exclude informational GET requests and reduce volume by ~80% while retaining security-relevant events.
+> This is a connector-level Sentinel classification used for cost planning.
 
 ---
 

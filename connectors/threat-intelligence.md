@@ -1,6 +1,6 @@
 # Threat Intelligence Platforms
 
-**Tier:** 2 (Extended Visibility) · **Connector type:** Microsoft first-party · **Free ingestion:** Yes — ThreatIntelIndicators and ThreatIntelObjects are free data sources
+**Tier:** 2 (Extended Visibility) · **Connector type:** Microsoft first-party · **Free ingestion:** Yes (free data source)
 
 ---
 
@@ -44,13 +44,12 @@ Without TI, your detections rely entirely on behavioural analytics and custom ru
 
 ### Licensing Benefits
 
-| License | What it unlocks |
-|:--------|:----------------|
-| **Microsoft Sentinel** | TI platform connector and TAXII connector at no additional TI cost — community feeds available |
-| **Microsoft Defender Threat Intelligence (MDTI)** | Premium Microsoft TI feed with high-fidelity IOCs and context |
+| Sentinel cost classification | Microsoft Sentinel benefit |
+|:-----------------------------|:---------------------------|
+| **Yes (free data source)** | This connector is treated as a free Sentinel data source for connector-level cost planning. |
 
 > [!NOTE]
-> The `ThreatIntelligenceIndicator` table is a **free data source** in Sentinel. IOC storage costs nothing. The detection value is immediate.
+> This is a connector-level Sentinel classification. Product-side licensing still controls feature availability.
 
 ---
 

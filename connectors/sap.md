@@ -1,6 +1,6 @@
 # SAP
 
-**Tier:** 3 (Advanced) · **Connector type:** Microsoft first-party (via SAP agent) · **Free ingestion:** No
+**Tier:** 3 (Advanced) · **Connector type:** Microsoft first-party (via SAP agent) · **Free ingestion:** No (paid ingestion)
 
 ---
 
@@ -29,13 +29,12 @@ SAP systems are high-value targets because they store financial data, HR records
 
 ### Licensing Benefits
 
-| License | What it unlocks |
-|:--------|:----------------|
-| **Microsoft Sentinel for SAP (add-on)** | Full SAP log collection and built-in analytics — priced per SAP system ID (SID) |
-| **SAP S-User license** | Required for downloading SAP NetWeaver SDK used by the data collector agent |
+| Sentinel cost classification | Microsoft Sentinel benefit |
+|:-----------------------------|:---------------------------|
+| **No (paid ingestion)** | No built-in Sentinel ingestion benefit is documented for this connector; ingestion is billed based on enabled data types and volume. |
 
 > [!NOTE]
-> Microsoft Sentinel for SAP is a separately licensed add-on. It includes a comprehensive set of **built-in analytic rules, watchlists, and workbooks** specifically designed for SAP threat detection. See [SAP solution pricing](https://learn.microsoft.com/en-us/azure/sentinel/sap/solution-overview#pricing).
+> This is a connector-level Sentinel classification used for cost planning.
 
 ---
 

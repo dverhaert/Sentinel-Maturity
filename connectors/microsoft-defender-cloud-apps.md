@@ -1,6 +1,6 @@
 # Microsoft Defender for Cloud Apps (Standalone)
 
-**Tier:** 3 (Advanced) · **Connector type:** Microsoft first-party · **Free ingestion:** No
+**Tier:** 3 (Advanced) · **Connector type:** Microsoft first-party · **Free ingestion:** No (paid ingestion)
 
 ---
 
@@ -29,16 +29,12 @@ This connector is most valuable for organisations that need visibility into unsa
 
 ### Licensing Benefits
 
-| License | What it unlocks |
-|:--------|:----------------|
-| **M365 E5 / E5 Security** | Full MDCA capability including Cloud Discovery, session policies, and app governance |
-| **MDCA standalone license** | Available as add-on for E3 customers — full CASB without E5 bundle |
+| Sentinel cost classification | Microsoft Sentinel benefit |
+|:-----------------------------|:---------------------------|
+| **No (paid ingestion)** | No built-in Sentinel ingestion benefit is documented for this connector; ingestion is billed based on enabled data types and volume. |
 
 > [!NOTE]
-> `CloudAppEvents` from the XDR connector (Tier 1) covers M365 app activity. This standalone connector adds **Cloud Discovery logs** (shadow IT), **CASB governance alerts**, and **app governance signals** that are not available through XDR advanced hunting.
-
-> [!NOTE]
-> The Microsoft Defender for Cloud Apps → Microsoft Sentinel integration is currently labelled **(Preview)** by Microsoft. See the [Microsoft Sentinel integration (Preview)](https://learn.microsoft.com/defender-cloud-apps/siem-sentinel) Learn page. This is distinct from the generic **MDCA SIEM agent** (CEF forwarder for third-party SIEMs), which is being retired in November 2025 — the Sentinel integration remains supported.
+> This is a connector-level Sentinel classification used for cost planning.
 
 ---
 

@@ -1,6 +1,6 @@
 # Azure WAF (Application Gateway / Front Door)
 
-**Tier:** 2 (Extended Visibility) · **Connector type:** Microsoft first-party · **Free ingestion:** No
+**Tier:** 2 (Extended Visibility) · **Connector type:** Microsoft first-party · **Free ingestion:** No (paid ingestion)
 
 ---
 
@@ -26,13 +26,12 @@ These logs are critical for detecting application-layer attacks that network fir
 
 ### Licensing Benefits
 
-| License | What it unlocks |
-|:--------|:----------------|
-| **Application Gateway WAF v2** | Regional WAF with OWASP CRS rules, custom rules, bot protection |
-| **Front Door WAF** | Global edge WAF with OWASP CRS, rate limiting, geo-filtering |
+| Sentinel cost classification | Microsoft Sentinel benefit |
+|:-----------------------------|:---------------------------|
+| **No (paid ingestion)** | No built-in Sentinel ingestion benefit is documented for this connector; ingestion is billed based on enabled data types and volume. |
 
 > [!NOTE]
-> WAF diagnostic logs are **not** a free data source. Volume depends on request rate to your web applications.
+> This is a connector-level Sentinel classification used for cost planning.
 
 ---
 

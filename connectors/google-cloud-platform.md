@@ -1,6 +1,6 @@
 # Google Cloud Platform (GCP)
 
-**Tier:** 2 (Extended Visibility) · **Connector type:** Multi-cloud · **Free ingestion:** No · **Conditional:** Only applicable with GCP workloads
+**Tier:** 2 (Extended Visibility) · **Connector type:** Multi-cloud · **Free ingestion:** No (paid ingestion) · **Conditional:** Only applicable with GCP workloads
 
 ---
 
@@ -37,14 +37,12 @@ The same ACSC cloud logging priorities that apply to Azure and AWS apply to GCP.
 
 ### Licensing Benefits
 
-| License | What it unlocks |
-|:--------|:----------------|
-| **GCP Cloud Audit Logs (Admin Activity)** | Always enabled, free, cannot be disabled — all admin API calls |
-| **GCP Cloud Audit Logs (Data Access)** | Must be explicitly enabled — API calls that read data or metadata. May incur GCP logging cost at high volume |
-| **Google Security Command Center** | GCP-native threat detection findings — equivalent of GuardDuty / Defender for Cloud |
+| Sentinel cost classification | Microsoft Sentinel benefit |
+|:-----------------------------|:---------------------------|
+| **No (paid ingestion)** | No built-in Sentinel ingestion benefit is documented for this connector; ingestion is billed based on enabled data types and volume. |
 
 > [!NOTE]
-> GCP Audit Logs are **not** a free data source in Sentinel. Sentinel ingestion cost applies. GCP Admin Activity audit logs are free within GCP; Data Access audit logs may incur GCP logging charges.
+> This is a connector-level Sentinel classification used for cost planning.
 
 ---
 

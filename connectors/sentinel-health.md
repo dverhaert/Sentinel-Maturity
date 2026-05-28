@@ -1,6 +1,6 @@
 # Sentinel Health & Audit Diagnostics
 
-**Tier:** 1 (Bare Minimum) · **Connector type:** Built-in diagnostic setting · **Free ingestion:** Yes (SentinelHealth is not billable)
+**Tier:** 1 (Bare Minimum) · **Connector type:** Built-in diagnostic setting · **Free ingestion:** Yes (free data source)
 
 ---
 
@@ -34,16 +34,12 @@ This is a **Tier 1 essential** because a SIEM that silently stops ingesting data
 
 ### Licensing Benefits
 
-| License | What it unlocks |
-|:--------|:----------------|
-| **Any Microsoft Sentinel workspace** | SentinelHealth table (data connectors, analytics rules, automation rules, playbooks) |
-| **Any Microsoft Sentinel workspace** | SentinelAudit table (analytics rule change tracking) |
+| Sentinel cost classification | Microsoft Sentinel benefit |
+|:-----------------------------|:---------------------------|
+| **Yes (free data source)** | This connector is treated as a free Sentinel data source for connector-level cost planning. |
 
 > [!NOTE]
-> The **SentinelHealth** table is **not billable** — there are no charges for ingesting health data. The **SentinelAudit** table is billable, but audit volume is typically very low (proportional to the number of rule changes made by analysts and automation).
-
-> [!TIP]
-> Health monitoring is not enabled by default. You must explicitly turn it on in Sentinel Settings → Auditing and health monitoring, or configure diagnostic settings for your workspace.
+> This is a connector-level Sentinel classification. Product-side licensing still controls feature availability.
 
 ---
 

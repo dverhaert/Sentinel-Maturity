@@ -1,6 +1,6 @@
 # Microsoft Global Secure Access
 
-**Tier:** 2 (Extended Visibility) · **Connector type:** Microsoft first-party · **Free ingestion:** No · **Conditional:** Requires Global Secure Access licensing
+**Tier:** 2 (Extended Visibility) · **Connector type:** Microsoft first-party · **Free ingestion:** No (paid ingestion) · **Conditional:** Requires Global Secure Access licensing
 
 ---
 
@@ -30,14 +30,12 @@ The [Microsoft Entra ID](microsoft-entra-id.md) connector covers **authenticatio
 
 ### Licensing Benefits
 
-| License | What it unlocks |
-|:--------|:----------------|
-| **Microsoft Entra Suite** | Full GSA — Internet Access + Private Access |
-| **Microsoft Entra Private Access (standalone)** | Private Access only — ZTNA for internal applications |
-| **Microsoft Entra Internet Access (standalone)** | Internet Access only — SWG for web traffic |
+| Sentinel cost classification | Microsoft Sentinel benefit |
+|:-----------------------------|:---------------------------|
+| **No (paid ingestion)** | No built-in Sentinel ingestion benefit is documented for this connector; ingestion is billed based on enabled data types and volume. |
 
 > [!NOTE]
-> GSA is a distinct product from Entra ID. Logs only flow to the `NetworkAccessTraffic` table when GSA is deployed and the GSA client is installed on user endpoints. If your organisation does not use GSA, this connector page does not apply.
+> This is a connector-level Sentinel classification used for cost planning.
 
 ---
 

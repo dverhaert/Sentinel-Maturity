@@ -1,6 +1,6 @@
 # Windows Forwarded Events (Advanced)
 
-**Tier:** 3 (Advanced) · **Connector type:** Microsoft first-party (AMA) · **Free ingestion:** No
+**Tier:** 3 (Advanced) · **Connector type:** Microsoft first-party (AMA) · **Free ingestion:** No (paid ingestion)
 
 ---
 
@@ -29,12 +29,12 @@ These additional event sources are essential for detecting sophisticated attacks
 
 ### Licensing Benefits
 
-| License | What it unlocks |
-|:--------|:----------------|
-| **Any Windows server** | Advanced event log collection via Azure Monitor Agent and Data Collection Rules |
+| Sentinel cost classification | Microsoft Sentinel benefit |
+|:-----------------------------|:---------------------------|
+| **No (paid ingestion)** | No built-in Sentinel ingestion benefit is documented for this connector; ingestion is billed based on enabled data types and volume. |
 
 > [!NOTE]
-> These advanced `WindowsEvent` channels (PowerShell, WMI, AppLocker/WDAC, Sysmon, Windows Firewall) are **not** covered by the Defender for Servers P2 500 MB/day data ingestion benefit. Only the `Microsoft-SecurityEvent` stream that populates the `SecurityEvent` table is eligible — see the list of [eligible tables](https://learn.microsoft.com/en-us/azure/defender-for-cloud/data-ingestion-benefit). Advanced Windows event collection requires **Group Policy configuration** to enable the relevant event channels (PowerShell ScriptBlock, AppLocker, etc.). The data is collected via AMA using the `WindowsEvent` table — not the legacy `SecurityEvent` table.
+> This is a connector-level Sentinel classification used for cost planning.
 
 ---
 

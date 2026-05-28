@@ -1,6 +1,6 @@
 # IIS / Web Server Logs
 
-**Tier:** 3 (Advanced) · **Connector type:** Microsoft first-party (AMA) · **Free ingestion:** No
+**Tier:** 3 (Advanced) · **Connector type:** Microsoft first-party (AMA) · **Free ingestion:** No (paid ingestion)
 
 ---
 
@@ -26,12 +26,12 @@ For organisations hosting custom web applications, internal portals, or APIs on 
 
 ### Licensing Benefits
 
-| License | What it unlocks |
-|:--------|:----------------|
-| **Any Azure subscription** | Full IIS log collection via Azure Monitor Agent and Data Collection Rules |
+| Sentinel cost classification | Microsoft Sentinel benefit |
+|:-----------------------------|:---------------------------|
+| **No (paid ingestion)** | No built-in Sentinel ingestion benefit is documented for this connector; ingestion is billed based on enabled data types and volume. |
 
 > [!NOTE]
-> IIS logs are **not** covered by the Defender for Servers P2 500 MB/day data ingestion benefit. The `W3CIISLog` table is not on the list of [eligible tables](https://learn.microsoft.com/en-us/azure/defender-for-cloud/data-ingestion-benefit). IIS logs can generate **significant volume** on busy web servers — use DCR transformations to filter out health probes, static asset requests, and known-good traffic to manage cost.
+> This is a connector-level Sentinel classification used for cost planning.
 
 ---
 

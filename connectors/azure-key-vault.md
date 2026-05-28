@@ -1,6 +1,6 @@
 # Azure Key Vault
 
-**Tier:** 2 (Extended Visibility) · **Connector type:** Microsoft first-party · **Free ingestion:** No
+**Tier:** 2 (Extended Visibility) · **Connector type:** Microsoft first-party · **Free ingestion:** No (paid ingestion)
 
 ---
 
@@ -26,13 +26,12 @@ In a breach scenario, the first question after *"which accounts were compromised
 
 ### Licensing Benefits
 
-| License | What it unlocks |
-|:--------|:----------------|
-| **Any Azure subscription** | Full Key Vault diagnostic logging — no additional license required |
-| **Defender for Key Vault** | Adds threat detection alerts for anomalous Key Vault access (alerts flow through `SecurityAlert` → Tier 2 Defender for Cloud page) |
+| Sentinel cost classification | Microsoft Sentinel benefit |
+|:-----------------------------|:---------------------------|
+| **No (paid ingestion)** | No built-in Sentinel ingestion benefit is documented for this connector; ingestion is billed based on enabled data types and volume. |
 
 > [!NOTE]
-> Key Vault diagnostic logs are **not** a free data source. Volume depends on the number of Key Vault operations in your environment. For most organisations, volume is relatively low compared to network or endpoint logs.
+> This is a connector-level Sentinel classification used for cost planning.
 
 ---
 

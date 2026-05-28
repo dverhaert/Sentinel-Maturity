@@ -86,10 +86,10 @@ Template: `connectors/_TEMPLATE.md`
 ### Required Sections (in order)
 
 1. **H1 title** — Product name
-2. **Metadata line** — `**Tier:** [1/2/3] · **Connector type:** [Microsoft first-party / Third-party] · **Free ingestion:** [Yes/No — details]`
+2. **Metadata line** — `**Tier:** [1/2/3] · **Connector type:** [Microsoft first-party / Third-party] · **Free ingestion:** [Yes (free data source) / Ingestion benefit only (conditional) / No (paid ingestion) — details + doc link]`
 3. **Contents** — Full markdown TOC
 4. **Overview** — What the connector provides and why it matters
-5. **Licensing Benefits** — Table: `| License | What it unlocks |`
+5. **Licensing Benefits** — Table: `| Sentinel cost classification | Microsoft Sentinel benefit |` (single-row default; only add extra rows when explicitly required and justified)
 6. **Tables and Rationale** — Core table(s) with columns: `| Table | Description | Retention Recommendation | Rationale | Forensic Value | Example Detection |`
    - Group into H3 subsections when >5 tables (e.g., "### Authentication Tables")
 7. **Example Detections** — H3 subsections by category. Table: `| Detection | Table(s) / Event ID(s) | MITRE ATT&CK | Detection Strategy | Description |`
@@ -108,6 +108,20 @@ Template: `connectors/_TEMPLATE.md`
 - `## Key Events to Monitor` — Specific event IDs or log patterns
 - `## [Connector-specific comparison]` — e.g., "OfficeActivity vs CloudAppEvents"
 - `### Why Layered Logging Matters for [Topic]` — EDR complement rationale (only for endpoint/OS log connectors). Include resource table with blog links.
+
+### Ingestion Label Policy
+
+- Use Sentinel-centric wording only: `Yes (free data source)`, `Ingestion benefit only (conditional)`, or `No (paid ingestion)`.
+- Do not use `Mixed` in metadata lines.
+- When using `Ingestion benefit only (conditional)`, include a Microsoft documentation link in the metadata line so readers can verify current coverage.
+
+### Licensing Benefits Simplification Policy
+
+- Keep this section concise and Sentinel-focused: default to one row that matches the metadata label.
+- Use only these row labels: `Yes (free data source)`, `Ingestion benefit only (conditional)`, `No (paid ingestion)`.
+- For `Ingestion benefit only (conditional)`, the row text must explicitly say coverage is entitlement- or scope-dependent and should be verified in Microsoft documentation.
+- Do not add product feature/licence breakdown rows unless directly necessary to explain Sentinel billing impact.
+- If additional product nuance is needed, place it in `## Notes` or `## Important Considerations`, not extra licensing rows.
 
 ### Table Column Rules
 

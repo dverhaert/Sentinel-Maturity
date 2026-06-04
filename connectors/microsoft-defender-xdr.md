@@ -12,6 +12,8 @@
 - [MITRE Detection Strategies](#mitre-detection-strategies)
 - [MCSB Control Mapping](#mcsb-control-mapping)
 - [Notes](#notes)
+  - [UEBA Dependency Warning (DeviceLogonEvents)](#ueba-dependency-warning-devicelogonevents)
+  - [Retention and Tiering Scope](#retention-and-tiering-scope)
   - [Estimating Data Lake Retention Cost](#estimating-data-lake-retention-cost)
 - [Tools](#tools)
 - [References](#references)
@@ -45,7 +47,7 @@ The Microsoft Defender XDR connector ingests advanced hunting data from Microsof
 | **DeviceNetworkEvents** | Outbound/inbound network connections per process | Analytics: 90d / Lake: 365d | C2 detection, data exfiltration hunting, lateral movement. Essential for correlating process execution with network activity. | Correlate process execution with network behaviour — proves which process made a C2 connection or moved data laterally. Essential for exfiltration scoping. | Outbound connection to known C2 infrastructure, SMB lateral movement |
 | **DeviceFileEvents** | File creation, modification, deletion | Analytics: 90d / Lake: 365d | Malware delivery, staging, and exfiltration forensics. Tracks ransomware file encryption patterns and data staging. | Track file drops, staging, and encryption patterns — determines exactly which files were accessed, modified, or exfiltrated during a breach | Ransomware mass file rename/extension change pattern |
 | **DeviceRegistryEvents** | Registry key/value changes | Analytics: 90d / Lake: 365d | Persistence mechanism detection (Run keys, services, scheduled tasks registered via registry). | Identify persistence mechanisms installed by the attacker — Run keys, service registrations, and security product tampering via registry | New Run key persistence entry |
-| **DeviceLogonEvents** | Local and network logon events on endpoints | Analytics: 90d / Lake: 365d | Lateral movement detection, credential abuse. Complements IdentityLogonEvents with endpoint-side visibility. | Reconstruct lateral movement path from the endpoint perspective — which accounts logged onto which machines and when | Unusual network logon (Type 3/10) from unexpected source — lateral movement |
+| **DeviceLogonEvents** | Local and network logon events on endpoints | Analytics: 90d / Lake: 365d | Lateral movement detection, credential abuse. Complements IdentityLogonEvents with endpoint-side visibility. Keep this table in Analytics if Sentinel UEBA behavior/risk workflows are in scope. | Reconstruct lateral movement path from the endpoint perspective — which accounts logged onto which machines and when | Unusual network logon (Type 3/10) from unexpected source — lateral movement |
 | **DeviceImageLoadEvents** | DLL and driver loading events | Analytics: 90d / Lake: 365d | DLL side-loading, living-off-the-land detection. | Identify DLL hijacking and side-loading — proves which unsigned or malicious library was loaded into a legitimate process | Unsigned DLL loaded from unusual path by legitimate process |
 | **DeviceEvents** | Miscellaneous events (exploit guard, tamper protection, USB, etc.) | Analytics: 90d / Lake: 365d | Catch-all for attack surface reduction, exploit protection, and peripheral device events. | Provides evidence of security control tampering, ASR rule triggers, and physical device connections that may be relevant to insider threat or data theft investigations | ASR rule triggered, tamper protection event, USB device connected |
 | **DeviceFileCertificateInfo** | Certificate information for signed files | Analytics: 90d / Lake: 365d | Validates file authenticity, detects unsigned or suspiciously signed binaries. Supports software integrity verification. | Verify the trust chain of executables present during an incident — identifies supply chain compromise via revoked or fraudulent certificates | Executable signed with revoked or untrusted certificate |
@@ -191,6 +193,16 @@ Curated list of MITRE [Detection Strategies](https://attack.mitre.org/detections
 - Consider using the **Data Lake** tier for high-volume tables like `DeviceNetworkEvents` and `DeviceFileEvents` if cost becomes a concern beyond the free grant
 - The free data grant applies to **advanced hunting tables only** — custom logs or additional enrichment pipelines may incur cost
 - Enable **Incident creation rules** to automatically create Sentinel incidents from Defender XDR alerts
+
+### UEBA Dependency Warning (DeviceLogonEvents)
+
+> [!WARNING]
+> If `DeviceLogonEvents` is sent to the Data Lake tier, Sentinel UEBA behavior/risk scenarios that depend on this table may not populate as expected. If UEBA coverage is required, keep `DeviceLogonEvents` in the Analytics tier.
+
+### Retention and Tiering Scope
+
+> [!IMPORTANT]
+> Defender XDR table routing and retention are configured **per table**, not connector-wide. Moving one table to the Data Lake tier does not move other XDR tables automatically.
 
 ### Estimating Data Lake Retention Cost
 

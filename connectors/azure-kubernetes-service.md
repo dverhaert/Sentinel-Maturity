@@ -99,6 +99,8 @@ Curated list of MITRE [Detection Strategies](https://attack.mitre.org/detections
 
 - **Use kube-audit-admin:** The `kube-audit-admin` diagnostic category excludes GET/LIST operations, reducing volume by ~80% while retaining all security-relevant (create/update/delete) events
 - **Resource-specific mode:** Enable resource-specific mode in diagnostic settings to use the dedicated `AKSAudit` / `AKSAuditAdmin` tables instead of the generic `AzureDiagnostics` table
+- **Legacy mode still exists:** Some clusters still send AKS categories to `AzureDiagnostics`. Treat this as a valid legacy path, but prefer resource-specific mode for cleaner schema and table-level planning
+- **Container Insights is supplemental:** `ContainerInventory` and `KubeEvents` provide operational/container telemetry and complement (but do not replace) AKS audit and control-plane security logs
 - **Volume management:** Active clusters with many workloads can generate significant audit volume. Consider filtering by namespace in DCR transformations
 - **Defender for Containers:** If you have Defender for Cloud (Tier 2), container threat detection alerts already flow through `SecurityAlert`. The audit logs in this Tier 3 connector add the detailed investigation trail
 

@@ -24,6 +24,7 @@
   - [Tools](#tools)
   - [References](#references)
     - [Official Documentation](#official-documentation)
+    - [Admin portal](#admin-portal)
     - [Community \& Third-Party Resources](#community--third-party-resources)
 
 ---
@@ -216,5 +217,7 @@ Curated list of MITRE [Detection Strategies](https://attack.mitre.org/detections
 | Title | Author | Description | Link |
 |:------|:-------|:------------|:-----|
 | Sentinel Ninja — Microsoft Entra ID connector | Ofer Shezaf (Microsoft) | Auto-generated reference: tables ingested, related solutions, and content items | [github.com](https://github.com/oshezaf/sentinelninja/blob/main/Solutions%20Docs/connectors/azureactivedirectory.md) |
+| AADGraphActivityLogs in Microsoft Sentinel | Truls Dahlsveen (Infernux) | Detecting legacy Azure AD Graph (`graph.windows.net`) traffic via the `AADGraphActivityLogs` table — AADInternals / ROADtools detection queries and correlation with `SigninLogs` | [infernux.no](https://infernux.no/blog/aadgraphactivitylogs/) |
+| Now you see me: AADGraphActivityLogs | Fabian Bader (Cloud Brothers) | Deep dive into the `AADGraphActivityLogs` schema and detection opportunities (UserAgent, RequestUri, ResponseSizeBytes), including ROADtools / Ping Castle detection and LLM-assisted hunting | [cloudbrothers.info](https://cloudbrothers.info/en/aadgraphactivitylogs/) |
 
 [← Back to Connectors](README.md) · [← Back to Sentinel Maturity Model](../README.md)

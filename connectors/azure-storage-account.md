@@ -9,15 +9,19 @@
 
 ## Contents
 
-- [Overview](#overview)
-- [Tables and Rationale](#tables-and-rationale)
-- [Example Detections](#example-detections)
-- [MITRE Detection Strategies](#mitre-detection-strategies)
-- [MCSB Control Mapping](#mcsb-control-mapping)
-- [Important Considerations](#important-considerations)
-- [Notes](#notes)
-- [Tools](#tools)
-- [References](#references)
+- [Azure Storage Account](#azure-storage-account)
+  - [Contents](#contents)
+  - [Overview](#overview)
+    - [Licensing Benefits](#licensing-benefits)
+  - [Tables and Rationale](#tables-and-rationale)
+  - [Example Detections](#example-detections)
+  - [MITRE Detection Strategies](#mitre-detection-strategies)
+  - [MCSB Control Mapping](#mcsb-control-mapping)
+  - [Important Considerations](#important-considerations)
+  - [Notes](#notes)
+    - [Tools](#tools)
+  - [References](#references)
+    - [Admin portal](#admin-portal)
 
 ---
 
@@ -129,6 +133,7 @@ Curated list of MITRE [Detection Strategies](https://attack.mitre.org/detections
 | Storage diagnostic settings | [Learn](https://learn.microsoft.com/en-us/azure/storage/blobs/monitor-blob-storage) |
 | Defender for Storage overview | [Learn](https://learn.microsoft.com/en-us/azure/defender-for-cloud/defender-for-storage-introduction) |
 | StorageBlobLogs table reference | [Learn](https://learn.microsoft.com/en-us/azure/azure-monitor/reference/tables/storagebloblogs) |
+| Public preview — collect Azure resource platform logs at scale with DCRs | [techcommunity.microsoft.com](https://techcommunity.microsoft.com/blog/AzureObservabilityBlog/public-preview---azure-monitor---collect-azure-resource-platform-logs-at-scale-w/4525296) |
 
 ---
 

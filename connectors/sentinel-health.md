@@ -22,6 +22,7 @@
   - [Tools](#tools)
   - [References](#references)
     - [Official Documentation](#official-documentation)
+    - [Admin portal](#admin-portal)
     - [Community \& Third-Party Resources](#community--third-party-resources)
 
 ---
@@ -170,5 +171,6 @@ The `SentinelHealth` and `SentinelAudit` tables are automatically created after 
 | Title | Author | Description | Link |
 |:------|:-------|:------------|:-----|
 | Sentinel Ninja — SentinelHealth table | Ofer Shezaf (Microsoft) | Auto-generated reference: schema, solutions, and content items using the SentinelHealth table | [github.com](https://github.com/oshezaf/sentinelninja/blob/main/Solutions%20Docs/tables/sentinelhealth.md) |
+| Seven queries to audit the Sentinel detections your SOC may have missed | Rohit Ashok Gowda (Medium) | Seven KQL queries built on `SentinelHealth`, `SentinelAudit`, `SecurityAlert`, `SecurityIncident`, and `Usage` to surface silent, broken, benign, or untracked analytics rules | [medium.com](https://medium.com/@rohitashokgowd/seven-queries-to-audit-the-sentinel-detections-your-soc-may-have-missed-8e9c73fc2522) |
 
 [← Back to Connectors](README.md) · [← Back to Sentinel Maturity Model](../README.md)

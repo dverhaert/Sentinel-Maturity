@@ -2,11 +2,15 @@
 
 ## Contents
 
-- [Overview](#overview)
-- [The Strategy](#the-strategy)
-- [Applying This to Microsoft Sentinel](#applying-this-to-microsoft-sentinel)
-- [Key Takeaway](#key-takeaway)
-- [References](#references)
+- [Input/Output Strategy](#inputoutput-strategy)
+  - [Contents](#contents)
+  - [Overview](#overview)
+  - [The Strategy](#the-strategy)
+    - [Inputs — What Goes Into the SIEM](#inputs--what-goes-into-the-siem)
+    - [Outputs — What the SIEM Delivers](#outputs--what-the-siem-delivers)
+  - [Applying This to Microsoft Sentinel](#applying-this-to-microsoft-sentinel)
+  - [Key Takeaway](#key-takeaway)
+  - [References](#references)
 
 ---
 
@@ -71,6 +75,7 @@ Microsoft Sentinel's architecture maps well to this tiered approach:
 
 - [Plan costs and understand pricing and billing — Microsoft Sentinel](https://learn.microsoft.com/en-us/azure/sentinel/billing?tabs=simplified%2Ccommitment-tiers)
 - [Data Collection Rules in Azure Monitor](https://learn.microsoft.com/en-us/azure/azure-monitor/essentials/data-collection-rule-overview)
+- [Collect Azure resource platform logs at scale with DCRs (public preview) — Azure Observability blog](https://techcommunity.microsoft.com/blog/AzureObservabilityBlog/public-preview---azure-monitor---collect-azure-resource-platform-logs-at-scale-w/4525296) — DCR-based collection that replaces per-resource diagnostic settings and filters/transforms platform logs at ingestion
 
 ---
 

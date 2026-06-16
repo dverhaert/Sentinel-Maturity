@@ -6,15 +6,25 @@
 
 ## Contents
 
-- [Overview](#overview)
-- [Tables and Rationale](#tables-and-rationale)
-- [Example Detections](#example-detections)
-- [MITRE Detection Strategies](#mitre-detection-strategies)
-- [MCSB Control Mapping](#mcsb-control-mapping)
-- [Important Considerations](#important-considerations)
-- [Notes](#notes)
-- [Tools](#tools)
-- [References](#references)
+- [Azure WAF (Application Gateway / Front Door)](#azure-waf-application-gateway--front-door)
+  - [Contents](#contents)
+  - [Overview](#overview)
+    - [Licensing Benefits](#licensing-benefits)
+  - [Tables and Rationale](#tables-and-rationale)
+  - [Example Detections](#example-detections)
+    - [Application-Layer Attacks](#application-layer-attacks)
+    - [Reconnaissance and Abuse](#reconnaissance-and-abuse)
+  - [MITRE Detection Strategies](#mitre-detection-strategies)
+  - [MCSB Control Mapping](#mcsb-control-mapping)
+  - [Important Considerations](#important-considerations)
+    - [Application Gateway vs. Front Door](#application-gateway-vs-front-door)
+    - [OWASP Core Rule Set Versions](#owasp-core-rule-set-versions)
+  - [Notes](#notes)
+  - [Tools](#tools)
+  - [References](#references)
+    - [Official Documentation](#official-documentation)
+    - [Admin portal](#admin-portal)
+    - [Community \& Third-Party Resources](#community--third-party-resources)
 
 ---
 
@@ -160,5 +170,6 @@ Ensure your WAF policy uses **CRS 3.2** or later. Older CRS versions generate mo
 |:------|:-------|:------------|:-----|
 | Sentinel Ninja — Azure WAF connector | Ofer Shezaf (Microsoft) | Auto-generated reference: tables ingested, related solutions, and content items | [github.com](https://github.com/oshezaf/sentinelninja/blob/main/Solutions%20Docs/connectors/waf.md) |
 | Best practices for event logging and threat detection | ASD ACSC | International joint guidance — internet-facing services are Enterprise Networks priority #2 | [cyber.gov.au](https://www.cyber.gov.au/business-government/detecting-responding-to-threats/event-logging/best-practices-for-event-logging-and-threat-detection) |
+| Public preview — collect Azure resource platform logs at scale with DCRs | Azure Observability blog (Microsoft) | New DCR-based approach that replaces per-resource diagnostic settings, with ingestion-time filtering/transformation and ARM/Bicep/Terraform/Policy deployment | [techcommunity.microsoft.com](https://techcommunity.microsoft.com/blog/AzureObservabilityBlog/public-preview---azure-monitor---collect-azure-resource-platform-logs-at-scale-w/4525296) |
 
 [← Back to Connectors](README.md) · [← Back to Sentinel Maturity Model](../README.md)

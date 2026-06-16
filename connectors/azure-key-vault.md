@@ -6,15 +6,26 @@
 
 ## Contents
 
-- [Overview](#overview)
-- [Tables and Rationale](#tables-and-rationale)
-- [Example Detections](#example-detections)
-- [MITRE Detection Strategies](#mitre-detection-strategies)
-- [MCSB Control Mapping](#mcsb-control-mapping)
-- [Important Considerations](#important-considerations)
-- [Notes](#notes)
-- [Tools](#tools)
-- [References](#references)
+- [Azure Key Vault](#azure-key-vault)
+  - [Contents](#contents)
+  - [Overview](#overview)
+    - [Licensing Benefits](#licensing-benefits)
+  - [Tables and Rationale](#tables-and-rationale)
+  - [Example Detections](#example-detections)
+    - [Secret Access](#secret-access)
+    - [Administrative Changes](#administrative-changes)
+  - [MITRE Detection Strategies](#mitre-detection-strategies)
+  - [MCSB Control Mapping](#mcsb-control-mapping)
+  - [Important Considerations](#important-considerations)
+    - [Resource-Specific vs. Azure Diagnostics](#resource-specific-vs-azure-diagnostics)
+    - [Coverage](#coverage)
+    - [Defender for Key Vault](#defender-for-key-vault)
+  - [Notes](#notes)
+  - [Tools](#tools)
+  - [References](#references)
+    - [Official Documentation](#official-documentation)
+    - [Admin portal](#admin-portal)
+    - [Community \& Third-Party Resources](#community--third-party-resources)
 
 ---
 
@@ -162,5 +173,6 @@ If you have Defender for Key Vault enabled, anomalous access alerts (unusual IP,
 |:------|:-------|:------------|:-----|
 | Sentinel Ninja — Azure Key Vault connector | Ofer Shezaf (Microsoft) | Auto-generated reference: tables ingested, related solutions, and content items | [github.com](https://github.com/oshezaf/sentinelninja/blob/main/Solutions%20Docs/connectors/azurekeyvault.md) |
 | Best practices for event logging and threat detection | ASD ACSC | International joint guidance — secret and privilege management is Enterprise Networks priority #7 | [cyber.gov.au](https://www.cyber.gov.au/business-government/detecting-responding-to-threats/event-logging/best-practices-for-event-logging-and-threat-detection) |
+| Public preview — collect Azure resource platform logs at scale with DCRs | Azure Observability blog (Microsoft) | New DCR-based approach that replaces per-resource diagnostic settings, with ingestion-time filtering/transformation and ARM/Bicep/Terraform/Policy deployment | [techcommunity.microsoft.com](https://techcommunity.microsoft.com/blog/AzureObservabilityBlog/public-preview---azure-monitor---collect-azure-resource-platform-logs-at-scale-w/4525296) |
 
 [← Back to Connectors](README.md) · [← Back to Sentinel Maturity Model](../README.md)

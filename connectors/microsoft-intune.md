@@ -9,14 +9,21 @@
 
 ## Contents
 
-- [Overview](#overview)
-- [Tables and Rationale](#tables-and-rationale)
-- [Example Detections](#example-detections)
-- [MITRE Detection Strategies](#mitre-detection-strategies)
-- [MCSB Control Mapping](#mcsb-control-mapping)
-- [Notes](#notes)
-- [Tools](#tools)
-- [References](#references)
+- [Microsoft Intune (Endpoint Management)](#microsoft-intune-endpoint-management)
+  - [Contents](#contents)
+  - [Overview](#overview)
+    - [Licensing Benefits](#licensing-benefits)
+  - [Tables and Rationale](#tables-and-rationale)
+  - [Example Detections](#example-detections)
+    - [Endpoint Management](#endpoint-management)
+  - [MITRE Detection Strategies](#mitre-detection-strategies)
+  - [MCSB Control Mapping](#mcsb-control-mapping)
+  - [Notes](#notes)
+  - [Tools](#tools)
+  - [References](#references)
+    - [Official Documentation](#official-documentation)
+    - [Admin portal](#admin-portal)
+    - [Community \& Third-Party Resources](#community--third-party-resources)
 
 ---
 
@@ -130,5 +137,6 @@ Curated list of MITRE [Detection Strategies](https://attack.mitre.org/detections
 |:------|:-------|:------------|:-----|
 | Sentinel Ninja — Solutions Docs | Ofer Shezaf (Microsoft) | Comprehensive auto-generated reference for all Sentinel solutions, connectors, and tables | [github.com](https://github.com/oshezaf/sentinelninja/blob/main/Solutions%20Docs/README.md) |
 | Best practices for event logging and threat detection | ASD ACSC | International joint guidance — MDM/MAM events are Enterprise Mobility priority #7 | [cyber.gov.au](https://www.cyber.gov.au/business-government/detecting-responding-to-threats/event-logging/best-practices-for-event-logging-and-threat-detection) |
+| How to ingest Microsoft Intune logs into Microsoft Sentinel | Microsoft Sentinel blog | Step-by-step walkthrough for routing `IntuneAuditLogs`, `IntuneOperationalLogs`, `IntuneDeviceComplianceOrg`, and `IntuneDevices` into Sentinel via Intune diagnostic settings | [techcommunity.microsoft.com](https://techcommunity.microsoft.com/blog/microsoftsentinelblog/how-to-ingest-microsoft-intune-logs-into-microsoft-sentinel/4508562) |
 
 [← Back to Connectors](README.md) · [← Back to Sentinel Maturity Model](../README.md)

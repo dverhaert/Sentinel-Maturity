@@ -24,6 +24,7 @@
   - [Tools](#tools)
   - [References](#references)
     - [Official Documentation](#official-documentation)
+    - [Admin portal](#admin-portal)
     - [Community \& Third-Party Resources](#community--third-party-resources)
 
 ---
@@ -205,5 +206,6 @@ This ensures new subscriptions are automatically connected to your Sentinel work
 | Title | Author | Description | Link |
 |:------|:-------|:------------|:-----|
 | Sentinel Ninja — Azure Activity connector | Ofer Shezaf (Microsoft) | Auto-generated reference: tables ingested, related solutions, and content items | [github.com](https://github.com/oshezaf/sentinelninja/blob/main/Solutions%20Docs/connectors/azureactivity.md) |
+| Public preview — collect Azure resource platform logs at scale with DCRs | Azure Observability blog (Microsoft) | New DCR-based approach that replaces per-resource diagnostic settings, with ingestion-time filtering/transformation, managed identity, and ARM/Bicep/Terraform/Policy deployment | [techcommunity.microsoft.com](https://techcommunity.microsoft.com/blog/AzureObservabilityBlog/public-preview---azure-monitor---collect-azure-resource-platform-logs-at-scale-w/4525296) |
 
 [← Back to Connectors](README.md) · [← Back to Sentinel Maturity Model](../README.md)

@@ -223,6 +223,8 @@ Setting retention is not a one-time activity. To maintain compliance and cost co
 - [GDPR — General Data Protection Regulation](https://gdpr-info.eu/)
 - [Microsoft Sentinel Data Lake overview](https://learn.microsoft.com/en-us/azure/sentinel/datalake/sentinel-lake-overview)
 - [Configure data retention and archive policies in Azure Monitor Logs](https://learn.microsoft.com/en-us/azure/azure-monitor/logs/data-retention-archive)
+- [Demystifying log retention in Azure — Shannon Kuehn](https://www.shankuehn.io/post/demystifying-log-retention-in-azure) — end-to-end overview of retention across Activity logs, resource logs, Log Analytics, metrics, Entra ID, and Purview, with a retention cheat-sheet and cost considerations
+- [Manage Microsoft Sentinel table tiers and retention as code with Bicep — Nicola Suter](https://nicolasuter.ch/sentinel-table-retention-bicep/) — declaratively manage per-table tier and total retention with the `Microsoft.OperationalInsights/workspaces/tables` Bicep resource
 
 ---
 

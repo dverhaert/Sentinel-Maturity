@@ -123,6 +123,7 @@ Curated list of MITRE [Detection Strategies](https://attack.mitre.org/detections
 | Audit to Log Analytics | [Learn](https://learn.microsoft.com/en-us/azure/azure-sql/database/auditing-log-analytics) |
 | Defender for SQL overview | [Learn](https://learn.microsoft.com/en-us/azure/defender-for-cloud/defender-for-sql-introduction) |
 | Cosmos DB diagnostic logging | [Learn](https://learn.microsoft.com/en-us/azure/cosmos-db/monitor-resource-logs) |
+| Public preview — collect Azure resource platform logs at scale with DCRs | [techcommunity.microsoft.com](https://techcommunity.microsoft.com/blog/AzureObservabilityBlog/public-preview---azure-monitor---collect-azure-resource-platform-logs-at-scale-w/4525296) |
 
 ---
 

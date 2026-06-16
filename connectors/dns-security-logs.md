@@ -6,15 +6,27 @@
 
 ## Contents
 
-- [Overview](#overview)
-- [Tables and Rationale](#tables-and-rationale)
-- [Example Detections](#example-detections)
-- [MITRE Detection Strategies](#mitre-detection-strategies)
-- [MCSB Control Mapping](#mcsb-control-mapping)
-- [Important Considerations](#important-considerations)
-- [Notes](#notes)
-- [Tools](#tools)
-- [References](#references)
+- [DNS Security Logs](#dns-security-logs)
+  - [Contents](#contents)
+  - [Overview](#overview)
+    - [Licensing Benefits](#licensing-benefits)
+  - [Tables and Rationale](#tables-and-rationale)
+    - [Endpoint DNS](#endpoint-dns)
+    - [Azure DNS](#azure-dns)
+  - [Example Detections](#example-detections)
+    - [C2 and Tunnelling](#c2-and-tunnelling)
+    - [Reputation and Threat Intel](#reputation-and-threat-intel)
+  - [MITRE Detection Strategies](#mitre-detection-strategies)
+  - [MCSB Control Mapping](#mcsb-control-mapping)
+  - [Important Considerations](#important-considerations)
+    - [Three DNS Vantage Points](#three-dns-vantage-points)
+    - [Volume Management](#volume-management)
+  - [Notes](#notes)
+  - [Tools](#tools)
+  - [References](#references)
+    - [Official Documentation](#official-documentation)
+    - [Admin portal](#admin-portal)
+    - [Community \& Third-Party Resources](#community--third-party-resources)
 
 ---
 
@@ -170,5 +182,6 @@ DNS logs are **high-volume**. Strategies to manage cost:
 | Sentinel Ninja — DNS connector | Ofer Shezaf (Microsoft) | Auto-generated reference: tables ingested, related solutions, and content items | [github.com](https://github.com/oshezaf/sentinelninja/blob/main/Solutions%20Docs/connectors/dns.md) |
 | Best practices for event logging and threat detection | ASD ACSC | International joint guidance — DNS services are Enterprise Networks priority #13 | [cyber.gov.au](https://www.cyber.gov.au/business-government/detecting-responding-to-threats/event-logging/best-practices-for-event-logging-and-threat-detection) |
 | JSCU Logging Essentials | AIVD / MIVD (Netherlands) | Dutch intelligence services' baseline for Windows event logging including DNS — developed by the Joint SIGINT Cyber Unit | [GitHub](https://github.com/JSCU-NL/logging-essentials) |
+| Public preview — collect Azure resource platform logs at scale with DCRs | Azure Observability blog (Microsoft) | New DCR-based approach that replaces per-resource diagnostic settings, with ingestion-time filtering/transformation and ARM/Bicep/Terraform/Policy deployment | [techcommunity.microsoft.com](https://techcommunity.microsoft.com/blog/AzureObservabilityBlog/public-preview---azure-monitor---collect-azure-resource-platform-logs-at-scale-w/4525296) |
 
 [← Back to Connectors](README.md) · [← Back to Sentinel Maturity Model](../README.md)

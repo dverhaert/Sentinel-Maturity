@@ -13,6 +13,7 @@
   - [Contents](#contents)
   - [Overview](#overview)
     - [Licensing Benefits](#licensing-benefits)
+  - [Enabling Visibility and Detection](#enabling-visibility-and-detection)
   - [Tables and Rationale](#tables-and-rationale)
   - [Example Detections](#example-detections)
   - [MITRE Detection Strategies](#mitre-detection-strategies)
@@ -39,6 +40,23 @@ For organisations storing sensitive documents, backups, application data, or dat
 
 > [!NOTE]
 > This is a connector-level Sentinel classification used for cost planning.
+
+---
+
+## Enabling Visibility and Detection
+
+Azure resources do **not** generate data-plane (diagnostic) logs by default. Unlike an on-premises system that writes to a local event log — which at least buffers and rolls over — an Azure Storage account produces **no audit trail at all** until you explicitly route its logs somewhere. The only way to retain evidence of what happened is to send the diagnostic logs to Azure Monitor / Log Analytics (or Storage / Event Hubs) **before** an incident occurs. If diagnostic settings (or a Data Collection Rule) are not in place at the time, that telemetry is never produced and **cannot be recovered retroactively**.
+
+This makes deliberate log configuration a **forensic-readiness prerequisite**, not a cost optimisation — see [Forensic Readiness](../guidance/forensic-readiness.md) and the [Layered Detection Approach](../guidance/layered-detection.md). You have three options to gain visibility and detections for Azure Storage:
+
+| Option | What you get | Detections available |
+|:-------|:-------------|:---------------------|
+| **A — Defender for Storage only** | Out-of-the-box Defender for Cloud alerts (malware uploads via hash-reputation and on-upload scanning, anomalous access, data exfiltration, sensitive-data exposure) surfaced in `SecurityAlert` and the Defender portal via the [Microsoft Defender for Cloud](microsoft-defender-for-cloud.md) connector. Fast to enable; no raw audit trail. | Microsoft-maintained Defender alerts only — no raw log for custom hunting or forensics |
+| **B — Defender for Storage + diagnostic logs** *(recommended)* | Both the out-of-the-box Defender alerts **and** the full data-plane audit trail (`StorageBlobLogs`, `StorageFileLogs`, etc.) in Sentinel for correlation, custom analytics, threat hunting, and long-term forensic retention. | Defender alerts **+** custom KQL analytics **+** full forensic trail |
+| **C — Diagnostic logs only** | The full storage data-plane audit trail in Sentinel, but **no** Defender for Storage out-of-the-box detections — every detection is one you build and maintain yourself. | Custom KQL analytics + forensic trail; no out-of-the-box Defender alerts |
+
+> [!TIP]
+> Option **B** is the recommended baseline: Defender for Cloud provides immediate, Microsoft-maintained detections, while the diagnostic logs preserve the underlying evidence those alerts are derived from — plus everything an alert cannot anticipate.
 
 ---
 

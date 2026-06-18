@@ -11,6 +11,7 @@
   - [Overview](#overview)
     - [Components](#components)
   - [Licensing Benefits](#licensing-benefits)
+  - [Enabling Visibility and Detection](#enabling-visibility-and-detection)
   - [Tables and Rationale](#tables-and-rationale)
   - [Example Detections](#example-detections)
     - [Lateral Movement](#lateral-movement)
@@ -57,6 +58,17 @@ While Azure Firewall logs cover traffic at the centralised egress/ingress point,
 
 > [!NOTE]
 > This is a connector-level Sentinel classification used for cost planning.
+
+---
+
+## Enabling Visibility and Detection
+
+Azure resources do **not** generate data-plane (diagnostic) logs by default. Unlike an on-premises system that writes to a local event log — which at least buffers and rolls over — a virtual network produces **no flow record at all** until you explicitly enable flow logging and route it somewhere. The only way to retain evidence of east-west and egress traffic is to enable VNet Flow Logs and send them to Azure Monitor / Log Analytics (or Storage) **before** an incident occurs. If flow logging (or a Data Collection Rule) is not in place at the time, that telemetry is never produced and **cannot be recovered retroactively**.
+
+This makes deliberate log configuration a **forensic-readiness prerequisite**, not a cost optimisation — see [Forensic Readiness](../guidance/forensic-readiness.md) and the [Layered Detection Approach](../guidance/layered-detection.md).
+
+> [!NOTE]
+> There is **no Microsoft Defender for Cloud plan** that produces out-of-the-box detections from VNet Flow Logs. Visibility therefore depends entirely on **enabling flow logging and routing it to Sentinel** and building detections on top of it (see [Example Detections](#example-detections) below) — the equivalent of **option C** on connectors that do have a Defender plan. Enabling flow logs is the only way to gain, and retain, this evidence.
 
 ---
 

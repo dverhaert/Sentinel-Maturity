@@ -64,6 +64,9 @@ Microsoft Sentinel's architecture maps well to this tiered approach:
 > [!TIP]
 > Use **Data Collection Rules** to filter high-volume sources at ingestion time. For example, you can filter Windows Security Events to only collect specific Event IDs rather than the full event stream, significantly reducing cost while maintaining detection capability.
 
+> [!NOTE]
+> DCRs are also becoming the **collection** mechanism for Azure resource platform logs, not just a filter. [DCRs for Azure resource platform logs](https://techcommunity.microsoft.com/blog/AzureObservabilityBlog/public-preview---azure-monitor---collect-azure-resource-platform-logs-at-scale-w/4525296) (public preview) let you replace thousands of per-resource diagnostic settings with a single policy-enforced rule — closing the configuration-drift gaps that otherwise leave resources silently unlogged.
+
 ## Key Takeaway
 
 > [!NOTE]

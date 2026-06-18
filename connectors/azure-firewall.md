@@ -7,6 +7,7 @@
 ## Contents
 
 - [Overview](#overview)
+- [Enabling Visibility and Detection](#enabling-visibility-and-detection)
 - [Tables and Rationale](#tables-and-rationale)
 - [Example Detections](#example-detections)
 - [MITRE Detection Strategies](#mitre-detection-strategies)
@@ -32,6 +33,17 @@ For organisations using Azure Firewall as their central egress point (hub-spoke 
 
 > [!NOTE]
 > This is a connector-level Sentinel classification used for cost planning.
+
+---
+
+## Enabling Visibility and Detection
+
+Azure resources do **not** generate data-plane (diagnostic) logs by default. Unlike an on-premises system that writes to a local event log — which at least buffers and rolls over — Azure Firewall produces **no log at all** until you explicitly route its diagnostic logs somewhere. The only way to retain evidence of what was allowed or blocked is to send the diagnostic logs to Azure Monitor / Log Analytics (or Storage / Event Hubs) **before** an incident occurs. If diagnostic settings (or a Data Collection Rule) are not in place at the time, that telemetry is never produced and **cannot be recovered retroactively**.
+
+This makes deliberate log configuration a **forensic-readiness prerequisite**, not a cost optimisation — see [Forensic Readiness](../guidance/forensic-readiness.md) and the [Layered Detection Approach](../guidance/layered-detection.md).
+
+> [!NOTE]
+> There is **no Microsoft Defender for Cloud plan** that provides out-of-the-box detections for Azure Firewall. Visibility therefore depends entirely on **routing its diagnostic logs to Sentinel** and building detections on top of them (see [Example Detections](#example-detections) below) — the equivalent of **option C** on connectors that do have a Defender plan. Azure Firewall Premium's own IDPS engine adds signature-based detections, but those are likewise only available to you once the firewall's diagnostic logs are forwarded. Enabling diagnostic settings is the only way to gain, and retain, this evidence.
 
 ---
 

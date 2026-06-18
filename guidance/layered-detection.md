@@ -77,9 +77,13 @@ For the connectors covered in this maturity model, layered detection means:
 | Linux SSH brute-force | MDE for Linux (if deployed) | `Syslog` auth/authpriv facility |
 | Email phishing detection | `EmailEvents` (MDO) | `OfficeActivity` Exchange workload |
 | Azure resource modification | N/A | `AzureActivity` (only available via Sentinel) |
+| Azure resource data-plane access (Key Vault secret read, Storage blob download, SQL query) | Defender for Cloud plan, if enabled (alerts only) | Diagnostic logs via Sentinel — **opt-in only, no native retention** |
 
 > [!TIP]
 > For Windows and Linux servers specifically, see the layered logging sections in the [Windows Security Events](../connectors/windows-security-events.md) and [Syslog for Linux](../connectors/syslog-linux.md) connector pages.
+
+> [!NOTE]
+> The resource data-plane layer is unique: it has **no EDR fallback and no native retention**. Unlike Windows or Linux hosts — where MDE and the local event log exist independently — an Azure resource log exists **only** if you enabled its diagnostic settings beforehand. See [Forensic Readiness](forensic-readiness.md#you-cannot-investigate-logs-you-never-collected).
 
 ---
 

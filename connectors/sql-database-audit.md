@@ -10,6 +10,7 @@
   - [Contents](#contents)
   - [Overview](#overview)
     - [Licensing Benefits](#licensing-benefits)
+  - [Enabling Visibility and Detection](#enabling-visibility-and-detection)
   - [Tables and Rationale](#tables-and-rationale)
   - [Example Detections](#example-detections)
   - [MITRE Detection Strategies](#mitre-detection-strategies)
@@ -36,6 +37,23 @@ For organisations with databases containing sensitive data (PII, financial recor
 
 > [!NOTE]
 > This is a connector-level Sentinel classification used for cost planning.
+
+---
+
+## Enabling Visibility and Detection
+
+Azure resources do **not** generate data-plane (diagnostic) logs by default. Unlike an on-premises system that writes to a local event log — which at least buffers and rolls over — an Azure database resource produces **no audit trail at all** until you explicitly route its logs somewhere. The only way to retain evidence of what happened is to send the diagnostic and audit logs to Azure Monitor / Log Analytics (or Storage / Event Hubs) **before** an incident occurs. If auditing and diagnostic settings (or a Data Collection Rule) are not in place at the time, that telemetry is never produced and **cannot be recovered retroactively**.
+
+This makes deliberate log configuration a **forensic-readiness prerequisite**, not a cost optimisation — see [Forensic Readiness](../guidance/forensic-readiness.md) and the [Layered Detection Approach](../guidance/layered-detection.md). You have three options to gain visibility and detections for your Azure SQL and database resources:
+
+| Option | What you get | Detections available |
+|:-------|:-------------|:---------------------|
+| **A — Defender for Databases only** | Out-of-the-box Defender for Cloud alerts (SQL injection, anomalous database access, brute-force attempts, suspicious data extraction) for Azure SQL, open-source relational databases, and Cosmos DB, surfaced in `SecurityAlert` and the Defender portal via the [Microsoft Defender for Cloud](microsoft-defender-for-cloud.md) connector. Fast to enable; no raw audit trail. | Microsoft-maintained Defender alerts only — no raw log for custom hunting or forensics |
+| **B — Defender for Databases + audit/diagnostic logs** *(recommended)* | Both the out-of-the-box Defender alerts **and** the full data-plane audit trail (`SQLSecurityAuditEvents` and related tables) in Sentinel for correlation, custom analytics, threat hunting, and long-term forensic retention. | Defender alerts **+** custom KQL analytics **+** full forensic trail |
+| **C — Audit/diagnostic logs only** | The full database audit trail in Sentinel, but **no** Defender for Databases out-of-the-box detections — every detection is one you build and maintain yourself. | Custom KQL analytics + forensic trail; no out-of-the-box Defender alerts |
+
+> [!TIP]
+> Option **B** is the recommended baseline: Defender for Cloud provides immediate, Microsoft-maintained detections, while the audit logs preserve the underlying evidence those alerts are derived from — plus everything an alert cannot anticipate.
 
 ---
 

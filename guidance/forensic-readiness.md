@@ -5,6 +5,7 @@
 - [Overview](#overview)
 - [Forensic Readiness as a Design Requirement](#forensic-readiness-as-a-design-requirement)
 - [Why Centralised Logging Is Critical](#why-centralised-logging-is-critical)
+- [You Cannot Investigate Logs You Never Collected](#you-cannot-investigate-logs-you-never-collected)
 - [Forensic Value Across Log Sources](#forensic-value-across-log-sources)
 - [Real-World Examples](#real-world-examples)
 - [References](#references)
@@ -69,6 +70,23 @@ A centralised SIEM platform like Microsoft Sentinel addresses these challenges:
 > [!IMPORTANT]
 > The independence of the SIEM from the source environment is particularly critical from a forensic standpoint. It increases confidence that the data used during an investigation has not been manipulated by the attacker.
 
+## You Cannot Investigate Logs You Never Collected
+
+In the cloud, a critical nuance compounds the case for centralised logging: **most Azure resource logs do not exist until you deliberately enable them.** There is no local buffer to fall back on. Where an on-premises server at least records to a local event log that rolls over, an Azure resource generates **nothing** at the data-plane level until diagnostic settings (or a Data Collection Rule) route its logs to a destination such as Azure Monitor / Log Analytics.
+
+| Log source | Default state | If not configured before an incident |
+|:-----------|:--------------|:-------------------------------------|
+| Azure Activity Log (control plane) | On by default — 90 days, free | Available for 90 days; export for longer retention |
+| Resource / diagnostic logs (Key Vault, Storage, SQL, AKS, Firewall, WAF, NSG/VNet, DNS) | **Off — no data generated** | **Permanently lost — the evidence never existed** |
+| Entra ID sign-in / audit logs | 7 days (Free) / 30 days (P1/P2) | Lost beyond the retention window unless exported |
+
+The implication for forensic readiness is severe: the moment you need a resource log during an investigation is far too late to enable it. The data for the period under investigation will simply not exist.
+
+At enterprise scale this risk is amplified by **configuration drift** — per-resource diagnostic settings are inconsistently applied, disabled, or never added to newly created resources, leaving silent gaps. [Data Collection Rules for Azure resource platform logs](https://techcommunity.microsoft.com/blog/AzureObservabilityBlog/public-preview---azure-monitor---collect-azure-resource-platform-logs-at-scale-w/4525296) (public preview) address this by centralising collection under a single policy-enforced, drift-resistant rule. For a per-log-type breakdown of defaults and retention, see [Demystifying Log Retention in Azure](https://www.shankuehn.io/post/demystifying-log-retention-in-azure).
+
+> [!IMPORTANT]
+> Treat "enable diagnostic logging" as a forensic-readiness control, not a monitoring nicety. Evidence that is not collected at the time of the event cannot be recovered afterwards.
+
 ## Forensic Value Across Log Sources
 
 Different log sources contribute distinct and complementary forensic insights. When combined and correlated centrally, they enable a much more complete reconstruction of an attack lifecycle.
@@ -127,7 +145,8 @@ Network telemetry is often the key to validating whether suspicious endpoint act
 
 ## References
 
-*No community references yet — contributions welcome.*
+- [Demystifying Log Retention in Azure — shankuehn.io](https://www.shankuehn.io/post/demystifying-log-retention-in-azure) — per-log-type breakdown of Azure default retention and the opt-in nature of resource diagnostic logs
+- [Collect Azure resource platform logs at scale with DCRs (public preview) — Azure Observability blog](https://techcommunity.microsoft.com/blog/AzureObservabilityBlog/public-preview---azure-monitor---collect-azure-resource-platform-logs-at-scale-w/4525296) — centralised, drift-resistant collection of Azure resource platform logs
 
 ---
 

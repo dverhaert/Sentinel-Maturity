@@ -35,6 +35,7 @@ The following factors should drive what you log, how long you retain it, and whe
 | **Exposure to targeted vs commodity threats** | Organisations facing APT-level threats need broader telemetry and longer retention to support extended investigations |
 | **Ability to respond to and investigate incidents** | Logging has limited value if the SOC lacks capacity to act on it — balance collection with operational capability |
 | **Dependence on third-party or legacy systems** | Systems that cannot forward native logs may require compensating controls or additional monitoring at network boundaries |
+| **Reliance on opt-in cloud resource logs** | Most Azure resource (data-plane) logs are off by default and generate **no evidence** until diagnostic settings or a Data Collection Rule are configured — unconfigured or drifted settings create silent telemetry gaps that cannot be recovered after an incident |
 
 ## Assessing Each Data Source
 
